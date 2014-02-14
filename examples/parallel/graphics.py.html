@@ -1,0 +1,903 @@
+<html>
+<head>
+<title>graphics.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>graphics.py (<a href="graphics.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: green; font-style: italic"># graphics.py
+</span><span style="color: darkred">"""Simple object oriented graphics library  
+
+The library is designed to make it very easy for novice programmers to
+experiment with computer graphics in an object oriented fashion. It is
+written by John Zelle for use with the book "Python Programming: An
+Introduction to Computer Science" (Franklin, Beedle &amp; Associates).
+
+LICENSE: This is open-source software released under the terms of the
+GPL (http://www.gnu.org/licenses/gpl.html).
+
+PLATFORMS: The package is a wrapper around Tkinter and should run on
+any platform where Tkinter is available.
+
+INSTALLATION: Put this file somewhere where Python can see it.
+
+OVERVIEW: There are two kinds of objects in the library. The GraphWin
+class implements a window where drawing can be done and various
+GraphicsObjects are provided that can be drawn into a GraphWin. As a
+simple example, here is a complete program to draw a circle of radius
+10 centered in a 100x100 window:
+
+--------------------------------------------------------------------
+from graphics import *
+
+def main():
+    win = GraphWin("My Circle", 100, 100)
+    c = Circle(Point(50,50), 10)
+    c.draw(win)
+    win.getMouse() # Pause to view result
+    win.close()    # Close window when done
+
+main()
+--------------------------------------------------------------------
+GraphWin objects support coordinate transformation through the
+setCoords method and pointer-based input through getMouse.
+
+The library provides the following graphical objects:
+    Point
+    Line
+    Circle
+    Oval
+    Rectangle
+    Polygon
+    Text
+    Entry (for text-based input)
+    Image
+
+Various attributes of graphical objects can be set such as
+outline-color, fill-color and line-width. Graphical objects also
+support moving and hiding for animation effects.
+
+The library also provides a very simple class for pixel-based image
+manipulation, Pixmap. A pixmap can be loaded from a file and displayed
+using an Image object. Both getPixel and setPixel methods are provided
+for manipulating the image.
+
+DOCUMENTATION: For complete documentation, see Chapter 4 of "Python
+Programming: An Introduction to Computer Science" by John Zelle,
+published by Franklin, Beedle &amp; Associates.  Also see
+http://mcsp.wartburg.edu/zelle/python for a quick reference"""
+
+</span><span style="color: green; font-style: italic"># Version 4.2 5/26/2011
+#     * Modified Image to allow multiple undraws like other GraphicsObjects
+# Version 4.1 12/29/2009
+#     * Merged Pixmap and Image class. Old Pixmap removed, use Image.
+# Version 4.0.1 10/08/2009
+#     * Modified the autoflush on GraphWin to default to True
+#     * Autoflush check on close, setBackground
+#     * Fixed getMouse to flush pending clicks at entry
+# Version 4.0 08/2009
+#     * Reverted to non-threaded version. The advantages (robustness,
+#         efficiency, ability to use with other Tk code, etc.) outweigh
+#         the disadvantage that interactive use with IDLE is slightly more
+#         cumbersome.
+#     * Modified to run in either Python 2.x or 3.x (same file).
+#     * Added Image.getPixmap()
+#     * Added update() -- stand alone function to cause any pending
+#           graphics changes to display.
+#
+# Version 3.4 10/16/07
+#     Fixed GraphicsError to avoid "exploded" error messages.
+# Version 3.3 8/8/06
+#     Added checkMouse method to GraphWin
+# Version 3.2.3
+#     Fixed error in Polygon init spotted by Andrew Harrington
+#     Fixed improper threading in Image constructor
+# Version 3.2.2 5/30/05
+#     Cleaned up handling of exceptions in Tk thread. The graphics package
+#     now raises an exception if attempt is made to communicate with
+#     a dead Tk thread.
+# Version 3.2.1 5/22/05
+#     Added shutdown function for tk thread to eliminate race-condition
+#        error "chatter" when main thread terminates
+#     Renamed various private globals with _
+# Version 3.2 5/4/05
+#     Added Pixmap object for simple image manipulation.
+# Version 3.1 4/13/05
+#     Improved the Tk thread communication so that most Tk calls
+#        do not have to wait for synchonization with the Tk thread.
+#        (see _tkCall and _tkExec)
+# Version 3.0 12/30/04
+#     Implemented Tk event loop in separate thread. Should now work
+#        interactively with IDLE. Undocumented autoflush feature is
+#        no longer necessary. Its default is now False (off). It may
+#        be removed in a future version.
+#     Better handling of errors regarding operations on windows that
+#       have been closed.
+#     Addition of an isClosed method to GraphWindow class.
+
+# Version 2.2 8/26/04
+#     Fixed cloning bug reported by Joseph Oldham.
+#     Now implements deep copy of config info.
+# Version 2.1 1/15/04
+#     Added autoflush option to GraphWin. When True (default) updates on
+#        the window are done after each action. This makes some graphics
+#        intensive programs sluggish. Turning off autoflush causes updates
+#        to happen during idle periods or when flush is called.
+# Version 2.0
+#     Updated Documentation
+#     Made Polygon accept a list of Points in constructor
+#     Made all drawing functions call TK update for easier animations
+#          and to make the overall package work better with
+#          Python 2.3 and IDLE 1.0 under Windows (still some issues).
+#     Removed vestigial turtle graphics.
+#     Added ability to configure font for Entry objects (analogous to Text)
+#     Added setTextColor for Text as an alias of setFill
+#     Changed to class-style exceptions
+#     Fixed cloning of Text objects
+
+# Version 1.6
+#     Fixed Entry so StringVar uses _root as master, solves weird
+#            interaction with shell in Idle
+#     Fixed bug in setCoords. X and Y coordinates can increase in
+#           "non-intuitive" direction.
+#     Tweaked wm_protocol so window is not resizable and kill box closes.
+
+# Version 1.5
+#     Fixed bug in Entry. Can now define entry before creating a
+#     GraphWin. All GraphWins are now toplevel windows and share
+#     a fixed root (called _root).
+
+# Version 1.4
+#     Fixed Garbage collection of Tkinter images bug.
+#     Added ability to set text atttributes.
+#     Added Entry boxes.
+
+</span><span style="color: blue; font-weight: bold">import </span>time<span style="font-weight: bold">, </span>os<span style="font-weight: bold">, </span>sys
+
+<span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:  </span><span style="color: green; font-style: italic"># import as appropriate for 2.x vs. 3.x
+   </span><span style="color: blue; font-weight: bold">import </span>tkinter as tk
+<span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+   </span><span style="color: blue; font-weight: bold">import </span>Tkinter as tk
+
+
+<span style="color: green; font-style: italic">##########################################################################
+# Module Exceptions
+
+</span><span style="color: blue; font-weight: bold">class </span>GraphicsError<span style="font-weight: bold">(</span>Exception<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Generic error class for graphics module exceptions."""
+    </span><span style="color: blue; font-weight: bold">pass
+
+</span>OBJ_ALREADY_DRAWN <span style="font-weight: bold">= </span><span style="color: red">"Object currently drawn"
+</span>UNSUPPORTED_METHOD <span style="font-weight: bold">= </span><span style="color: red">"Object doesn't support operation"
+</span>BAD_OPTION <span style="font-weight: bold">= </span><span style="color: red">"Illegal option value"
+</span>DEAD_THREAD <span style="font-weight: bold">= </span><span style="color: red">"Graphics thread quit unexpectedly"
+
+</span>_root <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>Tk<span style="font-weight: bold">()
+</span>_root<span style="font-weight: bold">.</span>withdraw<span style="font-weight: bold">()
+
+</span><span style="color: blue; font-weight: bold">def </span>update<span style="font-weight: bold">():
+    </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+</span><span style="color: green; font-style: italic">############################################################################
+# Graphics classes start here
+        
+</span><span style="color: blue; font-weight: bold">class </span>GraphWin<span style="font-weight: bold">(</span>tk<span style="font-weight: bold">.</span>Canvas<span style="font-weight: bold">):
+
+    </span><span style="color: darkred">"""A GraphWin is a toplevel window for displaying graphics."""
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>title<span style="font-weight: bold">=</span><span style="color: red">"Graphics Window"</span><span style="font-weight: bold">,
+                 </span>width<span style="font-weight: bold">=</span><span style="color: red">200</span><span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span><span style="color: red">200</span><span style="font-weight: bold">, </span>autoflush<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">):
+        </span>master <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>Toplevel<span style="font-weight: bold">(</span>_root<span style="font-weight: bold">)
+        </span>master<span style="font-weight: bold">.</span>protocol<span style="font-weight: bold">(</span><span style="color: red">"WM_DELETE_WINDOW"</span><span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>close<span style="font-weight: bold">)
+        </span>tk<span style="font-weight: bold">.</span>Canvas<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>master<span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span>height<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>master<span style="font-weight: bold">.</span>title<span style="font-weight: bold">(</span>title<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>pack<span style="font-weight: bold">()
+        </span>master<span style="font-weight: bold">.</span>resizable<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">,</span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>foreground <span style="font-weight: bold">= </span><span style="color: red">"black"
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>items <span style="font-weight: bold">= []
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>bind<span style="font-weight: bold">(</span><span style="color: red">"&lt;Button-1&gt;"</span><span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_onClick<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>height <span style="font-weight: bold">= </span>height
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>width <span style="font-weight: bold">= </span>width
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>autoflush <span style="font-weight: bold">= </span>autoflush
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>_mouseCallback <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>trans <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>closed <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+        </span>master<span style="font-weight: bold">.</span>lift<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">if </span>autoflush<span style="font-weight: bold">: </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+     
+    </span><span style="color: blue; font-weight: bold">def </span>__checkOpen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>closed<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span><span style="color: red">"window is closed"</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setBackground<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set background color of the window"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__checkOpen<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__autoflush<span style="font-weight: bold">()
+        
+    </span><span style="color: blue; font-weight: bold">def </span>setCoords<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x1<span style="font-weight: bold">, </span>y1<span style="font-weight: bold">, </span>x2<span style="font-weight: bold">, </span>y2<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set coordinates of window to run from (x1,y1) in the
+        lower-left corner to (x2,y2) in the upper-right corner."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>trans <span style="font-weight: bold">= </span>Transform<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>height<span style="font-weight: bold">, </span>x1<span style="font-weight: bold">, </span>y1<span style="font-weight: bold">, </span>x2<span style="font-weight: bold">, </span>y2<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>close<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Close the window"""
+
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>closed<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">return
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>closed <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>master<span style="font-weight: bold">.</span>destroy<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__autoflush<span style="font-weight: bold">()
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>isClosed<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>closed
+
+
+    <span style="color: blue; font-weight: bold">def </span>isOpen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>closed
+
+
+    <span style="color: blue; font-weight: bold">def </span>__autoflush<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>autoflush<span style="font-weight: bold">:
+            </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+    
+    </span><span style="color: blue; font-weight: bold">def </span>plot<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">"black"</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set pixel (x,y) to the given color"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__checkOpen<span style="font-weight: bold">()
+        </span>xs<span style="font-weight: bold">,</span>ys <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>create_line<span style="font-weight: bold">(</span>xs<span style="font-weight: bold">,</span>ys<span style="font-weight: bold">,</span>xs<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">,</span>ys<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__autoflush<span style="font-weight: bold">()
+        
+    </span><span style="color: blue; font-weight: bold">def </span>plotPixel<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">"black"</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set pixel raw (independent of window coordinates) pixel
+        (x,y) to color"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__checkOpen<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>create_line<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">,</span>x<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">,</span>y<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__autoflush<span style="font-weight: bold">()
+      
+    </span><span style="color: blue; font-weight: bold">def </span>flush<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Update drawing to the window"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__checkOpen<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>update_idletasks<span style="font-weight: bold">()
+        
+    </span><span style="color: blue; font-weight: bold">def </span>getMouse<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Wait for mouse click and return Point object representing
+        the click"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>update<span style="font-weight: bold">()      </span><span style="color: green; font-style: italic"># flush any prior clicks
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">= </span><span style="color: blue">None
+        </span><span style="color: blue; font-weight: bold">while </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">== </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">or </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">== </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+            </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">(): </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span><span style="color: red">"getMouse in closed window"</span><span style="font-weight: bold">)
+            </span>time<span style="font-weight: bold">.</span>sleep<span style="font-weight: bold">(.</span><span style="color: red">1</span><span style="font-weight: bold">) </span><span style="color: green; font-style: italic"># give up thread
+        </span>x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>toWorld<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseY<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">= </span><span style="color: blue">None
+        </span><span style="color: blue; font-weight: bold">return </span>Point<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>checkMouse<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return last mouse click or None if mouse has
+        not been clicked since last call"""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">():
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span><span style="color: red">"checkMouse in closed window"</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">!= </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">and </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">!= </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>toWorld<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseY<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">= </span><span style="color: blue">None
+            self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">= </span><span style="color: blue">None
+            </span><span style="color: blue; font-weight: bold">return </span>Point<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">None
+            
+    </span><span style="color: blue; font-weight: bold">def </span>getHeight<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return the height of the window"""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>height
+        
+    <span style="color: blue; font-weight: bold">def </span>getWidth<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return the width of the window"""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width
+    
+    <span style="color: blue; font-weight: bold">def </span>toScreen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span>trans <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>trans
+        <span style="color: blue; font-weight: bold">if </span>trans<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>trans<span style="font-weight: bold">.</span>screen<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>x<span style="font-weight: bold">,</span>y
+                      
+    <span style="color: blue; font-weight: bold">def </span>toWorld<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span>trans <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>trans
+        <span style="color: blue; font-weight: bold">if </span>trans<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>trans<span style="font-weight: bold">.</span>world<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>x<span style="font-weight: bold">,</span>y
+        
+    <span style="color: blue; font-weight: bold">def </span>setMouseHandler<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>func<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_mouseCallback <span style="font-weight: bold">= </span>func
+        
+    <span style="color: blue; font-weight: bold">def </span>_onClick<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>e<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseX <span style="font-weight: bold">= </span>e<span style="font-weight: bold">.</span>x
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>mouseY <span style="font-weight: bold">= </span>e<span style="font-weight: bold">.</span>y
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_mouseCallback<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_mouseCallback<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">(</span>e<span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span>e<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)) 
+                      
+</span><span style="color: blue; font-weight: bold">class </span>Transform<span style="font-weight: bold">:
+
+    </span><span style="color: darkred">"""Internal class for 2-D coordinate transformations"""
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>w<span style="font-weight: bold">, </span>h<span style="font-weight: bold">, </span>xlow<span style="font-weight: bold">, </span>ylow<span style="font-weight: bold">, </span>xhigh<span style="font-weight: bold">, </span>yhigh<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># w, h are width and height of window
+        # (xlow,ylow) coordinates of lower-left [raw (0,h-1)]
+        # (xhigh,yhigh) coordinates of upper-right [raw (w-1,0)]
+        </span>xspan <span style="font-weight: bold">= (</span>xhigh<span style="font-weight: bold">-</span>xlow<span style="font-weight: bold">)
+        </span>yspan <span style="font-weight: bold">= (</span>yhigh<span style="font-weight: bold">-</span>ylow<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>xbase <span style="font-weight: bold">= </span>xlow
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ybase <span style="font-weight: bold">= </span>yhigh
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>xscale <span style="font-weight: bold">= </span>xspan<span style="font-weight: bold">/</span>float<span style="font-weight: bold">(</span>w<span style="font-weight: bold">-</span><span style="color: red">1</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>yscale <span style="font-weight: bold">= </span>yspan<span style="font-weight: bold">/</span>float<span style="font-weight: bold">(</span>h<span style="font-weight: bold">-</span><span style="color: red">1</span><span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>screen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">,</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Returns x,y in screen (actually window) coordinates
+        </span>xs <span style="font-weight: bold">= (</span>x<span style="font-weight: bold">-</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>xbase<span style="font-weight: bold">) / </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>xscale
+        ys <span style="font-weight: bold">= (</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ybase<span style="font-weight: bold">-</span>y<span style="font-weight: bold">) / </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>yscale
+        <span style="color: blue; font-weight: bold">return </span>int<span style="font-weight: bold">(</span>xs<span style="font-weight: bold">+</span><span style="color: red">0.5</span><span style="font-weight: bold">),</span>int<span style="font-weight: bold">(</span>ys<span style="font-weight: bold">+</span><span style="color: red">0.5</span><span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>world<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">,</span>xs<span style="font-weight: bold">,</span>ys<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Returns xs,ys in world coordinates
+        </span>x <span style="font-weight: bold">= </span>xs<span style="font-weight: bold">*</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>xscale <span style="font-weight: bold">+ </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>xbase
+        y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ybase <span style="font-weight: bold">- </span>ys<span style="font-weight: bold">*</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>yscale
+        <span style="color: blue; font-weight: bold">return </span>x<span style="font-weight: bold">,</span>y
+
+
+<span style="color: green; font-style: italic"># Default values for various item configuration options. Only a subset of
+#   keys may be present in the configuration dictionary for a given item
+</span>DEFAULT_CONFIG <span style="font-weight: bold">= {</span><span style="color: red">"fill"</span><span style="font-weight: bold">:</span><span style="color: red">""</span><span style="font-weight: bold">,
+      </span><span style="color: red">"outline"</span><span style="font-weight: bold">:</span><span style="color: red">"black"</span><span style="font-weight: bold">,
+      </span><span style="color: red">"width"</span><span style="font-weight: bold">:</span><span style="color: red">"1"</span><span style="font-weight: bold">,
+      </span><span style="color: red">"arrow"</span><span style="font-weight: bold">:</span><span style="color: red">"none"</span><span style="font-weight: bold">,
+      </span><span style="color: red">"text"</span><span style="font-weight: bold">:</span><span style="color: red">""</span><span style="font-weight: bold">,
+      </span><span style="color: red">"justify"</span><span style="font-weight: bold">:</span><span style="color: red">"center"</span><span style="font-weight: bold">,
+                  </span><span style="color: red">"font"</span><span style="font-weight: bold">: (</span><span style="color: red">"helvetica"</span><span style="font-weight: bold">, </span><span style="color: red">12</span><span style="font-weight: bold">, </span><span style="color: red">"normal"</span><span style="font-weight: bold">)}
+
+</span><span style="color: blue; font-weight: bold">class </span>GraphicsObject<span style="font-weight: bold">:
+
+    </span><span style="color: darkred">"""Generic base class for all of the drawable objects"""
+    </span><span style="color: green; font-style: italic"># A subclass of GraphicsObject should override _draw and
+    #   and _move methods.
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># options is a list of strings indicating which options are
+        # legal for this object.
+        
+        # When an object is drawn, canvas is set to the GraphWin(canvas)
+        #    object where it is drawn and id is the TK identifier of the
+        #    drawn shape.
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>id <span style="font-weight: bold">= </span><span style="color: blue">None
+
+        </span><span style="color: green; font-style: italic"># config is the dictionary of configuration options for the widget.
+        </span>config <span style="font-weight: bold">= {}
+        </span><span style="color: blue; font-weight: bold">for </span>option <span style="color: blue; font-weight: bold">in </span>options<span style="font-weight: bold">:
+            </span>config<span style="font-weight: bold">[</span>option<span style="font-weight: bold">] = </span>DEFAULT_CONFIG<span style="font-weight: bold">[</span>option<span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span>config
+        
+    <span style="color: blue; font-weight: bold">def </span>setFill<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set interior color to color"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"fill"</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>setOutline<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set outline color to color"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"outline"</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>setWidth<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>width<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Set line weight to width"""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"width"</span><span style="font-weight: bold">, </span>width<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>graphwin<span style="font-weight: bold">):
+
+        </span><span style="color: darkred">"""Draw the object in graphwin, which should be a GraphWin
+        object.  A GraphicsObject may only be drawn into one
+        window. Raises an error if attempt made to draw an object that
+        is already visible."""
+
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="color: blue; font-weight: bold">and not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">(): </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>OBJ_ALREADY_DRAWN<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>graphwin<span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">(): </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span><span style="color: red">"Can't draw to closed window"</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="font-weight: bold">= </span>graphwin
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>id <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw<span style="font-weight: bold">(</span>graphwin<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>graphwin<span style="font-weight: bold">.</span>autoflush<span style="font-weight: bold">:
+            </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+            
+    </span><span style="color: blue; font-weight: bold">def </span>undraw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+
+        </span><span style="color: darkred">"""Undraw the object (i.e. hide it). Returns silently if the
+        object is not currently drawn."""
+        
+        </span><span style="color: blue; font-weight: bold">if not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">return
+        if not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">():
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>delete<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>id<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>autoflush<span style="font-weight: bold">:
+                </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>id <span style="font-weight: bold">= </span><span style="color: blue">None
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+
+        </span><span style="color: darkred">"""move object dx units in x direction and dy units in y
+        direction"""
+        
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_move<span style="font-weight: bold">(</span>dx<span style="font-weight: bold">,</span>dy<span style="font-weight: bold">)
+        </span>canvas <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas
+        <span style="color: blue; font-weight: bold">if </span>canvas <span style="color: blue; font-weight: bold">and not </span>canvas<span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">():
+            </span>trans <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>trans
+            <span style="color: blue; font-weight: bold">if </span>trans<span style="font-weight: bold">:
+                </span>x <span style="font-weight: bold">= </span>dx<span style="font-weight: bold">/ </span>trans<span style="font-weight: bold">.</span>xscale 
+                y <span style="font-weight: bold">= -</span>dy <span style="font-weight: bold">/ </span>trans<span style="font-weight: bold">.</span>yscale
+            <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+                </span>x <span style="font-weight: bold">= </span>dx
+                y <span style="font-weight: bold">= </span>dy
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>id<span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span>canvas<span style="font-weight: bold">.</span>autoflush<span style="font-weight: bold">:
+                </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+           
+    </span><span style="color: blue; font-weight: bold">def </span>_reconfig<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>option<span style="font-weight: bold">, </span>setting<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Internal method for changing configuration of the object
+        # Raises an error if the option does not exist in the config
+        #    dictionary for this object
+        </span><span style="color: blue; font-weight: bold">if </span>option <span style="color: blue; font-weight: bold">not in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>UNSUPPORTED_METHOD<span style="font-weight: bold">)
+        </span>options <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config
+        options<span style="font-weight: bold">[</span>option<span style="font-weight: bold">] = </span>setting
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="color: blue; font-weight: bold">and not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>isClosed<span style="font-weight: bold">():
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>itemconfig<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>id<span style="font-weight: bold">, </span>options<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>autoflush<span style="font-weight: bold">:
+                </span>_root<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""draws appropriate figure on canvas with options provided
+        Returns Tk id of item drawn"""
+        </span><span style="color: blue; font-weight: bold">pass </span><span style="color: green; font-style: italic"># must override in subclass
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""updates internal state of object to move it dx,dy units"""
+        </span><span style="color: blue; font-weight: bold">pass </span><span style="color: green; font-style: italic"># must override in subclass
+
+         
+</span><span style="color: blue; font-weight: bold">class </span>Point<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, [</span><span style="color: red">"outline"</span><span style="font-weight: bold">, </span><span style="color: red">"fill"</span><span style="font-weight: bold">])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setOutline
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span>x
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span>y
+        
+    <span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_rectangle<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">,</span>x<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">,</span>y<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">,</span>options<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">+ </span>dx
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">+ </span>dy
+        
+    <span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+                
+    <span style="color: blue; font-weight: bold">def </span>getX<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">): </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x
+    <span style="color: blue; font-weight: bold">def </span>getY<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">): </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y
+
+<span style="color: blue; font-weight: bold">class </span>_BBox<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+    </span><span style="color: green; font-style: italic"># Internal base class for objects represented by bounding box
+    # (opposite corners) Line segment is a degenerate case.
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">, </span>options<span style="font-weight: bold">=[</span><span style="color: red">"outline"</span><span style="font-weight: bold">,</span><span style="color: red">"width"</span><span style="font-weight: bold">,</span><span style="color: red">"fill"</span><span style="font-weight: bold">]):
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>options<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1 <span style="font-weight: bold">= </span>p1<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2 <span style="font-weight: bold">= </span>p2<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">.</span>x <span style="font-weight: bold">+ </span>dx
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">.</span>y <span style="font-weight: bold">+ </span>dy
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">.</span>x <span style="font-weight: bold">+ </span>dx
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">.</span>y  <span style="font-weight: bold">+ </span>dy
+                
+    <span style="color: blue; font-weight: bold">def </span>getP1<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">): </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>getP2<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">): </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+    
+    </span><span style="color: blue; font-weight: bold">def </span>getCenter<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>p1 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1
+        p2 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2
+        <span style="color: blue; font-weight: bold">return </span>Point<span style="font-weight: bold">((</span>p1<span style="font-weight: bold">.</span>x<span style="font-weight: bold">+</span>p2<span style="font-weight: bold">.</span>x<span style="font-weight: bold">)/</span><span style="color: red">2.0</span><span style="font-weight: bold">, (</span>p1<span style="font-weight: bold">.</span>y<span style="font-weight: bold">+</span>p2<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)/</span><span style="color: red">2.0</span><span style="font-weight: bold">)
+    
+</span><span style="color: blue; font-weight: bold">class </span>Rectangle<span style="font-weight: bold">(</span>_BBox<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">):
+        </span>_BBox<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">)
+    
+    </span><span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p1 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1
+        p2 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2
+        x1<span style="font-weight: bold">,</span>y1 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p1<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p1<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span>x2<span style="font-weight: bold">,</span>y2 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p2<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p2<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_rectangle<span style="font-weight: bold">(</span>x1<span style="font-weight: bold">,</span>y1<span style="font-weight: bold">,</span>x2<span style="font-weight: bold">,</span>y2<span style="font-weight: bold">,</span>options<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Rectangle<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+        
+<span style="color: blue; font-weight: bold">class </span>Oval<span style="font-weight: bold">(</span>_BBox<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">):
+        </span>_BBox<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Oval<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+   
+    <span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p1 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1
+        p2 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2
+        x1<span style="font-weight: bold">,</span>y1 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p1<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p1<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span>x2<span style="font-weight: bold">,</span>y2 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p2<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p2<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_oval<span style="font-weight: bold">(</span>x1<span style="font-weight: bold">,</span>y1<span style="font-weight: bold">,</span>x2<span style="font-weight: bold">,</span>y2<span style="font-weight: bold">,</span>options<span style="font-weight: bold">)
+    
+</span><span style="color: blue; font-weight: bold">class </span>Circle<span style="font-weight: bold">(</span>Oval<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>center<span style="font-weight: bold">, </span>radius<span style="font-weight: bold">):
+        </span>p1 <span style="font-weight: bold">= </span>Point<span style="font-weight: bold">(</span>center<span style="font-weight: bold">.</span>x<span style="font-weight: bold">-</span>radius<span style="font-weight: bold">, </span>center<span style="font-weight: bold">.</span>y<span style="font-weight: bold">-</span>radius<span style="font-weight: bold">)
+        </span>p2 <span style="font-weight: bold">= </span>Point<span style="font-weight: bold">(</span>center<span style="font-weight: bold">.</span>x<span style="font-weight: bold">+</span>radius<span style="font-weight: bold">, </span>center<span style="font-weight: bold">.</span>y<span style="font-weight: bold">+</span>radius<span style="font-weight: bold">)
+        </span>Oval<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>radius <span style="font-weight: bold">= </span>radius
+        
+    <span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Circle<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>getCenter<span style="font-weight: bold">(), </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>radius<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+        
+    <span style="color: blue; font-weight: bold">def </span>getRadius<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>radius
+              
+<span style="color: blue; font-weight: bold">class </span>Line<span style="font-weight: bold">(</span>_BBox<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">):
+        </span>_BBox<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p1<span style="font-weight: bold">, </span>p2<span style="font-weight: bold">, [</span><span style="color: red">"arrow"</span><span style="font-weight: bold">,</span><span style="color: red">"fill"</span><span style="font-weight: bold">,</span><span style="color: red">"width"</span><span style="font-weight: bold">])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span>DEFAULT_CONFIG<span style="font-weight: bold">[</span><span style="color: red">'outline'</span><span style="font-weight: bold">])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setOutline <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill
+   
+    <span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Line<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+  
+    <span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p1 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p1
+        p2 <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p2
+        x1<span style="font-weight: bold">,</span>y1 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p1<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p1<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span>x2<span style="font-weight: bold">,</span>y2 <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p2<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p2<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_line<span style="font-weight: bold">(</span>x1<span style="font-weight: bold">,</span>y1<span style="font-weight: bold">,</span>x2<span style="font-weight: bold">,</span>y2<span style="font-weight: bold">,</span>options<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>setArrow<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>option<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if not </span>option <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">"first"</span><span style="font-weight: bold">,</span><span style="color: red">"last"</span><span style="font-weight: bold">,</span><span style="color: red">"both"</span><span style="font-weight: bold">,</span><span style="color: red">"none"</span><span style="font-weight: bold">]:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"arrow"</span><span style="font-weight: bold">, </span>option<span style="font-weight: bold">)
+        
+
+</span><span style="color: blue; font-weight: bold">class </span>Polygon<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, *</span>points<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># if points passed as a list, extract it
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>points<span style="font-weight: bold">) == </span><span style="color: red">1 </span><span style="color: blue; font-weight: bold">and </span>type<span style="font-weight: bold">(</span>points<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]) == </span>type<span style="font-weight: bold">([]):
+            </span>points <span style="font-weight: bold">= </span>points<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>points <span style="font-weight: bold">= </span>list<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">, </span>points<span style="font-weight: bold">))
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, [</span><span style="color: red">"outline"</span><span style="font-weight: bold">, </span><span style="color: red">"width"</span><span style="font-weight: bold">, </span><span style="color: red">"fill"</span><span style="font-weight: bold">])
+        
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Polygon<span style="font-weight: bold">(*</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>points<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+
+    <span style="color: blue; font-weight: bold">def </span>getPoints<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>list<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>points<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>points<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span>dx<span style="font-weight: bold">,</span>dy<span style="font-weight: bold">)
+   
+    </span><span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>args <span style="font-weight: bold">= [</span>canvas<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>points<span style="font-weight: bold">:
+            </span>x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+            </span>args<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>x<span style="font-weight: bold">)
+            </span>args<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>y<span style="font-weight: bold">)
+        </span>args<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>options<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>GraphWin<span style="font-weight: bold">.</span>create_polygon<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">) 
+
+</span><span style="color: blue; font-weight: bold">class </span>Text<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p<span style="font-weight: bold">, </span>text<span style="font-weight: bold">):
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, [</span><span style="color: red">"justify"</span><span style="font-weight: bold">,</span><span style="color: red">"fill"</span><span style="font-weight: bold">,</span><span style="color: red">"text"</span><span style="font-weight: bold">,</span><span style="color: red">"font"</span><span style="font-weight: bold">])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setText<span style="font-weight: bold">(</span>text<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor <span style="font-weight: bold">= </span>p<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span>DEFAULT_CONFIG<span style="font-weight: bold">[</span><span style="color: red">'outline'</span><span style="font-weight: bold">])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setOutline <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill
+        
+    <span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor
+        x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_text<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">,</span>options<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span>dx<span style="font-weight: bold">,</span>dy<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">[</span><span style="color: red">'text'</span><span style="font-weight: bold">])
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+
+    <span style="color: blue; font-weight: bold">def </span>setText<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">,</span>text<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"text"</span><span style="font-weight: bold">, </span>text<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>getText<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">[</span><span style="color: red">"text"</span><span style="font-weight: bold">]
+            
+    </span><span style="color: blue; font-weight: bold">def </span>getAnchor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>setFace<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>face<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>face <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">'helvetica'</span><span style="font-weight: bold">,</span><span style="color: red">'arial'</span><span style="font-weight: bold">,</span><span style="color: red">'courier'</span><span style="font-weight: bold">,</span><span style="color: red">'times roman'</span><span style="font-weight: bold">]:
+            </span>f<span style="font-weight: bold">,</span>s<span style="font-weight: bold">,</span>b <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">[</span><span style="color: red">'font'</span><span style="font-weight: bold">]
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"font"</span><span style="font-weight: bold">,(</span>face<span style="font-weight: bold">,</span>s<span style="font-weight: bold">,</span>b<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setSize<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>size<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: red">5 </span><span style="font-weight: bold">&lt;= </span>size <span style="font-weight: bold">&lt;= </span><span style="color: red">36</span><span style="font-weight: bold">:
+            </span>f<span style="font-weight: bold">,</span>s<span style="font-weight: bold">,</span>b <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">[</span><span style="color: red">'font'</span><span style="font-weight: bold">]
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"font"</span><span style="font-weight: bold">, (</span>f<span style="font-weight: bold">,</span>size<span style="font-weight: bold">,</span>b<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setStyle<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>style<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>style <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">'bold'</span><span style="font-weight: bold">,</span><span style="color: red">'normal'</span><span style="font-weight: bold">,</span><span style="color: red">'italic'</span><span style="font-weight: bold">, </span><span style="color: red">'bold italic'</span><span style="font-weight: bold">]:
+            </span>f<span style="font-weight: bold">,</span>s<span style="font-weight: bold">,</span>b <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">[</span><span style="color: red">'font'</span><span style="font-weight: bold">]
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_reconfig<span style="font-weight: bold">(</span><span style="color: red">"font"</span><span style="font-weight: bold">, (</span>f<span style="font-weight: bold">,</span>s<span style="font-weight: bold">,</span>style<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setTextColor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span>color<span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Entry<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p<span style="font-weight: bold">, </span>width<span style="font-weight: bold">):
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, [])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor <span style="font-weight: bold">= </span>p<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        </span><span style="color: green; font-style: italic">#print self.anchor
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width <span style="font-weight: bold">= </span>width
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>StringVar<span style="font-weight: bold">(</span>_root<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>text<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span><span style="color: red">""</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>fill <span style="font-weight: bold">= </span><span style="color: red">"gray"
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color <span style="font-weight: bold">= </span><span style="color: red">"black"
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>font <span style="font-weight: bold">= </span>DEFAULT_CONFIG<span style="font-weight: bold">[</span><span style="color: red">'font'</span><span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor
+        x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span>frm <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>Frame<span style="font-weight: bold">(</span>canvas<span style="font-weight: bold">.</span>master<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>Entry<span style="font-weight: bold">(</span>frm<span style="font-weight: bold">,
+                              </span>width<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width<span style="font-weight: bold">,
+                              </span>textvariable<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>text<span style="font-weight: bold">,
+                              </span>bg <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>fill<span style="font-weight: bold">,
+                              </span>fg <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color<span style="font-weight: bold">,
+                              </span>font<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>font<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">.</span>pack<span style="font-weight: bold">()
+        </span><span style="color: green; font-style: italic">#self.setFill(self.fill)
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_window<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">,</span>window<span style="font-weight: bold">=</span>frm<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>getText<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>text<span style="font-weight: bold">.</span>get<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span>dx<span style="font-weight: bold">,</span>dy<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>getAnchor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Entry<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width<span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span>other<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>StringVar<span style="font-weight: bold">()
+        </span>other<span style="font-weight: bold">.</span>text<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>text<span style="font-weight: bold">.</span>get<span style="font-weight: bold">())
+        </span>other<span style="font-weight: bold">.</span>fill <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>fill
+        <span style="color: blue; font-weight: bold">return </span>other
+
+    <span style="color: blue; font-weight: bold">def </span>setText<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>t<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>text<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>t<span style="font-weight: bold">)
+
+            
+    </span><span style="color: blue; font-weight: bold">def </span>setFill<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>fill <span style="font-weight: bold">= </span>color
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">.</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+
+            
+    </span><span style="color: blue; font-weight: bold">def </span>_setFontComponent<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>which<span style="font-weight: bold">, </span>value<span style="font-weight: bold">):
+        </span>font <span style="font-weight: bold">= </span>list<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>font<span style="font-weight: bold">)
+        </span>font<span style="font-weight: bold">[</span>which<span style="font-weight: bold">] = </span>value
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>font <span style="font-weight: bold">= </span>tuple<span style="font-weight: bold">(</span>font<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">.</span>config<span style="font-weight: bold">(</span>font<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>font<span style="font-weight: bold">)
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>setFace<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>face<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>face <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">'helvetica'</span><span style="font-weight: bold">,</span><span style="color: red">'arial'</span><span style="font-weight: bold">,</span><span style="color: red">'courier'</span><span style="font-weight: bold">,</span><span style="color: red">'times roman'</span><span style="font-weight: bold">]:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_setFontComponent<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span>face<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setSize<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>size<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: red">5 </span><span style="font-weight: bold">&lt;= </span>size <span style="font-weight: bold">&lt;= </span><span style="color: red">36</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_setFontComponent<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">,</span>size<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setStyle<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>style<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>style <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">'bold'</span><span style="font-weight: bold">,</span><span style="color: red">'normal'</span><span style="font-weight: bold">,</span><span style="color: red">'italic'</span><span style="font-weight: bold">, </span><span style="color: red">'bold italic'</span><span style="font-weight: bold">]:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_setFontComponent<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">,</span>style<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>GraphicsError<span style="font-weight: bold">(</span>BAD_OPTION<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>setTextColor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color<span style="font-weight: bold">=</span>color
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entry<span style="font-weight: bold">.</span>config<span style="font-weight: bold">(</span>fg<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Image<span style="font-weight: bold">(</span>GraphicsObject<span style="font-weight: bold">):
+
+    </span>idCount <span style="font-weight: bold">= </span><span style="color: red">0
+    </span>imageCache <span style="font-weight: bold">= {} </span><span style="color: green; font-style: italic"># tk photoimages go here to avoid GC while drawn 
+    
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>p<span style="font-weight: bold">, *</span>pixmap<span style="font-weight: bold">):
+        </span>GraphicsObject<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, [])
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor <span style="font-weight: bold">= </span>p<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>imageId <span style="font-weight: bold">= </span>Image<span style="font-weight: bold">.</span>idCount
+        Image<span style="font-weight: bold">.</span>idCount <span style="font-weight: bold">= </span>Image<span style="font-weight: bold">.</span>idCount <span style="font-weight: bold">+ </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>pixmap<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># file name provided
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span>pixmap<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">], </span>master<span style="font-weight: bold">=</span>_root<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># width and height provided
+            </span>width<span style="font-weight: bold">, </span>height <span style="font-weight: bold">= </span>pixmap
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>img <span style="font-weight: bold">= </span>tk<span style="font-weight: bold">.</span>PhotoImage<span style="font-weight: bold">(</span>master<span style="font-weight: bold">=</span>_root<span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span>height<span style="font-weight: bold">)
+                
+    </span><span style="color: blue; font-weight: bold">def </span>_draw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>canvas<span style="font-weight: bold">, </span>options<span style="font-weight: bold">):
+        </span>p <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor
+        x<span style="font-weight: bold">,</span>y <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>toScreen<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>x<span style="font-weight: bold">,</span>p<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>imageCache<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>imageId<span style="font-weight: bold">] = </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img <span style="color: green; font-style: italic"># save a reference  
+        </span><span style="color: blue; font-weight: bold">return </span>canvas<span style="font-weight: bold">.</span>create_image<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">,</span>image<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">)
+    
+    </span><span style="color: blue; font-weight: bold">def </span>_move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>dx<span style="font-weight: bold">, </span>dy<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span>dx<span style="font-weight: bold">,</span>dy<span style="font-weight: bold">)
+        
+    </span><span style="color: blue; font-weight: bold">def </span>undraw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">del </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>imageCache<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>imageId<span style="font-weight: bold">]  </span><span style="color: green; font-style: italic"># allow gc of tk photoimage
+        </span><span style="color: blue; font-weight: bold">except </span>KeyError<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">pass
+        </span>GraphicsObject<span style="font-weight: bold">.</span>undraw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>getAnchor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        
+    </span><span style="color: blue; font-weight: bold">def </span>clone<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>other <span style="font-weight: bold">= </span>Image<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">,</span><span style="color: red">0</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span>other<span style="font-weight: bold">.</span>img <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span>other<span style="font-weight: bold">.</span>anchor <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>anchor<span style="font-weight: bold">.</span>clone<span style="font-weight: bold">()
+        </span>other<span style="font-weight: bold">.</span>config <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>other
+
+    <span style="color: blue; font-weight: bold">def </span>getWidth<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Returns the width of the image in pixels"""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>width<span style="font-weight: bold">() 
+
+    </span><span style="color: blue; font-weight: bold">def </span>getHeight<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Returns the height of the image in pixels"""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>height<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>getPixel<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Returns a list [r,g,b] with the RGB color values for pixel (x,y)
+        r,g,b are in range(256)
+
+        """
+        
+        </span>value <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>get<span style="font-weight: bold">(</span>x<span style="font-weight: bold">,</span>y<span style="font-weight: bold">) 
+        </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>value<span style="font-weight: bold">) ==  </span>type<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>value<span style="font-weight: bold">, </span>value<span style="font-weight: bold">, </span>value<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>list<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>int<span style="font-weight: bold">, </span>value<span style="font-weight: bold">.</span>split<span style="font-weight: bold">())) 
+
+    </span><span style="color: blue; font-weight: bold">def </span>setPixel<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>color<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Sets pixel (x,y) to the given color
+        
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>put<span style="font-weight: bold">(</span><span style="color: red">"{" </span><span style="font-weight: bold">+ </span>color <span style="font-weight: bold">+</span><span style="color: red">"}"</span><span style="font-weight: bold">, (</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">))
+        
+
+    </span><span style="color: blue; font-weight: bold">def </span>save<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>filename<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Saves the pixmap image to filename.
+        The format for the save image is determined from the filname extension.
+
+        """
+        
+        </span>path<span style="font-weight: bold">, </span>name <span style="font-weight: bold">= </span>os<span style="font-weight: bold">.</span>path<span style="font-weight: bold">.</span>split<span style="font-weight: bold">(</span>filename<span style="font-weight: bold">)
+        </span>ext <span style="font-weight: bold">= </span>name<span style="font-weight: bold">.</span>split<span style="font-weight: bold">(</span><span style="color: red">"."</span><span style="font-weight: bold">)[-</span><span style="color: red">1</span><span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>img<span style="font-weight: bold">.</span>write<span style="font-weight: bold">( </span>filename<span style="font-weight: bold">, </span>format<span style="font-weight: bold">=</span>ext<span style="font-weight: bold">)
+
+        
+</span><span style="color: blue; font-weight: bold">def </span>color_rgb<span style="font-weight: bold">(</span>r<span style="font-weight: bold">,</span>g<span style="font-weight: bold">,</span>b<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""r,g,b are intensities of red, green, and blue in range(256)
+    Returns color specifier string for the resulting color"""
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">"#%02x%02x%02x" </span><span style="font-weight: bold">% (</span>r<span style="font-weight: bold">,</span>g<span style="font-weight: bold">,</span>b<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>test<span style="font-weight: bold">():
+    </span>win <span style="font-weight: bold">= </span>GraphWin<span style="font-weight: bold">()
+    </span>win<span style="font-weight: bold">.</span>setCoords<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">,</span><span style="color: red">0</span><span style="font-weight: bold">,</span><span style="color: red">10</span><span style="font-weight: bold">,</span><span style="color: red">10</span><span style="font-weight: bold">)
+    </span>t <span style="font-weight: bold">= </span>Text<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">,</span><span style="color: red">5</span><span style="font-weight: bold">), </span><span style="color: red">"Centered Text"</span><span style="font-weight: bold">)
+    </span>t<span style="font-weight: bold">.</span>draw<span style="font-weight: bold">(</span>win<span style="font-weight: bold">)
+    </span>p <span style="font-weight: bold">= </span>Polygon<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">,</span><span style="color: red">1</span><span style="font-weight: bold">), </span>Point<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">,</span><span style="color: red">3</span><span style="font-weight: bold">), </span>Point<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">,</span><span style="color: red">7</span><span style="font-weight: bold">))
+    </span>p<span style="font-weight: bold">.</span>draw<span style="font-weight: bold">(</span>win<span style="font-weight: bold">)
+    </span>e <span style="font-weight: bold">= </span>Entry<span style="font-weight: bold">(</span>Point<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">,</span><span style="color: red">6</span><span style="font-weight: bold">), </span><span style="color: red">10</span><span style="font-weight: bold">)
+    </span>e<span style="font-weight: bold">.</span>draw<span style="font-weight: bold">(</span>win<span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>p<span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span><span style="color: red">"red"</span><span style="font-weight: bold">)
+    </span>p<span style="font-weight: bold">.</span>setOutline<span style="font-weight: bold">(</span><span style="color: red">"blue"</span><span style="font-weight: bold">)
+    </span>p<span style="font-weight: bold">.</span>setWidth<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">)
+    </span>s <span style="font-weight: bold">= </span><span style="color: red">""
+    </span><span style="color: blue; font-weight: bold">for </span>pt <span style="color: blue; font-weight: bold">in </span>p<span style="font-weight: bold">.</span>getPoints<span style="font-weight: bold">():
+        </span>s <span style="font-weight: bold">= </span>s <span style="font-weight: bold">+ </span><span style="color: red">"(%0.1f,%0.1f) " </span><span style="font-weight: bold">% (</span>pt<span style="font-weight: bold">.</span>getX<span style="font-weight: bold">(), </span>pt<span style="font-weight: bold">.</span>getY<span style="font-weight: bold">())
+    </span>t<span style="font-weight: bold">.</span>setText<span style="font-weight: bold">(</span>e<span style="font-weight: bold">.</span>getText<span style="font-weight: bold">())
+    </span>e<span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span><span style="color: red">"green"</span><span style="font-weight: bold">)
+    </span>e<span style="font-weight: bold">.</span>setText<span style="font-weight: bold">(</span><span style="color: red">"Spam!"</span><span style="font-weight: bold">)
+    </span>e<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">,</span><span style="color: red">0</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>p<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">,</span><span style="color: red">3</span><span style="font-weight: bold">)
+    </span>s <span style="font-weight: bold">= </span><span style="color: red">""
+    </span><span style="color: blue; font-weight: bold">for </span>pt <span style="color: blue; font-weight: bold">in </span>p<span style="font-weight: bold">.</span>getPoints<span style="font-weight: bold">():
+        </span>s <span style="font-weight: bold">= </span>s <span style="font-weight: bold">+ </span><span style="color: red">"(%0.1f,%0.1f) " </span><span style="font-weight: bold">% (</span>pt<span style="font-weight: bold">.</span>getX<span style="font-weight: bold">(), </span>pt<span style="font-weight: bold">.</span>getY<span style="font-weight: bold">())
+    </span>t<span style="font-weight: bold">.</span>setText<span style="font-weight: bold">(</span>s<span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>p<span style="font-weight: bold">.</span>undraw<span style="font-weight: bold">()
+    </span>e<span style="font-weight: bold">.</span>undraw<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setStyle<span style="font-weight: bold">(</span><span style="color: red">"bold"</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setStyle<span style="font-weight: bold">(</span><span style="color: red">"normal"</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setStyle<span style="font-weight: bold">(</span><span style="color: red">"italic"</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setStyle<span style="font-weight: bold">(</span><span style="color: red">"bold italic"</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setSize<span style="font-weight: bold">(</span><span style="color: red">14</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>t<span style="font-weight: bold">.</span>setFace<span style="font-weight: bold">(</span><span style="color: red">"arial"</span><span style="font-weight: bold">)
+    </span>t<span style="font-weight: bold">.</span>setSize<span style="font-weight: bold">(</span><span style="color: red">20</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>getMouse<span style="font-weight: bold">()
+    </span>win<span style="font-weight: bold">.</span>close<span style="font-weight: bold">()
+
+</span><span style="color: blue; font-weight: bold">if </span>__name__ <span style="font-weight: bold">== </span><span style="color: red">"__main__"</span><span style="font-weight: bold">:
+    </span>test<span style="font-weight: bold">()
+</span>
+</pre>
+</body>
+</html>

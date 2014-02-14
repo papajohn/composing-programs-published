@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.3 Sequences</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="sequences">
+<h2>2.3   Sequences</h2>
+<p>A sequence is an ordered collection of data values.  Unlike a pair, which has
+exactly two elements, a sequence can have an arbitrary (but finite) number of
+ordered elements.</p>
+<p>The sequence is a powerful, fundamental abstraction in computer science.  For
+example, if we have sequences, we can list every university in the world, or
+every student in every university.  The sequence abstraction enables the
+thousands of data-driven programs that impact our lives every day.</p>
+<p>A sequence is not a particular abstract data type, but instead a collection of
+behaviors that different types share.  That is, there are many kinds of
+sequences, but they all share certain properties.  In particular,</p>
+<p><strong>Length.</strong> A sequence has a finite length.</p>
+<p><strong>Element selection.</strong> A sequence has an element corresponding to any
+non-negative integer index less than its length, starting at 0 for the first
+element.</p>
+<p>Unlike an abstract data type, we have not stated how to construct a sequence.
+The sequence abstraction is a collection of behaviors that does not fully
+specify a type (i.e., with constructors and selectors), but may be shared among
+several types. Sequences provide a layer of abstraction that may hide the
+details of exactly which sequence type is being manipulated by a particular
+program.</p>
+<p>In this section, we introduce built-in Python types that implement the sequence
+abstraction. We then develop our own abstract data type that can implement the
+same abstraction.</p>
+<div class="section" id="tuples">
+<h3>2.3.1   Tuples</h3>
+<p>In fact, the <tt class="docutils literal">tuple</tt> type that we introduced to form primitive pairs is itself
+a full sequence type.  Tuples provide substantially more functionality than the
+pair abstract data type that we implemented functionally.</p>
+<p>Tuples can have arbitrary length, and they exhibit the two principal behaviors
+of the sequence abstraction: length and element selection. Below, <tt class="docutils literal">digits</tt> is
+a tuple with four elements.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">8</span>
+</pre></div>
+
+<p>Additionally, tuples can be added together and multiplied by integers.  For
+tuples, addition and multiplication do not add or multiply elements, but instead
+combine and replicate the tuples themselves. That is, the <tt class="docutils literal">add</tt> function in
+the <tt class="docutils literal">operator</tt> module (and the <tt class="docutils literal">+</tt> operator) returns a new tuple that is the
+conjunction of the added arguments.  The <tt class="docutils literal">mul</tt> function in <tt class="docutils literal">operator</tt> (and
+the <tt class="docutils literal">*</tt> operator) can take an integer <tt class="docutils literal">k</tt> and a tuple and return a new tuple
+that consists of <tt class="docutils literal">k</tt> copies of the tuple argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">digits</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="go">(2, 7, 1, 8, 2, 8, 1, 8, 2, 8)</span>
+</pre></div>
+
+<p><strong>Multiple assignment and return values.</strong> In Chapter 1, we saw that Python
+allows multiple names to be assigned in a single statement.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span><span class="p">,</span> <span class="n">circumference</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span>
+<span class="go">314.1592653589793</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">circumference</span>
+<span class="go">62.83185307179586</span>
+</pre></div>
+
+<p>We can also return multiple values from a function.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">divide_exact</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">n</span> <span class="o">//</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span> <span class="o">%</span> <span class="n">d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quotient</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">divide_exact</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quotient</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remainder</span>
+<span class="go">1</span>
+</pre></div>
+
+<p>Python actually uses tuples to represent multiple values separated by commas.
+This is called <em>tuple packing</em>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span>
+<span class="go">(1, 8, 2, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">divide_exact</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">(3, 1)</span>
+</pre></div>
+
+<p>Using a tuple to assign to multiple names is called, as one might expect, <em>tuple
+unpacking</em>. The names may or may not be enclosed by parentheses.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">d3</span> <span class="o">=</span> <span class="n">digits</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d2</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">quotient</span><span class="p">,</span> <span class="n">remainder</span><span class="p">)</span> <span class="o">=</span> <span class="n">divide_exact</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quotient</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remainder</span>
+<span class="go">1</span>
+</pre></div>
+
+<p>Multiple assignment is just the combination of tuple packing and unpacking.</p>
+<p><strong>Arbitrary argument lists.</strong> Tuples can be used to define a function that takes
+in an arbitrary number of arguments, such as the built-in <tt class="docutils literal">print</tt> function. We
+precede a parameter name with a <tt class="docutils literal">*</tt> to indicate that an arbitrary number of
+arguments can be passed in for that parameter. Python automatically packs those
+arguments into a tuple and binds the parameter name to that tuple..</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_all</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Compute the sum of all arguments."""</span>
+<span class="gp">    </span>    <span class="n">total</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="gp">    </span>        <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add_all</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">6</span>
+</pre></div>
+
+<p>In addition, we can use the <tt class="docutils literal">*</tt> operator to unpack a tuple to pass its
+elements as separate arguments to a function call.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">pow</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">8</span>
+</pre></div>
+
+<p>As illustrated in these examples, tuples support many of the features that we
+have been using in Python.</p>
+</div>
+<div class="section" id="sequence-iteration">
+<h3>2.3.2   Sequence Iteration</h3>
+<p>In many cases, we would like to iterate over the elements of a sequence and
+perform a computational process for each in turn.  This pattern is so common
+that Python has an additional control statement to process sequential data: the
+<tt class="docutils literal">for</tt> statement.</p>
+<p>Consider the problem of counting how many times a value appears in a sequence.
+We can implement a function to compute this count using a <tt class="docutils literal">while</tt> loop.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Count the number of occurrences of value in sequence s."""</span>
+<span class="gp">    </span>    <span class="n">total</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>        <span class="n">index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>The Python <tt class="docutils literal">for</tt> statement can simplify this function body by iterating over
+the element values directly, without introducing the name <tt class="docutils literal">index</tt> at all.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Count the number of occurrences of value in sequence s."""</span>
+<span class="gp">    </span>    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">elem</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>A <tt class="docutils literal">for</tt> statement consists of a single clause with the form:</p>
+<pre class="literal-block">
+for &lt;name&gt; in &lt;expression&gt;:
+    &lt;suite&gt;
+</pre>
+<p>A <tt class="docutils literal">for</tt> statement is executed by the following procedure:</p>
+<ol class="arabic simple">
+<li>Evaluate the header <tt class="docutils literal">&lt;expression&gt;</tt>, which must yield an iterable value.</li>
+<li>For each element value in that sequence, in order:<ol class="upperalpha">
+<li>Bind <tt class="docutils literal">&lt;name&gt;</tt> to that value in the local environment.</li>
+<li>Execute the <tt class="docutils literal">&lt;suite&gt;</tt>.</li>
+</ol>
+</li>
+</ol>
+<p>Step 1 refers to an iterable value.  Sequences are iterable, and their elements
+are considered in their sequential order.  Python does include other iterable
+types, but we will focus on sequences for now; the general definition of the
+term "iterable" appears in the section on iterators in Chapter 4.</p>
+<p>An important consequence of this evaluation procedure is that <tt class="docutils literal">&lt;name&gt;</tt> will be
+bound to the last element of the sequence after the <tt class="docutils literal">for</tt> statement is
+executed.  The <tt class="docutils literal">for</tt> loop introduces yet another way in which the local
+environment can be updated by a statement.</p>
+<p><strong>Sequence unpacking.</strong> A common pattern in programs is to have a sequence of
+elements that are themselves sequences, but all of a fixed length.  <tt class="docutils literal">For</tt>
+statements may include multiple names in their header to "unpack" each element
+sequence into its respective elements.  For example, we may have a sequence of
+pairs (that is, two-element tuples),</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pairs</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+
+<p>and wish to find the number of pairs that have the same first and second
+element.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">same_count</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+
+<p>The following <tt class="docutils literal">for</tt> statement with two names in its header will bind each name
+<tt class="docutils literal">x</tt> and <tt class="docutils literal">y</tt> to the first and second elements in each pair, respectively.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">same_count</span> <span class="o">=</span> <span class="n">same_count</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">same_count</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>This pattern of binding multiple names to multiple values in a fixed-length
+sequence is called <em>sequence unpacking</em>; it is the same pattern that we see in
+assignment statements that bind multiple names to multiple values.</p>
+<p><strong>Ranges.</strong> A <tt class="docutils literal">range</tt> is another built-in type of sequence in Python, which
+represents a range of integers.  Ranges are created with <tt class="docutils literal">range</tt>, which takes
+two integer arguments: the first number and one beyond the last number in the
+desired range.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c"># Includes 1, but not 10</span>
+<span class="go">range(1, 10)</span>
+</pre></div>
+
+<p>Calling the <tt class="docutils literal">tuple</tt> constructor on a range will create a tuple with the same
+elements as the range, so that the elements can be easily inspected.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="go">(5, 6, 7)</span>
+</pre></div>
+
+<p>If only one argument is given, it is interpreted as one beyond the last value
+for a range that starts at 0.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">(0, 1, 2, 3)</span>
+</pre></div>
+
+<p>Ranges commonly appear as the expression in a <tt class="docutils literal">for</tt> header to specify the
+number of times that the suite should be executed:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">total</span> <span class="o">=</span> <span class="n">total</span> <span class="o">+</span> <span class="n">k</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">total</span>
+<span class="go">18</span>
+</pre></div>
+
+<p>A common convention is to use a single underscore character for the name in the
+<tt class="docutils literal">for</tt> header if the name is unused in the suite:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; for _ in range(3):
+        print('Go Bears!')
+
+Go Bears!
+Go Bears!
+Go Bears!
+</pre>
+<p>This underscore is just another name in the environment as far as the
+interpreter is concerned, but has a conventional meaning among programmers that
+indicates the name will not appear in any expressions.</p>
+</div>
+<div class="section" id="sequence-abstraction">
+<h3>2.3.3   Sequence Abstraction</h3>
+<p>We have now introduced two types of native data types that implement the
+sequence abstraction: tuples and ranges.  Both satisfy the conditions with which
+we began this section: length and element selection.  Python includes two more
+behaviors of sequence types that extend the sequence abstraction.</p>
+<p><strong>Membership.</strong>  A value can be tested for membership in a sequence.  Python has
+two operators <tt class="docutils literal">in</tt> and <tt class="docutils literal">not in</tt> that evaluate to <tt class="docutils literal">True</tt> or <tt class="docutils literal">False</tt>
+depending on whether an element appears in a sequence.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span>
+<span class="go">(1, 8, 2, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="ow">in</span> <span class="n">digits</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1828</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">digits</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>All sequences also have methods called <tt class="docutils literal">index</tt> and <tt class="docutils literal">count</tt>, which return the
+index of (or count of) a value in a sequence.</p>
+<p><strong>Slicing.</strong> Sequences contain smaller sequences within them.  A <em>slice</em> of a
+sequence is any contiguous span of the original sequence, designated by a pair
+of integers. As with the <tt class="docutils literal">range</tt> constructor, the first integer indicates the
+starting index of the slice and the second indicates one beyond the ending
+index.</p>
+<p>In Python, sequence slicing is expressed similarly to element selection, using
+square brackets.  A colon separates the starting and ending indices.  Any bound
+that is omitted is assumed to be an extreme value:  0 for the starting index,
+and the length of the sequence for the ending index.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">(1, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">digits</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="go">(8, 2, 8)</span>
+</pre></div>
+
+<p>Enumerating these additional behaviors of the Python sequence abstraction gives
+us an opportunity to reflect upon what constitutes a useful data abstraction in
+general.  The richness of an abstraction (that is, how many behaviors it
+includes) has consequences.  For users of an abstraction, additional behaviors
+can be helpful.  On the other hand, satisfying the requirements of a rich
+abstraction with a new data type can be challenging. Another negative
+consequence of rich abstractions is that they take longer for users to learn.</p>
+<p>Sequences have a rich abstraction because they are so ubiquitous in computing
+that learning a few complex behaviors is justified.  In general, most
+user-defined abstractions should be kept as simple as possible.</p>
+<p><strong>Further reading.</strong> Slice notation admits a variety of special cases, such as
+negative starting values, ending values, and step sizes.  A complete description
+appears in the subsection called <a class="reference external" href="http://getpython3.com/diveintopython3/native-datatypes.html#slicinglists">slicing a list</a> in
+Dive Into Python 3.  In this chapter, we will only use the basic features
+described above.</p>
+</div>
+<div class="section" id="nested-pairs">
+<h3>2.3.4   Nested Pairs</h3>
+<p>For rational numbers, we paired together two integer objects using a two-element
+tuple, then showed that we could implement pairs just as well using functions.
+In that case, the elements of each pair we constructed were integers. However,
+like expressions, tuples can nest. Either element of a pair can itself be a
+pair, a property that holds true for either method of implementing a pair that
+we have seen: as a tuple or as a dispatch function.</p>
+<p>We visualize pairs (two-element tuples) in environment diagrams using
+<em>box-and-pointer</em> notation. Pairs are depicted as boxes with two parts: the
+left part contains (an arrow to) the first element of the pair and the right
+part contains the second. Simple values such as numbers, strings, boolean
+values, and <tt class="docutils literal">None</tt> appear within the box.  Composite values, such as function
+values and other pairs, are connected by a pointer.</p>
+<div class="example" data-output="False" data-step="-1" id="example_25" style="">
+numbers = (1, 2)
+pairs = ((1, 2), (3, 4))
+</div>
+<script type="text/javascript">
+var example_25_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["numbers"], "heap": {"1": ["TUPLE", 1, 2]}, "globals": {"numbers": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["numbers", "pairs"], "heap": {"1": ["TUPLE", 1, 2], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "numbers": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}], "code": "numbers = (1, 2)\npairs = ((1, 2), (3, 4))"}</script><p>We can use recursion to process an arbitrary nesting of pairs. For example,
+let's write a function to compute the sum of all integer elements in a nesting
+of pairs and integers.</p>
+<div class="example" data-output="False" data-step="2" id="example_26" style="">
+def sum_elems(elem):
+    if type(elem) == int:
+        return elem
+    else:
+        return (sum_elems(elem[0]) +
+                sum_elems(elem[1]))
+
+pairs = ((1, 2), (3, 4))
+total = sum_elems(pairs)
+</div>
+<script type="text/javascript">
+var example_26_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null]}, "globals": {"sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 9, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}], "func_name": "sum_elems", "line": 5, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}], "func_name": "sum_elems", "line": 5, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 1}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f3"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 1}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f3"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 1}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f3"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 1, "__return__": 1}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f3"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 2}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f4"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 2}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f4"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 2}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f4"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 2, "__return__": 2}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f4"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 3], "__return__": 3}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f2"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}], "func_name": "sum_elems", "line": 5, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 3}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f6"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 3}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f6"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 3}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f6"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 3, "__return__": 3}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f6"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 4}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f7"}], "func_name": "sum_elems", "line": 1, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 4}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f7"}], "func_name": "sum_elems", "line": 2, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 4}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f7"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": 4, "__return__": 4}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f7"}], "func_name": "sum_elems", "line": 3, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["elem"], "unique_hash": "sum_elems_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 4], "__return__": 7}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f5"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_elems", "is_zombie": false, "encoded_locals": {"elem": ["REF", 2], "__return__": 10}, "is_parent": false, "ordered_varnames": ["elem", "__return__"], "unique_hash": "sum_elems_f1"}], "func_name": "sum_elems", "line": 6, "stdout": ""}, {"ordered_globals": ["sum_elems", "pairs", "total"], "heap": {"1": ["FUNCTION", "sum_elems(elem)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4]], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"pairs": ["REF", 2], "total": 10, "sum_elems": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 9, "stdout": ""}], "code": "def sum_elems(elem):\n    if type(elem) == int:\n        return elem\n    else:\n        return (sum_elems(elem[0]) +\n                sum_elems(elem[1]))\n\npairs = ((1, 2), (3, 4))\ntotal = sum_elems(pairs)"}</script><p>The <tt class="docutils literal">sum_elems</tt> function computes the sum of integer elements in a nested pair
+by recursively computing the sums of its first and second elements and adding
+the results. The base case is when an element is an integer, in which case the
+sum is the integer itself.</p>
+<p>Our ability to use tuples as the elements of other tuples provides a new means
+of combination in our programming language.  We call the ability for tuples to
+nest in this way a <em>closure property</em> of the tuple data type.  In general, a
+method for combining data values satisfies the closure property if the result of
+combination can itself be combined using the same method.  Closure is the key to
+power in any means of combination because it permits us to create hierarchical
+structures — structures made up of parts, which themselves are made up of
+parts, and so on.  We will explore a range of hierarchical structures in Chapter
+3.  For now, we consider a particularly important structure.</p>
+</div>
+<div class="section" id="recursive-lists">
+<h3>2.3.5   Recursive Lists</h3>
+<p>We can use nested pairs to form lists of elements of arbitrary length, which
+will allow us to implement the sequence abstraction.  The environment diagram
+below illustrates the structure of the recursive representation of a
+four-element list: 1, 2, 3, 4.</p>
+<div class="example" data-output="False" data-step="-1" id="example_27" style="">
+up_to_four = (1, (2, (3, (4, None))))
+</div>
+<script type="text/javascript">
+var example_27_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["up_to_four"], "heap": {"1": ["TUPLE", 1, ["REF", 2]], "2": ["TUPLE", 2, ["REF", 3]], "3": ["TUPLE", 3, ["REF", 4]], "4": ["TUPLE", 4, null]}, "globals": {"up_to_four": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}], "code": "up_to_four = (1, (2, (3, (4, None))))"}</script><p>The list is represented by a chain of pairs.  The first element of each pair
+is an element in the list, while the second is a pair that represents the rest
+of the list.  The second element of the final pair is <tt class="docutils literal">None</tt>, which indicates
+that the list has ended.  This structure can be constructed using the nested
+tuple literal above.</p>
+<p>This nested structure corresponds to a very useful way of thinking about
+sequences in general. A non-empty sequence can be decomposed into:</p>
+<ul class="simple">
+<li>its first element, and</li>
+<li>the rest of the sequence.</li>
+</ul>
+<p>The rest of a sequence is itself a (possibly empty) sequence.  We call this view
+of sequences recursive, because sequences contain other sequences as their
+second component.</p>
+<p>Since our list representation is recursive, we will call it an <tt class="docutils literal">rlist</tt> in our
+implementation, so as not to confuse it with the built-in <tt class="docutils literal">list</tt> type in
+Python that we will discuss later. A recursive list can be constructed from a
+first element and the rest of the list. The value <tt class="docutils literal">None</tt> represents an empty
+recursive list.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">empty_rlist</span> <span class="o">=</span> <span class="k">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rlist</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Construct a recursive list from its first element and the rest."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the first element of a recursive list s."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rest</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the rest of the elements of a recursive list s."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+<p>These two selectors, one constructor, and one constant together implement the
+recursive list abstract data type.  The single behavior condition for a
+recursive list is that, like a pair, its constructor and selectors are inverse
+functions.</p>
+<ul class="simple">
+<li>If a recursive list <tt class="docutils literal">s</tt> was constructed from element <tt class="docutils literal">f</tt> and list <tt class="docutils literal">r</tt>,
+then <tt class="docutils literal">first(s)</tt> returns <tt class="docutils literal">f</tt>, and <tt class="docutils literal">rest(s)</tt> returns <tt class="docutils literal">r</tt>.</li>
+</ul>
+<p>We can use the constructor and selectors to manipulate recursive lists.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">counts</span> <span class="o">=</span> <span class="n">rlist</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rlist</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">rlist</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">empty_rlist</span><span class="p">))))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rest</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="go">(2, (3, (4, None)))</span>
+</pre></div>
+
+<p>Recall that we were able to represent pairs using functions, and therefore we
+can represent recursive lists using functions as well.</p>
+<p>The recursive list can store a sequence of values in order, but it does not yet
+implement the sequence abstraction.  Using the abstract data type we have
+defined, we can implement the two behaviors that characterize a sequence: length
+and element selection.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">len_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the length of recursive list s."""</span>
+<span class="gp">    </span>    <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">s</span> <span class="o">!=</span> <span class="n">empty_rlist</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">s</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">rest</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">length</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">length</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">getitem_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the element at index i of recursive list s."""</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">s</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">rest</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">first</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+<p>Now, we can manipulate a recursive list as a sequence:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">len_rlist</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getitem_rlist</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># The second item has index 1</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>Both of these implementations are iterative. They peel away each layer of nested
+pair until the end of the list (in <tt class="docutils literal">len_rlist</tt>) or the desired element (in
+<tt class="docutils literal">getitem_rlist</tt>) is reached. We can also implement length and element
+selection using recursion.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">len_rlist_recursive</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the length of a recursive list s."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">empty_rlist</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">len_rlist_recursive</span><span class="p">(</span><span class="n">rest</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">getitem_rlist_recursive</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the element at index i of recursive list s."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">first</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">getitem_rlist_recursive</span><span class="p">(</span><span class="n">rest</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">len_rlist_recursive</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getitem_rlist_recursive</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>These recursive implementations follow the chain of pairs until the end of the
+list (in <tt class="docutils literal">len_rlist_recursive</tt>) or the desired element (in
+<tt class="docutils literal">getitem_rlist_recursive</tt>) is reached.</p>
+<p>Recursive lists can be manipulated using both iteration and recursion. In
+Chapter 3, however, we will see more complicated examples of recursive data
+structures that will require recursion to manipulate easily.</p>
+<p>Let us return to the iterative way of implementing length and element selection.
+The series of environment diagrams below illustrate the iterative process by
+which <tt class="docutils literal">getitem_rlist</tt> finds the element 2 at index 1 in the recursive
+list. Below, we have defined the rlist <tt class="docutils literal">counts</tt> using Python primitives to
+simplify the diagrams. This implementation choice violate the abstraction
+barrier for the rlist data type, but allows us to inspect the computational
+process more easily for this example.</p>
+<div class="example" data-output="False" data-step="4" id="example_28" style="">
+def first(s):
+    return s[0]
+def rest(s):
+    return s[1]
+
+def getitem_rlist(s, i):
+    while i &gt; 0:
+        s, i = rest(s), i - 1
+    return first(s)
+
+counts = (1, (2, (3, (4, None))))
+getitem_rlist(counts, 1)
+</div>
+<script type="text/javascript">
+var example_28_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["first"], "heap": {"1": ["FUNCTION", "first(s)", null]}, "globals": {"first": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null]}, "globals": {"first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null]}, "globals": {"getitem_rlist": ["REF", 3], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 11, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 12, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 8, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 1, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "<module>", "line": 12, "stdout": ""}], "code": "def first(s):\n    return s[0]\ndef rest(s):\n    return s[1]\n\ndef getitem_rlist(s, i):\n    while i > 0:\n        s, i = rest(s), i - 1\n    return first(s)\n\ncounts = (1, (2, (3, (4, None))))\ngetitem_rlist(counts, 1)"}</script><p>First, the function <tt class="docutils literal">getitem_rlist</tt> is called, creating a local frame.</p>
+<div class="example" data-output="False" data-step="5" id="example_29" style="">
+def first(s):
+    return s[0]
+def rest(s):
+    return s[1]
+
+def getitem_rlist(s, i):
+    while i &gt; 0:
+        s, i = rest(s), i - 1
+    return first(s)
+
+counts = (1, (2, (3, (4, None))))
+getitem_rlist(counts, 1)
+</div>
+<script type="text/javascript">
+var example_29_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["first"], "heap": {"1": ["FUNCTION", "first(s)", null]}, "globals": {"first": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null]}, "globals": {"first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null]}, "globals": {"getitem_rlist": ["REF", 3], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 11, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 12, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 8, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 1, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "<module>", "line": 12, "stdout": ""}], "code": "def first(s):\n    return s[0]\ndef rest(s):\n    return s[1]\n\ndef getitem_rlist(s, i):\n    while i > 0:\n        s, i = rest(s), i - 1\n    return first(s)\n\ncounts = (1, (2, (3, (4, None))))\ngetitem_rlist(counts, 1)"}</script><p>The expression in the <tt class="docutils literal">while</tt> header evaluates to true, which causes the
+assignment statement in the <tt class="docutils literal">while</tt> suite to be executed.  The function
+<tt class="docutils literal">rest</tt> returns the sublist starting with 2.</p>
+<div class="example" data-output="False" data-step="8" id="example_30" style="">
+def first(s):
+    return s[0]
+def rest(s):
+    return s[1]
+
+def getitem_rlist(s, i):
+    while i &gt; 0:
+        s, i = rest(s), i - 1
+    return first(s)
+
+counts = (1, (2, (3, (4, None))))
+getitem_rlist(counts, 1)
+</div>
+<script type="text/javascript">
+var example_30_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["first"], "heap": {"1": ["FUNCTION", "first(s)", null]}, "globals": {"first": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null]}, "globals": {"first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null]}, "globals": {"getitem_rlist": ["REF", 3], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 11, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 12, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 8, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 1, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "<module>", "line": 12, "stdout": ""}], "code": "def first(s):\n    return s[0]\ndef rest(s):\n    return s[1]\n\ndef getitem_rlist(s, i):\n    while i > 0:\n        s, i = rest(s), i - 1\n    return first(s)\n\ncounts = (1, (2, (3, (4, None))))\ngetitem_rlist(counts, 1)"}</script><p>Next, the local name <tt class="docutils literal">s</tt> will be updated to refer to the sub-list that begins
+with the second element of the original list.  Evaluating the <tt class="docutils literal">while</tt> header
+expression now yields a false value, and so Python evaluates the expression in
+the return statement on the final line of <tt class="docutils literal">getitem_rlist</tt>.</p>
+<div class="example" data-output="False" data-step="12" id="example_31" style="">
+def first(s):
+    return s[0]
+def rest(s):
+    return s[1]
+
+def getitem_rlist(s, i):
+    while i &gt; 0:
+        s, i = rest(s), i - 1
+    return first(s)
+
+counts = (1, (2, (3, (4, None))))
+getitem_rlist(counts, 1)
+</div>
+<script type="text/javascript">
+var example_31_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["first"], "heap": {"1": ["FUNCTION", "first(s)", null]}, "globals": {"first": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null]}, "globals": {"first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null]}, "globals": {"getitem_rlist": ["REF", 3], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 11, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 12, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 6, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}], "func_name": "getitem_rlist", "line": 8, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 3, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 4], "i": 1}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": false, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2"}], "func_name": "rest", "line": 4, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 7, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 1, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3"}], "func_name": "first", "line": 2, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": false, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "getitem_rlist", "line": 9, "stdout": ""}, {"ordered_globals": ["first", "rest", "getitem_rlist", "counts"], "heap": {"1": ["FUNCTION", "first(s)", null], "2": ["FUNCTION", "rest(s)", null], "3": ["FUNCTION", "getitem_rlist(s, i)", null], "4": ["TUPLE", 1, ["REF", 5]], "5": ["TUPLE", 2, ["REF", 6]], "6": ["TUPLE", 3, ["REF", 7]], "7": ["TUPLE", 4, null]}, "globals": {"getitem_rlist": ["REF", 3], "counts": ["REF", 4], "first": ["REF", 1], "rest": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "getitem_rlist", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5], "i": 0}, "is_parent": false, "ordered_varnames": ["s", "i", "__return__"], "unique_hash": "getitem_rlist_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "rest", "is_zombie": true, "encoded_locals": {"__return__": ["REF", 5], "s": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "rest_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "first", "is_zombie": true, "encoded_locals": {"__return__": 2, "s": ["REF", 5]}, "is_parent": false, "ordered_varnames": ["s", "__return__"], "unique_hash": "first_f3_z"}], "func_name": "<module>", "line": 12, "stdout": ""}], "code": "def first(s):\n    return s[0]\ndef rest(s):\n    return s[1]\n\ndef getitem_rlist(s, i):\n    while i > 0:\n        s, i = rest(s), i - 1\n    return first(s)\n\ncounts = (1, (2, (3, (4, None))))\ngetitem_rlist(counts, 1)"}</script><p>This final environment diagram shows the local frame for the call to <tt class="docutils literal">first</tt>,
+which contains the name <tt class="docutils literal">s</tt> bound to that same sub-list.  The <tt class="docutils literal">first</tt>
+function selects the value 2 and returns it, which will also be returned
+from <tt class="docutils literal">getitem_rlist</tt>.</p>
+<p>This example demonstrates a common pattern of computation with recursive lists,
+where each step in an iteration operates on an increasingly shorter suffix of
+the original list. This incremental processing to find the length and elements
+of a recursive list does take some time to compute.  (In Chapter 3, we will
+learn to characterize the computation time of iterative functions like
+these.)  Python's built-in sequence types are implemented in a different way
+that does not have a large computational cost for computing the length of a
+sequence or retrieving its elements.</p>
+<p>The way in which we construct recursive lists is rather verbose. Fortunately,
+Python provides a variety of built-in sequence types that provide both the
+versatility of the sequence abstraction, as well as convenient notation.</p>
+</div>
+<div class="section" id="strings">
+<h3>2.3.6   Strings</h3>
+<p>Text values are perhaps more fundamental to computer science than even numbers.
+As a case in point, Python programs are written and stored as text.  The native
+data type for text in Python is called a string, and corresponds to the
+constructor <tt class="docutils literal">str</tt>.</p>
+<p>There are many details of how strings are represented, expressed, and
+manipulated in Python. Strings are another example of a rich abstraction, one
+which requires a substantial commitment on the part of the programmer to master.
+This section serves as a condensed introduction to essential string behaviors.</p>
+<p>String literals can express arbitrary text, surrounded by either single or
+double quotation marks.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'I am string!'</span>
+<span class="go">'I am string!'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">"I've got an apostrophe"</span>
+<span class="go">"I've got an apostrophe"</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">'您好'</span>
+<span class="go">'您好'</span>
+</pre></div>
+
+<p>We have seen strings already in our code, as docstrings, in calls to <tt class="docutils literal">print</tt>,
+and as error messages in <tt class="docutils literal">assert</tt> statements.</p>
+<p>Strings satisfy the two basic conditions of a sequence that we introduced at the
+beginning of this section: they have a length and they support element
+selection.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">city</span> <span class="o">=</span> <span class="s">'Berkeley'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+<span class="go">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">city</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">'k'</span>
+</pre></div>
+
+<p>The elements of a string are themselves strings that have only a single
+character.  A character is any single letter of the alphabet, punctuation
+mark, or other symbol.  Unlike many other programming languages, Python does not
+have a separate character type; any text is a string, and strings that represent
+single characters have a length of 1.</p>
+<p>Like tuples, strings can also be combined via addition and multiplication.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'Berkeley'</span> <span class="o">+</span> <span class="s">', CA'</span>
+<span class="go">'Berkeley, CA'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">'Shabu '</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="go">'Shabu Shabu '</span>
+</pre></div>
+
+<p><strong>Membership.</strong> The behavior of strings diverges from other sequence
+types in Python.  The string abstraction does not conform to the full sequence
+abstraction that we described for tuples and ranges.  In particular, the
+membership operator <tt class="docutils literal">in</tt> applies to strings, but has an entirely different
+behavior than when it is applied to sequences.  It matches substrings rather
+than elements.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'here'</span> <span class="ow">in</span> <span class="s">"Where's Waldo?"</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>Likewise, the <tt class="docutils literal">count</tt> and <tt class="docutils literal">index</tt> methods on strings take substrings as
+arguments, rather than single-character elements.  The behavior of <tt class="docutils literal">count</tt> is
+particularly nuanced; it counts the number of non-overlapping occurrences of a
+substring in a string.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'Mississippi'</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s">'i'</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">'Mississippi'</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s">'issi'</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+
+<p><strong>Multiline Literals.</strong> Strings aren't limited to a single line. Triple quotes
+delimit string literals that span multiple lines.  We have used this triple
+quoting extensively already for docstrings.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">"""The Zen of Python</span>
+<span class="go">claims, Readability counts.</span>
+<span class="go">Read more: import this."""</span>
+<span class="go">'The Zen of Python\nclaims, "Readability counts."\nRead more: import this.'</span>
+</pre></div>
+
+<p>In the printed result above, the <tt class="docutils literal">\n</tt> (pronounced "<em>backslash en</em>") is a
+single element that represents a new line.  Although it appears as two
+characters (backslash and "n"), it is considered a single character for the
+purposes of length and element selection.</p>
+<p><strong>String Coercion.</strong> A string can be created from any object in Python by
+calling the <tt class="docutils literal">str</tt> constructor function with an object value as its argument.
+This feature of strings is useful for constructing descriptive strings from
+objects of various types.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s">' is an element of '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span>
+<span class="go">'2 is an element of (1, 8, 2, 8)'</span>
+</pre></div>
+
+<p>The mechanism by which a single <tt class="docutils literal">str</tt> function can apply to any type of
+argument and return an appropriate value is the subject of the later section on
+generic functions.</p>
+<p><strong>Methods.</strong> The behavior of strings in Python is extremely productive because
+of a rich set of methods for returning string variants and searching for
+contents. A few of these methods are introduced below by example.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'1234'</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">'rOBERT dE nIRO'</span><span class="o">.</span><span class="n">swapcase</span><span class="p">()</span>
+<span class="go">'Robert De Niro'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">'snakeyes'</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">'YES'</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+
+<p><strong>Further reading.</strong> Encoding text in computers is a complex topic.  In this
+chapter, we will abstract away the details of how strings are represented.
+However, for many applications, the particular details of how strings are
+encoded by computers is essential knowledge.     <a class="reference external" href="http://getpython3.com/diveintopython3/strings.html">Sections 4.1-4.3 of Dive Into
+Python 3</a> provides a description of
+character encodings and Unicode.</p>
+</div>
+<div class="section" id="sequence-processing">
+<h3>2.3.7   Sequence Processing</h3>
+<p>Sequences are such a common form of compound data that one often organizes
+entire programs around this single abstraction. Representing all data in a
+program as sequences allows us to develop modular components that can be mixed
+and matched to perform data processing. That is, we can write several functions
+that all take a sequence as an argument and return a sequence as a value, then
+we can apply each to the output of the next in any order we choose. In this way,
+we can create a complex process by chaining together a pipeline of functions,
+each of which is simple and focused.</p>
+<p>Two general sequence operations serve as the foundation of much data processing:
+<tt class="docutils literal">map</tt> and <tt class="docutils literal">filter</tt>.</p>
+<p><strong>Map.</strong> A powerful method of transforming sequences is by applying a function
+to each element and collecting the results.  This general form of computation is
+called <em>mapping</em> a function over a sequence, and corresponds to the built-in
+<tt class="docutils literal">map</tt>.  The result of calling <tt class="docutils literal">map</tt> is an object that is not itself a
+sequence, but can be converted into a sequence by calling <tt class="docutils literal">tuple</tt>, the
+constructor function for tuples. The result can also be passed into other
+sequence processing operations.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">alternates</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">alternates</span><span class="p">))</span>
+<span class="go">(1, 2, 3, 4, 5)</span>
+</pre></div>
+
+<p>Mapping is important because it relies on the sequence abstraction: we do not
+need to be concerned about the structure of the underlying tuple; only that we
+can access each one of its elements individually in order to pass it as an
+argument to the mapped function (<tt class="docutils literal">abs</tt>, in this case). Other types of
+sequences, introduced shortly, can also serve as the second argument to <tt class="docutils literal">map</tt>.</p>
+<p><strong>Filter.</strong> <tt class="docutils literal">filter</tt> is also built into Python; it takes a sequence and
+returns those elements of that sequence for which a predicate is true.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nums</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">even</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">even</span><span class="p">,</span> <span class="n">nums</span><span class="p">))</span>
+<span class="go">(6, -8)</span>
+</pre></div>
+
+<p>Sequence operations can be nested as well.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">even</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">nums</span><span class="p">)))</span>
+<span class="go">14</span>
+</pre></div>
+
+<p>Consider these two problems, which appear at first to be related only in their
+use of sequences:</p>
+<ol class="arabic simple">
+<li>Sum the even members of the first <tt class="docutils literal">n</tt> Fibonacci numbers.</li>
+<li>List the letters in the acronym for a name, which includes the first letter
+of each capitalized word.</li>
+</ol>
+<p>These problems are related because they can be decomposed into simple operations
+that take sequences as input and yield sequences as output. Moreover, those
+operations are instances of general methods of computation over sequences. Let's
+consider the first problem.  It can be decomposed into the following steps:</p>
+<pre class="literal-block">
+ enumerate     map    filter  accumulate
+-----------    ---    ------  ----------
+naturals(n)    fib     even      sum
+</pre>
+<p>The <tt class="docutils literal">fib</tt> function below computes Fibonacci numbers (now updated from the
+definition in Chapter 1 with a <tt class="docutils literal">for</tt> statement),</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Compute the kth Fibonacci number."""</span>
+<span class="gp">    </span>    <span class="n">prev</span><span class="p">,</span> <span class="n">curr</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>  <span class="c"># curr is the first Fibonacci number.</span>
+<span class="gp">    </span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+<span class="gp">    </span>         <span class="n">prev</span><span class="p">,</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="p">,</span> <span class="n">prev</span> <span class="o">+</span> <span class="n">curr</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">curr</span>
+</pre></div>
+
+<p>Now we can implement <tt class="docutils literal">even_fib</tt>, the solution to our first problem, in terms
+of <tt class="docutils literal">map</tt>, <tt class="docutils literal">filter</tt>, and <tt class="docutils literal">sum</tt>. The predicate <tt class="docutils literal">even</tt> was defined
+previously in this section.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sum_even_fibs</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Sum the even members of the firsT n Fibonacci numbers."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">even</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">fib</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sum_even_fibs</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">3382</span>
+</pre></div>
+
+<p>Now, let's consider the second problem.  It can also be decomposed as a pipeline
+of sequence operations that include <tt class="docutils literal">map</tt> and <tt class="docutils literal">filter</tt>:</p>
+<pre class="literal-block">
+enumerate     filter     map   accumulate
+---------  -----------  -----  ----------
+  words    capitalized  first    tuple
+</pre>
+<p>The words in a string can be enumerated via the <tt class="docutils literal">split</tt> method of a string
+object, which by default splits on spaces.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="s">'Spaces between words'</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+<span class="go">('Spaces', 'between', 'words')</span>
+</pre></div>
+
+<p>The first letter of a word can be retrieved using the selection operator, and a
+predicate that determines if a word is capitalized can be defined using the
+built-in predicate <tt class="docutils literal">isupper</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">capitalized</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span>
+</pre></div>
+
+<p>At this point, our acronym function can be defined via <tt class="docutils literal">map</tt> and <tt class="docutils literal">filter</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">acronym</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a tuple of the letters that form the acronym for name."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="nb">filter</span><span class="p">(</span><span class="n">capitalized</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">())))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">acronym</span><span class="p">(</span><span class="s">'University of California Berkeley Undergraduate Graphics Group'</span><span class="p">)</span>
+<span class="go">('U', 'C', 'B', 'U', 'G', 'G')</span>
+</pre></div>
+
+<p>These similar solutions to rather different problems show how to combine general
+components that operate on sequences using the general computational patterns of
+mapping, filtering, and accumulation.  The sequence abstraction allows us to
+specify these solutions concisely.</p>
+<p>Expressing programs as sequence operations helps us design programs that are
+modular. Our designs are constructed by combining relatively independent pieces,
+each of which transforms a sequence. In general, we can encourage modular design
+by providing a library of standard components together with an assumption about data representation (e.g., that all inputs and outputs are sequences).</p>
+<p><strong>Generator expressions.</strong> The Python language includes a second approach to
+processing sequences, called <em>generator expressions</em>. which provide similar
+functionality to <tt class="docutils literal">map</tt> and <tt class="docutils literal">filter</tt>, but may require fewer function
+definitions.</p>
+<p>Generator expressions combine the ideas of filtering and mapping together into a
+single expression type with the following form:</p>
+<pre class="literal-block">
+&lt;map expression&gt; for &lt;name&gt; in &lt;sequence expression&gt; if &lt;filter expression&gt;
+</pre>
+<p>To evaluate a generator expression, Python evaluates the <tt class="docutils literal">&lt;sequence
+expression&gt;</tt>, which must return an iterable value.  Then, for each element in
+order, the element value is bound to <tt class="docutils literal">&lt;name&gt;</tt>, the filter expression is
+evaluated, and if it yields a true value, the map expression is evaluated.</p>
+<p>The result value of evaluating a generator expression is itself an iterable
+value.  Accumulation functions like <tt class="docutils literal">tuple</tt>, <tt class="docutils literal">sum</tt>, <tt class="docutils literal">max</tt>, and <tt class="docutils literal">min</tt> can
+take this returned object as an argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">acronym</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">capitalized</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sum_even_fibs</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fib</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">fib</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+<p>Generator expressions are specialized syntax for sequence processing. These
+expressions subsume most of the functionality of <tt class="docutils literal">map</tt> and <tt class="docutils literal">filter</tt>, but
+avoid actually creating the function values that are applied (or, incidentally,
+creating the environment frames required to apply those functions).</p>
+<p><strong>Reduce.</strong> In our examples we used specific functions to accumulate
+results, either <tt class="docutils literal">tuple</tt> or <tt class="docutils literal">sum</tt>.  Functional programming languages
+(including Python) include general higher-order accumulators that go by various
+names.  Python includes <tt class="docutils literal">reduce</tt> in the <tt class="docutils literal">functools</tt> module, which applies a
+two-argument function cumulatively to the elements of a sequence from left to
+right, to reduce a sequence to a value.  The following expression computes 5
+factorial.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">mul</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">120</span>
+</pre></div>
+
+<p>Using this more general form of accumulation, we can also compute the product of
+even Fibonacci numbers, in addition to the sum, using our sequence processing
+techniques.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">product_even_fibs</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the product of the first n even Fibonacci numbers, except 0."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="nb">filter</span><span class="p">(</span><span class="n">even</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">fib</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">product_even_fibs</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">123476336640</span>
+</pre></div>
+
+<p>The combination of higher order procedures corresponding to <tt class="docutils literal">map</tt>, <tt class="docutils literal">filter</tt>,
+and <tt class="docutils literal">reduce</tt> will appear again in Chapter 4, when we consider methods for
+distributing computation across multiple computers.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/24-mutable-data.html">
+  		2.4 Mutable Data
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

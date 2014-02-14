@@ -1,0 +1,310 @@
+<html>
+<head>
+<title>ants_gui.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>ants_gui.py (<a href="ants_gui.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""The ants_gui module implements a GUI for Ants vs. SomeBees.
+
+You should not feel that you need to read and understand this file, because all
+of the game logic is instead contained within ants.py.  We have provided some
+comments so that interested students can extend the graphics.
+
+=== Optional reading beyond this point ===
+
+The GUI for this game has a fixed layout specified by a series of global names
+that are constant throughout execution.  From a design perspective, global
+names are a fine solution for holding constants; most problems associated with
+global variables arise in programs that assign to global names.
+
+The GUI layout itself is divided into a control panel that lists all
+implemented ants and a play area populated with places.
+
+The Hive is handled as a special case so that the player can visually inspect
+how many bees remain in the hive.
+"""
+
+</span><span style="color: blue; font-weight: bold">import </span>ants
+<span style="color: blue; font-weight: bold">import </span>graphics
+<span style="color: blue; font-weight: bold">from </span>graphics <span style="color: blue; font-weight: bold">import </span>shift_point
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span><span style="font-weight: bold">*
+</span><span style="color: blue; font-weight: bold">from </span>math <span style="color: blue; font-weight: bold">import </span>pi
+<span style="color: blue; font-weight: bold">import </span>math
+<span style="color: blue; font-weight: bold">import </span>os
+<span style="color: blue; font-weight: bold">import </span>random
+
+STRATEGY_SECONDS <span style="font-weight: bold">= </span><span style="color: red">3
+</span>INSECT_FILES <span style="font-weight: bold">= {</span><span style="color: red">'Worker'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_harvester.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Thrower'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_thrower.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Long'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_longthrower.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Short'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_shortthrower.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Harvester'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_harvester.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Fire'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_fire.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Bodyguard'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_weeds.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Hungry'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_hungry.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Slow'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_freeze.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Stun'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_stun.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Ninja'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_ninja.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Wall'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_wall.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Scuba'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_scuba.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Queen'</span><span style="font-weight: bold">: </span><span style="color: red">'img/ant_queen.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Bee'</span><span style="font-weight: bold">: </span><span style="color: red">'img/bee.gif'</span><span style="font-weight: bold">,
+                </span><span style="color: red">'Remover'</span><span style="font-weight: bold">: </span><span style="color: red">'img/remover.gif'</span><span style="font-weight: bold">}
+</span>TUNNEL_FILE <span style="font-weight: bold">= </span><span style="color: red">'img/tunnel.gif'
+</span>ANT_IMAGE_WIDTH <span style="font-weight: bold">= </span><span style="color: red">66
+</span>ANT_IMAGE_HEIGHT <span style="font-weight: bold">= </span><span style="color: red">71
+</span>BEE_IMAGE_WIDTH <span style="font-weight: bold">= </span><span style="color: red">58
+</span>PANEL_PADDING <span style="font-weight: bold">= (</span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">)
+</span>PLACE_PADDING <span style="font-weight: bold">= (</span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">10</span><span style="font-weight: bold">)
+</span>PLACE_POS <span style="font-weight: bold">= (</span><span style="color: red">40</span><span style="font-weight: bold">, </span><span style="color: red">180</span><span style="font-weight: bold">)
+</span>PANEL_POS <span style="font-weight: bold">= (</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">40</span><span style="font-weight: bold">)
+</span>CRYPT <span style="font-weight: bold">= </span><span style="color: red">650
+</span>MESSAGE_POS <span style="font-weight: bold">= (</span><span style="color: red">120</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">)
+</span>HIVE_HEIGHT <span style="font-weight: bold">= </span><span style="color: red">300
+</span>PLACE_MARGIN <span style="font-weight: bold">= </span><span style="color: red">10
+</span>LEAF_START_OFFSET <span style="font-weight: bold">= (</span><span style="color: red">30</span><span style="font-weight: bold">, </span><span style="color: red">30</span><span style="font-weight: bold">)
+</span>LEAF_END_OFFSET <span style="font-weight: bold">= (</span><span style="color: red">50</span><span style="font-weight: bold">, </span><span style="color: red">30</span><span style="font-weight: bold">)
+</span>LEAF_COLORS <span style="font-weight: bold">= {</span><span style="color: red">'Thrower'</span><span style="font-weight: bold">: </span><span style="color: red">'ForestGreen'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Short'</span><span style="font-weight: bold">: </span><span style="color: red">'Green'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Long'</span><span style="font-weight: bold">: </span><span style="color: red">'DarkGreen'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Slow'</span><span style="font-weight: bold">: </span><span style="color: red">'LightBlue'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Stun'</span><span style="font-weight: bold">: </span><span style="color: red">'Red'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Scuba'</span><span style="font-weight: bold">: </span><span style="color: red">'Blue'</span><span style="font-weight: bold">,
+               </span><span style="color: red">'Queen'</span><span style="font-weight: bold">: </span><span style="color: red">'Purple'</span><span style="font-weight: bold">}
+
+
+</span><span style="color: blue; font-weight: bold">class </span>AntsGUI<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""GUI-based interactive strategy that logs all colony updates."""
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>initialized <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>initialize_colony_graphics<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create canvas, control panel, places, and labels."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>initialized <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>Canvas<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food_text <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_text<span style="font-weight: bold">(</span><span style="color: red">'Food: 1  Time: 0'</span><span style="font-weight: bold">, (</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">))
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_text <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_text<span style="font-weight: bold">(</span><span style="color: red">'Ant selected: None'</span><span style="font-weight: bold">, (</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">140</span><span style="font-weight: bold">))
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_rectangles <span style="font-weight: bold">= </span>list<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_init_control_panel<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_init_places<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+
+        </span>start_text <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_text<span style="font-weight: bold">(</span><span style="color: red">'CLICK TO START'</span><span style="font-weight: bold">, </span>MESSAGE_POS<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>wait_for_click<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>clear<span style="font-weight: bold">(</span>start_text<span style="font-weight: bold">)
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>_init_control_panel<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Construct the control panel of available ant types."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_selected <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>ant_type_frames <span style="font-weight: bold">= []  </span><span style="color: green; font-style: italic"># rectangle ids of frames.
+        </span>panel_pos <span style="font-weight: bold">= </span>PANEL_POS
+        <span style="color: blue; font-weight: bold">for </span>name<span style="font-weight: bold">, </span>ant_type <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>ant_types<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+            </span>width <span style="font-weight: bold">= </span>ANT_IMAGE_WIDTH <span style="font-weight: bold">+ </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>PANEL_PADDING<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+            </span>height <span style="font-weight: bold">= </span>ANT_IMAGE_HEIGHT <span style="font-weight: bold">+ </span><span style="color: red">6 </span><span style="font-weight: bold">+ </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>PANEL_PADDING<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+            </span><span style="color: blue; font-weight: bold">def </span>on_click<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">, </span>name<span style="font-weight: bold">=</span>name<span style="font-weight: bold">):
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_selected <span style="font-weight: bold">= </span>name
+                <span style="color: blue">self</span><span style="font-weight: bold">.</span>_update_control_panel<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+
+            </span>frame <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>add_click_rect<span style="font-weight: bold">(</span>panel_pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">, </span>on_click<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_frames<span style="font-weight: bold">.</span>append<span style="font-weight: bold">((</span>name<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">))
+            </span>img_pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>panel_pos<span style="font-weight: bold">, </span>PANEL_PADDING<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_image<span style="font-weight: bold">(</span>img_pos<span style="font-weight: bold">, </span>INSECT_FILES<span style="font-weight: bold">[</span>name<span style="font-weight: bold">])
+            </span>cost_pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>panel_pos<span style="font-weight: bold">, (</span>width <span style="font-weight: bold">/ </span><span style="color: red">2</span><span style="font-weight: bold">, </span>ANT_IMAGE_HEIGHT <span style="font-weight: bold">+ </span><span style="color: red">4
+                </span><span style="font-weight: bold">+ </span>PANEL_PADDING<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]))
+            </span>food_str <span style="font-weight: bold">= </span>str<span style="font-weight: bold">(</span>ant_type<span style="font-weight: bold">.</span>food_cost<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_text<span style="font-weight: bold">(</span>food_str<span style="font-weight: bold">, </span>cost_pos<span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span><span style="color: red">"center"</span><span style="font-weight: bold">)
+            </span>panel_pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>panel_pos<span style="font-weight: bold">, (</span>width <span style="font-weight: bold">+ </span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">))
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>_init_places<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Construct places in the play area."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">()
+        </span><span style="color: green; font-style: italic"># self.images: place_name -&gt; insect instance -&gt; image id
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images <span style="font-weight: bold">= {</span><span style="color: red">'AntQueen'</span><span style="font-weight: bold">: </span>dict<span style="font-weight: bold">()}
+        </span>place_pos <span style="font-weight: bold">= </span>PLACE_POS
+        width <span style="font-weight: bold">= </span>BEE_IMAGE_WIDTH <span style="font-weight: bold">+ </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>PLACE_PADDING<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span>height <span style="font-weight: bold">= </span>ANT_IMAGE_HEIGHT <span style="font-weight: bold">+ </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>PLACE_PADDING<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+        </span>rows <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">for </span>name<span style="font-weight: bold">, </span>place <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+            </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>name <span style="font-weight: bold">== </span><span style="color: red">'Hive'</span><span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">continue  </span><span style="color: green; font-style: italic"># Handled as a special case later
+            </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>exit<span style="font-weight: bold">.</span>name <span style="font-weight: bold">== </span><span style="color: red">'AntQueen'</span><span style="font-weight: bold">:
+                </span>row_offset <span style="font-weight: bold">= (</span><span style="color: red">0</span><span style="font-weight: bold">, </span>rows <span style="font-weight: bold">* (</span>height <span style="font-weight: bold">+ </span>PLACE_MARGIN<span style="font-weight: bold">))
+                </span>place_pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>PLACE_POS<span style="font-weight: bold">, </span>row_offset<span style="font-weight: bold">)
+                </span>rows <span style="font-weight: bold">+= </span><span style="color: red">1
+            </span><span style="color: blue; font-weight: bold">def </span>on_click<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">, </span>name<span style="font-weight: bold">=</span>name<span style="font-weight: bold">):
+                </span>ant_type <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_selected
+                existing_ant <span style="font-weight: bold">= </span>colony<span style="font-weight: bold">.</span>places<span style="font-weight: bold">[</span>name<span style="font-weight: bold">].</span>ant
+                <span style="color: blue; font-weight: bold">if </span>ant_type <span style="color: blue; font-weight: bold">is </span><span style="color: red">'Remover'</span><span style="font-weight: bold">:
+                    </span><span style="color: blue; font-weight: bold">if </span>existing_ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+                        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"colony.remove_ant('{0}')"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>name<span style="font-weight: bold">))
+                        </span>colony<span style="font-weight: bold">.</span>remove_ant<span style="font-weight: bold">(</span>name<span style="font-weight: bold">)
+                        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_update_places<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+                </span><span style="color: blue; font-weight: bold">elif </span>ant_type <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+                    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+                        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"colony.deploy_ant('{0}', '{1}')"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>name<span style="font-weight: bold">,
+                                                                       </span>ant_type<span style="font-weight: bold">))
+                        </span>colony<span style="font-weight: bold">.</span>deploy_ant<span style="font-weight: bold">(</span>name<span style="font-weight: bold">, </span>ant_type<span style="font-weight: bold">)
+                        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_update_places<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+                    </span><span style="color: blue; font-weight: bold">except </span>Exception as e<span style="font-weight: bold">:
+                        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>e<span style="font-weight: bold">)
+            </span>color <span style="font-weight: bold">= </span><span style="color: red">'Blue' </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>name<span style="font-weight: bold">.</span>startswith<span style="font-weight: bold">(</span><span style="color: red">'water'</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">else </span><span style="color: red">'White'
+            </span>frame <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>add_click_rect<span style="font-weight: bold">(</span>place_pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">, </span>on_click<span style="font-weight: bold">,
+                                             </span>color<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_image<span style="font-weight: bold">(</span>place_pos<span style="font-weight: bold">, </span>TUNNEL_FILE<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>name<span style="font-weight: bold">] = </span>place_pos
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>name<span style="font-weight: bold">] = </span>dict<span style="font-weight: bold">()
+            </span>place_pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>place_pos<span style="font-weight: bold">, (</span>width <span style="font-weight: bold">+ </span>PLACE_MARGIN<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">))
+
+        </span><span style="color: green; font-style: italic"># Hive
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">.</span>name<span style="font-weight: bold">] = </span>dict<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">.</span>name<span style="font-weight: bold">] = (</span>place_pos<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] + </span>width<span style="font-weight: bold">,
+                                               </span>HIVE_HEIGHT<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw_insect<span style="font-weight: bold">(</span>bee<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">.</span>name<span style="font-weight: bold">, </span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">)
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>add_click_rect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">, </span>on_click<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'White'</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Construct a rectangle that can be clicked."""
+        </span>frame_points <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>rectangle_points<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">)
+        </span>frame <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_polygon<span style="font-weight: bold">(</span>frame_points<span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_rectangles<span style="font-weight: bold">.</span>append<span style="font-weight: bold">((</span>pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">, </span>on_click<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">return </span>frame
+
+    <span style="color: blue; font-weight: bold">def </span>strategy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""The strategy function is called by the ants.AntColony each turn."""
+        </span><span style="color: blue; font-weight: bold">if not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>initialized<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>initialize_colony_graphics<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+        </span>elapsed <span style="font-weight: bold">= </span><span style="color: red">0  </span><span style="color: green; font-style: italic"># Physical time elapsed this turn
+        </span><span style="color: blue; font-weight: bold">while </span>elapsed <span style="font-weight: bold">&lt; </span>STRATEGY_SECONDS<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_update_control_panel<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_update_places<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">)
+            </span>msg <span style="font-weight: bold">= </span><span style="color: red">'Food: {0}  Time: {1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">.</span>food<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">.</span>time<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>edit_text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food_text<span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span>msg<span style="font-weight: bold">)
+            </span>pos<span style="font-weight: bold">, </span>el <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>wait_for_click<span style="font-weight: bold">(</span>STRATEGY_SECONDS <span style="font-weight: bold">- </span>elapsed<span style="font-weight: bold">)
+            </span>elapsed <span style="font-weight: bold">+= </span>el
+            <span style="color: blue; font-weight: bold">if </span>pos <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_interpret_click<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Throw leaves at the end of the turn
+        </span>has_ant <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>a<span style="font-weight: bold">: </span>hasattr<span style="font-weight: bold">(</span>a<span style="font-weight: bold">, </span><span style="color: red">'ant'</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>a<span style="font-weight: bold">.</span>ant
+        <span style="color: blue; font-weight: bold">for </span>ant <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>ants <span style="font-weight: bold">+ [</span>a<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">for </span>a <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>ants <span style="color: blue; font-weight: bold">if </span>has_ant<span style="font-weight: bold">(</span>a<span style="font-weight: bold">)]:
+            </span><span style="color: blue; font-weight: bold">if </span>ant<span style="font-weight: bold">.</span>name <span style="color: blue; font-weight: bold">in </span>LEAF_COLORS<span style="font-weight: bold">:
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_throw<span style="font-weight: bold">(</span>ant<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_interpret_click<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Interpret a click position by finding its click rectangle."""
+        </span>x<span style="font-weight: bold">, </span>y <span style="font-weight: bold">= </span>pos
+        <span style="color: blue; font-weight: bold">for </span>corner<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">, </span>on_click <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_rectangles<span style="font-weight: bold">:
+            </span>cx<span style="font-weight: bold">, </span>cy <span style="font-weight: bold">= </span>corner
+            <span style="color: blue; font-weight: bold">if </span>x <span style="font-weight: bold">&gt;= </span>cx <span style="color: blue; font-weight: bold">and </span>x <span style="font-weight: bold">&lt;= </span>cx <span style="font-weight: bold">+ </span>width <span style="color: blue; font-weight: bold">and </span>y <span style="font-weight: bold">&gt;= </span>cy <span style="color: blue; font-weight: bold">and </span>y <span style="font-weight: bold">&lt;= </span>cy <span style="font-weight: bold">+ </span>height<span style="font-weight: bold">:
+                </span>on_click<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">, </span>frame<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_update_control_panel<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Reflect the game state in the control panel."""
+        </span><span style="color: blue; font-weight: bold">for </span>name<span style="font-weight: bold">, </span>frame <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_frames<span style="font-weight: bold">:
+            </span>cost <span style="font-weight: bold">= </span>colony<span style="font-weight: bold">.</span>ant_types<span style="font-weight: bold">[</span>name<span style="font-weight: bold">].</span>food_cost
+            color <span style="font-weight: bold">= </span><span style="color: red">'White'
+            </span><span style="color: blue; font-weight: bold">if </span>cost <span style="font-weight: bold">&gt; </span>colony<span style="font-weight: bold">.</span>food<span style="font-weight: bold">:
+                </span>color <span style="font-weight: bold">= </span><span style="color: red">'Gray'
+            </span><span style="color: blue; font-weight: bold">elif </span>name <span style="font-weight: bold">== </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_type_selected<span style="font-weight: bold">:
+                </span>color <span style="font-weight: bold">= </span><span style="color: red">'Blue'
+                </span>msg <span style="font-weight: bold">= </span><span style="color: red">'Ant selected: {0}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>name<span style="font-weight: bold">)
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>edit_text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_text<span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span>msg<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>itemconfigure<span style="font-weight: bold">(</span>frame<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_update_places<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Reflect the game state in the play area.
+
+        This function handles several aspects of the game:
+          - Adding Ant images for newly placed ants
+          - Moving Bee images for bees that have advanced
+          - Moving insects out of play when they have expired
+        """
+        </span><span style="color: blue; font-weight: bold">for </span>name<span style="font-weight: bold">, </span>place <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+            </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>name <span style="font-weight: bold">== </span><span style="color: red">'Hive'</span><span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">continue
+            </span>current <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>name<span style="font-weight: bold">].</span>keys<span style="font-weight: bold">()
+
+            </span><span style="color: green; font-style: italic"># Add/move missing insects
+            </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">if </span>hasattr<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">, </span><span style="color: red">'container'</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>container \
+                    <span style="color: blue; font-weight: bold">and </span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">and </span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">not in </span>current<span style="font-weight: bold">:
+                    </span>container <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>name<span style="font-weight: bold">][</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">]
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw_insect<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">, </span>name<span style="font-weight: bold">, </span>behind<span style="font-weight: bold">=</span>container<span style="font-weight: bold">)
+                </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">not in </span>current<span style="font-weight: bold">:
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw_insect<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">, </span>name<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span>place<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">if </span>bee <span style="color: blue; font-weight: bold">not in </span>current<span style="font-weight: bold">:
+                    </span><span style="color: blue; font-weight: bold">for </span>other_place <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>values<span style="font-weight: bold">():
+                        </span><span style="color: blue; font-weight: bold">if </span>other_place<span style="font-weight: bold">.</span>exit <span style="color: blue; font-weight: bold">is </span>place<span style="font-weight: bold">:
+                            </span><span style="color: blue; font-weight: bold">break
+                    else</span><span style="font-weight: bold">:
+                        </span>other_place <span style="font-weight: bold">= </span>colony<span style="font-weight: bold">.</span>hive
+                    image <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>other_place<span style="font-weight: bold">.</span>name<span style="font-weight: bold">].</span>pop<span style="font-weight: bold">(</span>bee<span style="font-weight: bold">)
+                    </span>pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>name<span style="font-weight: bold">], </span>PLACE_PADDING<span style="font-weight: bold">)
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>slide_shape<span style="font-weight: bold">(</span>image<span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>STRATEGY_SECONDS<span style="font-weight: bold">)
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>name<span style="font-weight: bold">][</span>bee<span style="font-weight: bold">] = </span>image
+
+            <span style="color: green; font-style: italic"># Remove expired insects
+            </span>valid_insects <span style="font-weight: bold">= </span>set<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>bees <span style="font-weight: bold">+ [</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">])
+            </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">and </span>hasattr<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">, </span><span style="color: red">'container'</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>\
+                place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>container<span style="font-weight: bold">:
+                </span>valid_insects<span style="font-weight: bold">.</span>add<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">for </span>insect <span style="color: blue; font-weight: bold">in </span>current <span style="font-weight: bold">- </span>valid_insects<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">if not </span>place<span style="font-weight: bold">.</span>exit <span style="color: blue; font-weight: bold">or </span>insect <span style="color: blue; font-weight: bold">not in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>place<span style="font-weight: bold">.</span>exit<span style="font-weight: bold">.</span>name<span style="font-weight: bold">]:
+                    </span>image <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>name<span style="font-weight: bold">].</span>pop<span style="font-weight: bold">(</span>insect<span style="font-weight: bold">)
+                    </span>pos <span style="font-weight: bold">= (</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>name<span style="font-weight: bold">][</span><span style="color: red">0</span><span style="font-weight: bold">], </span>CRYPT<span style="font-weight: bold">)
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>slide_shape<span style="font-weight: bold">(</span>image<span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>STRATEGY_SECONDS<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_draw_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>insect<span style="font-weight: bold">, </span>place_name<span style="font-weight: bold">, </span>random_offset<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">, </span>behind<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Draw an insect and store the ID of its image."""
+        </span>image_file <span style="font-weight: bold">= </span>INSECT_FILES<span style="font-weight: bold">[</span>insect<span style="font-weight: bold">.</span>name<span style="font-weight: bold">]
+        </span>pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>place_name<span style="font-weight: bold">], </span>PLACE_PADDING<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>random_offset<span style="font-weight: bold">:
+            </span>pos <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, (</span>random<span style="font-weight: bold">.</span>randint<span style="font-weight: bold">(-</span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">10</span><span style="font-weight: bold">), </span>random<span style="font-weight: bold">.</span>randint<span style="font-weight: bold">(-</span><span style="color: red">50</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">)))
+        </span>image <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">.</span>draw_image<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>image_file<span style="font-weight: bold">, </span>behind<span style="font-weight: bold">=</span>behind<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>images<span style="font-weight: bold">[</span>place_name<span style="font-weight: bold">][</span>insect<span style="font-weight: bold">] = </span>image
+
+    <span style="color: blue; font-weight: bold">def </span>_throw<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>ant<span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Animate a leaf thrown at a Bee."""
+        </span>bee <span style="font-weight: bold">= </span>ant<span style="font-weight: bold">.</span>nearest_bee<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">)  </span><span style="color: green; font-style: italic"># nearest_bee logic from ants.py
+        </span><span style="color: blue; font-weight: bold">if </span>bee<span style="font-weight: bold">:
+            </span>start <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>ant<span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>name<span style="font-weight: bold">], </span>LEAF_START_OFFSET<span style="font-weight: bold">)
+            </span>end <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place_points<span style="font-weight: bold">[</span>bee<span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>name<span style="font-weight: bold">], </span>LEAF_END_OFFSET<span style="font-weight: bold">)
+            </span>animate_leaf<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>canvas<span style="font-weight: bold">, </span>start<span style="font-weight: bold">, </span>end<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span>LEAF_COLORS<span style="font-weight: bold">[</span>ant<span style="font-weight: bold">.</span>name<span style="font-weight: bold">])
+
+</span><span style="color: blue; font-weight: bold">def </span>leaf_coords<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>angle<span style="font-weight: bold">, </span>length<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the coordinates of a leaf polygon."""
+    </span>angles <span style="font-weight: bold">= [</span>angle <span style="font-weight: bold">- </span>pi<span style="font-weight: bold">, </span>angle <span style="font-weight: bold">- </span>pi<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">, </span>angle<span style="font-weight: bold">, </span>angle <span style="font-weight: bold">+ </span>pi<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">]
+    </span>distances <span style="font-weight: bold">= [</span>length<span style="font-weight: bold">/</span><span style="color: red">3</span><span style="font-weight: bold">, </span>length<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">, </span>length<span style="font-weight: bold">, </span>length<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>graphics<span style="font-weight: bold">.</span>translate_point<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>a<span style="font-weight: bold">, </span>d<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>a<span style="font-weight: bold">, </span>d <span style="color: blue; font-weight: bold">in </span>zip<span style="font-weight: bold">(</span>angles<span style="font-weight: bold">, </span>distances<span style="font-weight: bold">)]
+
+</span><span style="color: blue; font-weight: bold">def </span>animate_leaf<span style="font-weight: bold">(</span>canvas<span style="font-weight: bold">, </span>start<span style="font-weight: bold">, </span>end<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">=</span><span style="color: red">0.3</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'ForestGreen'</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Define the animation frames for a thrown leaf."""
+    </span>length <span style="font-weight: bold">= </span><span style="color: red">40
+    </span>leaf <span style="font-weight: bold">= </span>canvas<span style="font-weight: bold">.</span>draw_polygon<span style="font-weight: bold">(</span>leaf_coords<span style="font-weight: bold">(</span>start<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>length<span style="font-weight: bold">),
+            </span>color<span style="font-weight: bold">=</span><span style="color: red">'DarkGreen'</span><span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span>color<span style="font-weight: bold">, </span>smooth<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span>num_frames <span style="font-weight: bold">= </span>duration <span style="font-weight: bold">/ </span>graphics<span style="font-weight: bold">.</span>FRAME_TIME
+    increment <span style="font-weight: bold">= </span>tuple<span style="font-weight: bold">([(</span>e<span style="font-weight: bold">-</span>s<span style="font-weight: bold">) / </span>num_frames <span style="color: blue; font-weight: bold">for </span>s<span style="font-weight: bold">, </span>e <span style="color: blue; font-weight: bold">in </span>zip<span style="font-weight: bold">(</span>start<span style="font-weight: bold">, </span>end<span style="font-weight: bold">)])
+    </span><span style="color: blue; font-weight: bold">def </span>points_fn<span style="font-weight: bold">(</span>frame_count<span style="font-weight: bold">):
+        </span>nonlocal start
+        angle <span style="font-weight: bold">= </span>pi <span style="font-weight: bold">/ </span><span style="color: red">8 </span><span style="font-weight: bold">* </span>frame_count
+        cs <span style="font-weight: bold">= </span>leaf_coords<span style="font-weight: bold">(</span>start<span style="font-weight: bold">, </span>angle<span style="font-weight: bold">, </span>length<span style="font-weight: bold">)
+        </span>start <span style="font-weight: bold">= </span>shift_point<span style="font-weight: bold">(</span>start<span style="font-weight: bold">, </span>increment<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>cs
+    canvas<span style="font-weight: bold">.</span>animate_shape<span style="font-weight: bold">(</span>leaf<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">, </span>points_fn<span style="font-weight: bold">)
+    </span>canvas<span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>after<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span><span style="color: red">1000</span><span style="font-weight: bold">*</span>duration<span style="font-weight: bold">) + </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: blue; font-weight: bold">lambda</span><span style="font-weight: bold">: </span>canvas<span style="font-weight: bold">.</span>clear<span style="font-weight: bold">(</span>leaf<span style="font-weight: bold">))
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>ants<span style="font-weight: bold">.</span>start_with_strategy<span style="font-weight: bold">(</span>args<span style="font-weight: bold">, </span>AntsGUI<span style="font-weight: bold">().</span>strategy<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

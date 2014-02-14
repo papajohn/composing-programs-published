@@ -1,0 +1,386 @@
+<html>
+<head>
+<title>hog_gui.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>hog_gui.py (<a href="hog_gui.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""A graphical user interface (GUI) for the game of Hog.
+
+This file uses many features of Python not yet covered in the course.  A lab
+later in the semester will review its implementation and let you extend it.
+"""
+
+</span><span style="color: blue; font-weight: bold">import </span>hog
+<span style="color: blue; font-weight: bold">import </span>dice
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main
+
+<span style="color: blue; font-weight: bold">import </span>tkinter as tk
+<span style="color: blue; font-weight: bold">from </span>tkinter <span style="color: blue; font-weight: bold">import </span><span style="font-weight: bold">*
+</span><span style="color: blue; font-weight: bold">import </span>argparse
+
+<span style="color: green; font-style: italic">#############
+# Utilities #
+#############
+
+</span><span style="color: blue; font-weight: bold">class </span>BetterWidget<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A BetterWidget returns itself on pack and config for call chaining."""
+    </span><span style="color: blue; font-weight: bold">def </span>pack<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>super<span style="font-weight: bold">().</span>pack<span style="font-weight: bold">(**</span>kwargs<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self
+
+    </span><span style="color: blue; font-weight: bold">def </span>config<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>super<span style="font-weight: bold">().</span>config<span style="font-weight: bold">(**</span>kwargs<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self
+
+</span><span style="color: blue; font-weight: bold">class </span>TextWidget<span style="font-weight: bold">(</span>BetterWidget<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A TextWidget contains a mutable line of text."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>textvar <span style="font-weight: bold">= </span>kwargs<span style="font-weight: bold">.</span>get<span style="font-weight: bold">(</span><span style="color: red">'textvariable'</span><span style="font-weight: bold">, </span>tk<span style="font-weight: bold">.</span>StringVar<span style="font-weight: bold">())
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>config<span style="font-weight: bold">(</span>textvariable<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>textvar<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: red">'text' </span><span style="color: blue; font-weight: bold">in </span>kwargs<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>textvar<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>kwargs<span style="font-weight: bold">[</span><span style="color: red">'text'</span><span style="font-weight: bold">])
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>textvar<span style="font-weight: bold">.</span>get<span style="font-weight: bold">()
+
+    </span>@text<span style="font-weight: bold">.</span>setter
+    <span style="color: blue; font-weight: bold">def </span>text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>value<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>textvar<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>str<span style="font-weight: bold">(</span>value<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">class </span>Label<span style="font-weight: bold">(</span>TextWidget<span style="font-weight: bold">, </span>tk<span style="font-weight: bold">.</span>Label<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Label is a text label."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>kwargs<span style="font-weight: bold">.</span>update<span style="font-weight: bold">(</span>label_theme<span style="font-weight: bold">)
+        </span>tk<span style="font-weight: bold">.</span>Label<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+        </span>TextWidget<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">class </span>Button<span style="font-weight: bold">(</span>BetterWidget<span style="font-weight: bold">, </span>tk<span style="font-weight: bold">.</span>Button<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Button is an interactive button."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, *</span>args<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>kwargs<span style="font-weight: bold">.</span>update<span style="font-weight: bold">(</span>button_theme<span style="font-weight: bold">)
+        </span>tk<span style="font-weight: bold">.</span>Button<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, *</span>args<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">class </span>Entry<span style="font-weight: bold">(</span>TextWidget<span style="font-weight: bold">, </span>tk<span style="font-weight: bold">.</span>Entry<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""An Entry widget accepts text entry."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>kwargs<span style="font-weight: bold">.</span>update<span style="font-weight: bold">(</span>entry_theme<span style="font-weight: bold">)
+        </span>tk<span style="font-weight: bold">.</span>Entry<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+        </span>TextWidget<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">class </span>Frame<span style="font-weight: bold">(</span>BetterWidget<span style="font-weight: bold">, </span>tk<span style="font-weight: bold">.</span>Frame<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Frame contains other widgets."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, *</span>args<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">):
+        </span>kwargs<span style="font-weight: bold">.</span>update<span style="font-weight: bold">(</span>frame_theme<span style="font-weight: bold">)
+        </span>tk<span style="font-weight: bold">.</span>Frame<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, *</span>args<span style="font-weight: bold">, **</span>kwargs<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>name<span style="font-weight: bold">(</span>who<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the name of a player."""
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">"Player {0}"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>who<span style="font-weight: bold">)
+
+</span><span style="color: green; font-style: italic">#######
+# GUI #
+#######
+
+</span><span style="color: blue; font-weight: bold">class </span>HogGUIException<span style="font-weight: bold">(</span>BaseException<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""HogGUI-specific Exception. Used to exit a game prematurely."""
+    </span><span style="color: blue; font-weight: bold">pass
+
+class </span>HogGUI<span style="font-weight: bold">(</span>Frame<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Tkinter GUI for Hog."""
+
+    </span>KILL <span style="font-weight: bold">= -</span><span style="color: red">9   </span><span style="color: green; font-style: italic"># kill signal to stop a game
+
+    #########################
+    # Widget Initialization #
+    #########################
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, </span>computer<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Replace hog module's dice with hooks to GUI and start a game.
+
+        parent   -- parent widget (should be root)
+        computer -- True if playing against a computer
+        """
+        </span>super<span style="font-weight: bold">().</span>__init__<span style="font-weight: bold">(</span>parent<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>pack<span style="font-weight: bold">(</span>fill<span style="font-weight: bold">=</span>BOTH<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parent <span style="font-weight: bold">= </span>parent
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="font-weight: bold">= </span><span style="color: red">0
+
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>init_scores<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>init_rolls<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>init_dice<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>init_status<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>init_restart<span style="font-weight: bold">()
+
+        </span>hog<span style="font-weight: bold">.</span>six_sided <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>make_dice<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">)
+        </span>hog<span style="font-weight: bold">.</span>four_sided <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>make_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>computer<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>turn <span style="font-weight: bold">= </span>computer<span style="font-weight: bold">, </span><span style="color: red">0
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>play<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_scores<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates child widgets associated with scoring.
+
+        Each player has a score Label that is updated each turn. Scores can be
+        accessed and modified through Tkinter variables in self.score_vars.
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>score_frame <span style="font-weight: bold">= </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames <span style="font-weight: bold">= [</span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_labels <span style="font-weight: bold">= [</span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels <span style="font-weight: bold">= [</span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">):
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] = </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>score_frame<span style="font-weight: bold">, </span>padx<span style="font-weight: bold">=</span><span style="color: red">25</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">(</span>side<span style="font-weight: bold">=</span>LEFT<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_labels<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] = </span>Label<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames<span style="font-weight: bold">[</span>i<span style="font-weight: bold">],
+                        </span>text<span style="font-weight: bold">=</span>name<span style="font-weight: bold">(</span>i<span style="font-weight: bold">) + </span><span style="color: red">':'</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] = </span>Label<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames<span style="font-weight: bold">[</span>i<span style="font-weight: bold">]).</span>pack<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_rolls<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates child widgets associated with the number of rolls.
+
+        The primary widget is an Entry that accepts user input. An intermediate
+        Tkinter variable, self.roll_verified, is set to the final number of
+        rolls. Once it is updated, the player immediately takes a turn based on
+        its value.
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_frame <span style="font-weight: bold">= </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_label <span style="font-weight: bold">= </span>Label<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_frame<span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_entry <span style="font-weight: bold">= </span>Entry<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_frame<span style="font-weight: bold">,
+                                </span>justify<span style="font-weight: bold">=</span>CENTER<span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_entry<span style="font-weight: bold">.</span>bind<span style="font-weight: bold">(</span><span style="color: red">'&lt;Return&gt;'</span><span style="font-weight: bold">,
+                             </span><span style="color: blue; font-weight: bold">lambda </span>event<span style="font-weight: bold">: </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_button<span style="font-weight: bold">.</span>invoke<span style="font-weight: bold">())
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified <span style="font-weight: bold">= </span>IntVar<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_button <span style="font-weight: bold">= </span>Button<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_frame<span style="font-weight: bold">,
+                                  </span>text<span style="font-weight: bold">=</span><span style="color: red">'Roll!'</span><span style="font-weight: bold">,
+                                  </span>command<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll<span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_dice<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates child widgets associated with dice. Each dice is stored in a
+        Label. Dice Labels will be packed or unpacked depending on how many dice
+        are rolled.
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice_frames <span style="font-weight: bold">= [
+            </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">(),
+            </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+        ]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice <span style="font-weight: bold">= {
+            </span>i<span style="font-weight: bold">: </span>Label<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice_frames<span style="font-weight: bold">[</span>i<span style="font-weight: bold">//</span><span style="color: red">5</span><span style="font-weight: bold">]).
+                    </span>config<span style="font-weight: bold">(</span>image<span style="font-weight: bold">=</span>HogGUI<span style="font-weight: bold">.</span>IMAGES<span style="font-weight: bold">[</span><span style="color: red">6</span><span style="font-weight: bold">]).
+                    </span>pack<span style="font-weight: bold">(</span>side<span style="font-weight: bold">=</span>LEFT<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">)
+        }
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_status<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates child widgets associated with the game status. For example,
+        Hog Wild is displayed here."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label <span style="font-weight: bold">= </span>Label<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_restart<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates child widgets associated with restarting the game."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>restart_button <span style="font-weight: bold">= </span>Button<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span><span style="color: red">'Restart'</span><span style="font-weight: bold">,
+                                     </span>command<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>restart<span style="font-weight: bold">).</span>pack<span style="font-weight: bold">()
+
+    </span><span style="color: green; font-style: italic">##############
+    # Game Logic #
+    ##############
+
+    </span><span style="color: blue; font-weight: bold">def </span>make_dice<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>sides<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Creates a dice function that hooks to the GUI and wraps
+        dice.make_fair_dice.
+
+        sides -- number of sides for the die
+        """
+        </span>fair_dice <span style="font-weight: bold">= </span>dice<span style="font-weight: bold">.</span>make_fair_dice<span style="font-weight: bold">(</span>sides<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">def </span>gui_dice<span style="font-weight: bold">():
+            </span><span style="color: darkred">"""Roll fair_dice and add a corresponding image to self.dice."""
+            </span>result <span style="font-weight: bold">= </span>fair_dice<span style="font-weight: bold">()
+            </span>img <span style="font-weight: bold">= </span>HogGUI<span style="font-weight: bold">.</span>IMAGES<span style="font-weight: bold">[</span>result<span style="font-weight: bold">]
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice_count<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>image<span style="font-weight: bold">=</span>img<span style="font-weight: bold">).</span>pack<span style="font-weight: bold">(</span>side<span style="font-weight: bold">=</span>LEFT<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice_count <span style="font-weight: bold">+= </span><span style="color: red">1
+            </span><span style="color: blue; font-weight: bold">return </span>result
+        <span style="color: blue; font-weight: bold">return </span>gui_dice
+
+    <span style="color: blue; font-weight: bold">def </span>clear_dice<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Unpacks (hides) all dice Labels."""
+        </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">):
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice<span style="font-weight: bold">[</span>i<span style="font-weight: bold">].</span>pack_forget<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>roll<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Verify and set the number of rolls based on user input. As
+        per game rules, a valid number of rolls must be an integer
+        greater than or equal to 0.
+        """
+        </span>result <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_entry<span style="font-weight: bold">.</span>text
+        <span style="color: blue; font-weight: bold">if </span>result<span style="font-weight: bold">.</span>isnumeric<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">and </span><span style="color: red">10 </span><span style="font-weight: bold">&gt;= </span>int<span style="font-weight: bold">(</span>result<span style="font-weight: bold">) &gt;= </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span>result<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>switch<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>who<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Switches players. self.who is either 0 or 1."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>bg<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_labels<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>bg<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>bg<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="font-weight: bold">= </span><span style="color: red">1 </span><span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="color: blue; font-weight: bold">if </span>who <span style="color: blue; font-weight: bold">is </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">else </span>who
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>p_frames<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>select_bg<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>p_labels<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>select_bg<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">].</span>config<span style="font-weight: bold">(</span>bg<span style="font-weight: bold">=</span>select_bg<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>strategy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>score<span style="font-weight: bold">, </span>opp_score<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""A strategy with a hook to the GUI. This strategy gets
+        passed into the PLAY function from the HOG module. At its
+        core, the strategy waits until a number of rolls has been
+        verified, then returns that number. Game information is
+        updated as well.
+
+        score     -- player's score
+        opp_score -- opponent's score
+        """
+        </span>s0 <span style="font-weight: bold">= </span>score <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="font-weight: bold">== </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">else </span>opp_score
+        s1 <span style="font-weight: bold">= </span>opp_score <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="font-weight: bold">== </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">else </span>score
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span>s0
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span>s1
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span>name<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">) +</span><span style="color: red">' will roll:'
+        </span>status <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text
+        <span style="color: blue; font-weight: bold">if </span>hog<span style="font-weight: bold">.</span>select_dice<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opp_score<span style="font-weight: bold">) == </span>hog<span style="font-weight: bold">.</span>four_sided<span style="font-weight: bold">:
+            </span>status <span style="font-weight: bold">+= </span><span style="color: red">' Hog Wild!'
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span>status
+
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>computer <span style="color: blue; font-weight: bold">and </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who <span style="font-weight: bold">== </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>turn<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>after<span style="font-weight: bold">(</span>DELAY<span style="font-weight: bold">)
+            </span>result <span style="font-weight: bold">= </span>hog<span style="font-weight: bold">.</span>final_strategy<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opp_score<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_entry<span style="font-weight: bold">.</span>focus_set<span style="font-weight: bold">()
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>wait_variable<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified<span style="font-weight: bold">)
+            </span>result <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified<span style="font-weight: bold">.</span>get<span style="font-weight: bold">()
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_entry<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span><span style="color: red">''
+        </span><span style="color: blue; font-weight: bold">if </span>result <span style="font-weight: bold">== </span>HogGUI<span style="font-weight: bold">.</span>KILL<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>HogGUIException
+
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>clear_dice<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dice_count <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span><span style="color: red">'{} chose to roll {}.'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>name<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>who<span style="font-weight: bold">),
+                                                               </span>result<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>switch<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>result
+
+    <span style="color: blue; font-weight: bold">def </span>play<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Simulates a game of Hog by calling hog.play with the GUI strategies.
+
+        If the player destroys the window prematurely (i.e. in the
+        middle of a game), a HogGUIException is raised to exit out
+        of play's loop. Otherwise, the widget will be destroyed,
+        but the strategy will continue waiting.
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>turn <span style="font-weight: bold">= </span><span style="color: red">1 </span><span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>turn
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>switch<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span><span style="color: red">'0'
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span><span style="color: red">'0'
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span><span style="color: red">''
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>score<span style="font-weight: bold">, </span>opponent_score <span style="font-weight: bold">= </span>hog<span style="font-weight: bold">.</span>play<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>strategy<span style="font-weight: bold">,
+                                             </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>strategy<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span>HogGUIException<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">pass
+        else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span>score
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>s_labels<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">].</span>text <span style="font-weight: bold">= </span>opponent_score
+            winner <span style="font-weight: bold">= </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">if </span>score <span style="font-weight: bold">&gt; </span>opponent_score <span style="color: blue; font-weight: bold">else </span><span style="color: red">1
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span><span style="color: red">'Game over! {} wins!'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(
+                                        </span>name<span style="font-weight: bold">(</span>winner<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>restart<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Kills the current game and begins another game."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>HogGUI<span style="font-weight: bold">.</span>KILL<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>status_label<span style="font-weight: bold">.</span>text <span style="font-weight: bold">= </span><span style="color: red">''
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>clear_dice<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>play<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>destroy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Overrides the destroy method to end the current game."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>roll_verified<span style="font-weight: bold">.</span>set<span style="font-weight: bold">(</span>HogGUI<span style="font-weight: bold">.</span>KILL<span style="font-weight: bold">)
+        </span>super<span style="font-weight: bold">().</span>destroy<span style="font-weight: bold">()
+
+</span><span style="color: blue; font-weight: bold">def </span>run_GUI<span style="font-weight: bold">(</span>computer<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Start the GUI.
+
+    computer -- True if playing against computer
+    """
+    </span>root <span style="font-weight: bold">= </span>Tk<span style="font-weight: bold">()
+    </span>root<span style="font-weight: bold">.</span>title<span style="font-weight: bold">(</span><span style="color: red">'The Game of Hog'</span><span style="font-weight: bold">)
+    </span>root<span style="font-weight: bold">.</span>minsize<span style="font-weight: bold">(</span><span style="color: red">520</span><span style="font-weight: bold">, </span><span style="color: red">400</span><span style="font-weight: bold">)
+    </span>root<span style="font-weight: bold">.</span>geometry<span style="font-weight: bold">(</span><span style="color: red">"520x400"</span><span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Tkinter only works with GIFs
+    </span>HogGUI<span style="font-weight: bold">.</span>IMAGES <span style="font-weight: bold">= {
+        </span><span style="color: red">1</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die1.gif'</span><span style="font-weight: bold">),
+        </span><span style="color: red">2</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die2.gif'</span><span style="font-weight: bold">),
+        </span><span style="color: red">3</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die3.gif'</span><span style="font-weight: bold">),
+        </span><span style="color: red">4</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die4.gif'</span><span style="font-weight: bold">),
+        </span><span style="color: red">5</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die5.gif'</span><span style="font-weight: bold">),
+        </span><span style="color: red">6</span><span style="font-weight: bold">: </span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span><span style="color: red">'images/die6.gif'</span><span style="font-weight: bold">),
+    }
+
+    </span>app <span style="font-weight: bold">= </span>HogGUI<span style="font-weight: bold">(</span>root<span style="font-weight: bold">, </span>computer<span style="font-weight: bold">)
+    </span>root<span style="font-weight: bold">.</span>mainloop<span style="font-weight: bold">()
+
+</span><span style="color: green; font-style: italic">##########
+# THEMES #
+##########
+
+</span>select_bg <span style="font-weight: bold">= </span><span style="color: red">'#a6d785'
+</span>bg<span style="font-weight: bold">=</span><span style="color: red">'#ffffff'
+</span>fg<span style="font-weight: bold">=</span><span style="color: red">'#000000'
+</span>font<span style="font-weight: bold">=(</span><span style="color: red">'Arial'</span><span style="font-weight: bold">, </span><span style="color: red">14</span><span style="font-weight: bold">)
+
+</span>frame_theme <span style="font-weight: bold">= {
+    </span><span style="color: red">'bg'</span><span style="font-weight: bold">: </span>bg<span style="font-weight: bold">,
+}
+
+</span>label_theme <span style="font-weight: bold">= {
+    </span><span style="color: red">'font'</span><span style="font-weight: bold">: </span>font<span style="font-weight: bold">,
+    </span><span style="color: red">'bg'</span><span style="font-weight: bold">: </span>bg<span style="font-weight: bold">,
+    </span><span style="color: red">'fg'</span><span style="font-weight: bold">: </span>fg<span style="font-weight: bold">,
+}
+
+</span>button_theme <span style="font-weight: bold">= {
+    </span><span style="color: red">'font'</span><span style="font-weight: bold">: </span>font<span style="font-weight: bold">,
+    </span><span style="color: red">'activebackground'</span><span style="font-weight: bold">: </span>select_bg<span style="font-weight: bold">,
+    </span><span style="color: red">'bg'</span><span style="font-weight: bold">: </span>bg<span style="font-weight: bold">,
+    </span><span style="color: red">'fg'</span><span style="font-weight: bold">: </span>fg<span style="font-weight: bold">,
+}
+
+</span>entry_theme <span style="font-weight: bold">= {
+    </span><span style="color: red">'fg'</span><span style="font-weight: bold">: </span>fg<span style="font-weight: bold">,
+    </span><span style="color: red">'bg'</span><span style="font-weight: bold">: </span>bg<span style="font-weight: bold">,
+    </span><span style="color: red">'font'</span><span style="font-weight: bold">: </span>font<span style="font-weight: bold">,
+    </span><span style="color: red">'insertbackground'</span><span style="font-weight: bold">: </span>fg<span style="font-weight: bold">,
+}
+
+</span><span style="color: green; font-style: italic">##########################
+# Command Line Interface #
+##########################
+
+</span>DELAY<span style="font-weight: bold">=</span><span style="color: red">2000
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>parser <span style="font-weight: bold">= </span>argparse<span style="font-weight: bold">.</span>ArgumentParser<span style="font-weight: bold">(</span>description<span style="font-weight: bold">=</span><span style="color: red">'Hog GUI'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-f'</span><span style="font-weight: bold">, </span><span style="color: red">'--final'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'play against the final strategy in hog.py. '
+                             'Computer alternates playing as player 0 and 1.'</span><span style="font-weight: bold">,
+                        </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-d'</span><span style="font-weight: bold">, </span><span style="color: red">'--delay'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'time delay for computer, in seconds'</span><span style="font-weight: bold">, </span>type<span style="font-weight: bold">=</span>int<span style="font-weight: bold">,
+                        </span>default<span style="font-weight: bold">=</span><span style="color: red">2</span><span style="font-weight: bold">)
+    </span>args <span style="font-weight: bold">= </span>parser<span style="font-weight: bold">.</span>parse_args<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">global </span>DELAY
+    DELAY <span style="font-weight: bold">= </span>args<span style="font-weight: bold">.</span>delay <span style="font-weight: bold">* </span><span style="color: red">1000
+    </span>run_GUI<span style="font-weight: bold">(</span>computer<span style="font-weight: bold">=</span>args<span style="font-weight: bold">.</span>final<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

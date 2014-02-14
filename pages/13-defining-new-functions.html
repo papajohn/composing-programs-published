@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>1.3 Defining New Functions</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 1<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/11-getting-started.html">1.1 Getting Started</a></h3>
+				<li><a href="../pages/11-getting-started.html#programming-in-python">1.1.1 Programming in Python</a>
+				<li><a href="../pages/11-getting-started.html#installing-python-3">1.1.2 Installing Python 3</a>
+				<li><a href="../pages/11-getting-started.html#interactive-sessions">1.1.3 Interactive Sessions</a>
+				<li><a href="../pages/11-getting-started.html#first-example">1.1.4 First Example</a>
+				<li><a href="../pages/11-getting-started.html#errors">1.1.5 Errors</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/12-elements-of-programming.html">1.2 Elements of Programming</a></h3>
+				<li><a href="../pages/12-elements-of-programming.html#expressions">1.2.1 Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#call-expressions">1.2.2 Call Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#importing-library-functions">1.2.3 Importing Library Functions</a>
+				<li><a href="../pages/12-elements-of-programming.html#names-and-the-environment">1.2.4 Names and the Environment</a>
+				<li><a href="../pages/12-elements-of-programming.html#evaluating-nested-expressions">1.2.5 Evaluating Nested Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#the-non-pure-print-function">1.2.6 The Non-Pure Print Function</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/13-defining-new-functions.html">1.3 Defining New Functions</a></h3>
+				<li><a href="../pages/13-defining-new-functions.html#environments">1.3.1 Environments</a>
+				<li><a href="../pages/13-defining-new-functions.html#calling-user-defined-functions">1.3.2 Calling User-Defined Functions</a>
+				<li><a href="../pages/13-defining-new-functions.html#example-calling-a-user-defined-function">1.3.3 Example: Calling a User-Defined Function</a>
+				<li><a href="../pages/13-defining-new-functions.html#local-names">1.3.4 Local Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#choosing-names">1.3.5 Choosing Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#functions-as-abstractions">1.3.6 Functions as Abstractions</a>
+				<li><a href="../pages/13-defining-new-functions.html#operators">1.3.7 Operators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/14-designing-functions.html">1.4 Designing Functions</a></h3>
+				<li><a href="../pages/14-designing-functions.html#documentation">1.4.1 Documentation</a>
+				<li><a href="../pages/14-designing-functions.html#default-argument-values">1.4.2 Default Argument Values</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/15-control.html">1.5 Control</a></h3>
+				<li><a href="../pages/15-control.html#statements">1.5.1 Statements</a>
+				<li><a href="../pages/15-control.html#compound-statements">1.5.2 Compound Statements</a>
+				<li><a href="../pages/15-control.html#defining-functions-ii-local-assignment">1.5.3 Defining Functions II: Local Assignment</a>
+				<li><a href="../pages/15-control.html#conditional-statements">1.5.4 Conditional Statements</a>
+				<li><a href="../pages/15-control.html#iteration">1.5.5 Iteration</a>
+				<li><a href="../pages/15-control.html#testing">1.5.6 Testing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/16-higher-order-functions.html">1.6 Higher-Order Functions</a></h3>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-arguments">1.6.1 Functions as Arguments</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-general-methods">1.6.2 Functions as General Methods</a>
+				<li><a href="../pages/16-higher-order-functions.html#defining-functions-iii-nested-definitions">1.6.3 Defining Functions III: Nested Definitions</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-returned-values">1.6.4 Functions as Returned Values</a>
+				<li><a href="../pages/16-higher-order-functions.html#example-newton-s-method">1.6.5 Example: Newton's Method</a>
+				<li><a href="../pages/16-higher-order-functions.html#currying">1.6.6 Currying</a>
+				<li><a href="../pages/16-higher-order-functions.html#lambda-expressions">1.6.7 Lambda Expressions</a>
+				<li><a href="../pages/16-higher-order-functions.html#abstractions-and-first-class-functions">1.6.8 Abstractions and First-Class Functions</a>
+				<li><a href="../pages/16-higher-order-functions.html#function-decorators">1.6.9 Function Decorators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/17-recursive-functions.html">1.7 Recursive Functions</a></h3>
+				<li><a href="../pages/17-recursive-functions.html#the-anatomy-of-recursive-functions">1.7.1 The Anatomy of Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#mutual-recursion">1.7.2 Mutual Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#printing-in-recursive-functions">1.7.3 Printing in Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#tree-recursion">1.7.4 Tree Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#example-partitions">1.7.5 Example: Partitions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="defining-new-functions">
+<h2>1.3   Defining New Functions</h2>
+<p>We have identified in Python some of the elements that must appear in any
+powerful programming language:</p>
+<ol class="arabic simple">
+<li>Numbers and arithmetic operations are <em>primitive</em> built-in data values and
+functions.</li>
+<li>Nested function application provides a means of <em>combining</em> operations.</li>
+<li>Binding names to values provides a limited means of <em>abstraction</em>.</li>
+</ol>
+<p>Now we will learn about <em>function definitions</em>, a much more powerful abstraction
+technique by which a name can be bound to compound operation, which can then be
+referred to as a unit.</p>
+<p>We begin by examining how to express the idea of <em>squaring</em>. We might say, "To
+square something, multiply it by itself." This is expressed in Python as</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+<p>which defines a new function that has been given the name <tt class="docutils literal">square</tt>.
+This user-defined function is not built into the interpreter. It represents the
+compound operation of multiplying something by itself. The <tt class="docutils literal">x</tt> in this
+definition is called a <em>formal parameter</em>, which provides a name for the thing
+to be multiplied. The definition creates this user-defined function and
+associates it with the name <tt class="docutils literal">square</tt>.</p>
+<p><strong>How to define a function.</strong> Function definitions consist of a <tt class="docutils literal">def</tt>
+statement that indicates a <tt class="docutils literal">&lt;name&gt;</tt> and a comma-separated list of named
+<tt class="docutils literal">&lt;formal parameters&gt;</tt>, then a <tt class="docutils literal">return</tt> statement, called the function body,
+that specifies the <tt class="docutils literal">&lt;return expression&gt;</tt> of the function, which is an
+expression to be evaluated whenever the function is applied:</p>
+<pre class="literal-block">
+def &lt;name&gt;(&lt;formal parameters&gt;):
+    return &lt;return expression&gt;
+</pre>
+<p>The second line <em>must</em> be indented — most programmers use four spaces to indent.
+The return expression is not evaluated right away; it is stored as part of the
+newly defined function and evaluated only when the function is eventually
+applied.</p>
+<p>Having defined <tt class="docutils literal">square</tt>, we can apply it with a call expression:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">square</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+<span class="go">441</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">square</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">49</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">square</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="go">81</span>
+</pre></div>
+
+<p>We can also use <tt class="docutils literal">square</tt> as a building block in defining other functions. For
+example, we can easily define a function <tt class="docutils literal">sum_squares</tt> that, given any two
+numbers as arguments, returns the sum of their squares:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sum_squares</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">square</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sum_squares</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">25</span>
+</pre></div>
+
+<p>User-defined functions are used in exactly the same way as built-in functions.
+Indeed, one cannot tell from the definition of <tt class="docutils literal">sum_squares</tt> whether
+<tt class="docutils literal">square</tt> is built into the interpreter, imported from a module, or defined by
+the user.</p>
+<p>Both <tt class="docutils literal">def</tt> statements and assignment statements bind names to values, and any
+existing bindings are lost.  For example, <tt class="docutils literal">g</tt> below first refers to a function
+of no arguments, then a number, and then a different function of two arguments.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">h</span> <span class="o">+</span> <span class="n">i</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+
+<div class="section" id="environments">
+<h3>1.3.1   Environments</h3>
+<p>Our subset of Python is now complex enough that the meaning of programs is
+non-obvious. What if a formal parameter has the same name as a built-in
+function?  Can two functions share names without confusion?  To resolve such
+questions, we must describe environments in more detail.</p>
+<p>An environment in which an expression is evaluated consists of a sequence of
+<em>frames</em>, depicted as boxes. Each frame contains <em>bindings</em>, each of which
+associates a name with its corresponding value. There is a single <em>global</em>
+frame. Assignment and import statements add entries to the first frame of the
+current environment. So far, our environment consists only of the global frame.</p>
+<div class="example" data-output="False" data-step="-1" id="example_0" style="">
+from math import pi
+tau = 2 * pi
+</div>
+<script type="text/javascript">
+var example_0_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["pi"], "heap": {}, "globals": {"pi": 3.1416}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["pi", "tau"], "heap": {}, "globals": {"tau": 6.2832, "pi": 3.1416}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}], "code": "from math import pi\ntau = 2 * pi"}</script><p>This <em>environment diagram</em> shows the bindings of the current environment, along
+with the values to which names are bound. The environment diagrams in this text
+are interactive: you can step through the lines of the small program on the left
+to see the state of the environment evolve on the right. You can also click on
+the "Edit code in Online Python Tutor" link to load the example into the <a class="reference external" href="http://www.composingprograms.com/tutor">Online
+Python Tutor</a>, a tool created by
+<a class="reference external" href="http://www.pgbovine.net/">Philip Guo</a> for generating these environment
+diagrams. You are encouraged to create examples yourself and study the resulting
+environment diagrams.</p>
+<p>A <tt class="docutils literal">def</tt> statement also binds a name to the function created by the definition.
+The resulting environment after defining <tt class="docutils literal">square</tt> appears below:</p>
+<div class="example" data-output="False" data-step="-1" id="example_1" style="">
+from operator import mul
+def square(x):
+    return mul(x, x)
+</div>
+<script type="text/javascript">
+var example_1_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["mul"], "heap": {"1": ["FUNCTION", "mul(...)", null]}, "globals": {"mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}], "code": "from operator import mul\ndef square(x):\n    return mul(x, x)"}</script><p>Notice that the name of a function is repeated, once in the global frame, and
+once as part of the function itself, called the <em>intrinsic name</em>. This
+repetition is intentional: many different names may refer to the same function,
+but that function itself has only one intrinsic name.</p>
+<p>The name bound to a function in a frame is the one used during evaluation. The
+intrinsic name of a function does not play a role in evaluation. Step through
+the example below using the <em>Forward</em> button to see that once the name <tt class="docutils literal">max</tt>
+is bound to the value 3, it can no longer be used as a function.</p>
+<div class="example" data-output="False" data-step="2" id="example_2" style="">
+f = max
+max = 3
+result = f(2, 3, 4)
+max(1, 2)  # Causes an error
+</div>
+<script type="text/javascript">
+var example_2_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["f"], "heap": {"1": ["FUNCTION", "max(...)", null]}, "globals": {"f": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["f", "max"], "heap": {"1": ["FUNCTION", "max(...)", null]}, "globals": {"f": ["REF", 1], "max": 3}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 3, "stdout": ""}, {"ordered_globals": ["f", "max", "result"], "heap": {"1": ["FUNCTION", "max(...)", null]}, "globals": {"f": ["REF", 1], "result": 4, "max": 3}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["f", "max", "result"], "heap": {"1": ["FUNCTION", "max(...)", null]}, "globals": {"f": ["REF", 1], "result": 4, "max": 3}, "event": "exception", "stack_to_render": [], "func_name": "<module>", "line": 4, "exception_msg": "TypeError: 'int' object is not callable", "stdout": ""}], "code": "f = max\nmax = 3\nresult = f(2, 3, 4)\nmax(1, 2)  # Causes an error"}</script><p>The error message <tt class="docutils literal">TypeError: 'int' object is not callable</tt> is reporting that
+the name <tt class="docutils literal">max</tt> (currently bound to the number 3) is an integer and not a
+function.  Therefore, it cannot be used as the operator in a call expression.</p>
+<p><strong>Function Signatures.</strong> Functions differ in the number of arguments that they
+are allowed to take. To track these requirements, we draw each function in a
+way that shows the function name and its formal parameters. The user-defined
+function <tt class="docutils literal">square</tt> takes only <tt class="docutils literal">x</tt>; providing more or fewer arguments will
+result in an error.  A description of the formal parameters of a function is
+called the function's signature.</p>
+<p>The function <tt class="docutils literal">max</tt> can take an arbitrary number of arguments. It is rendered
+as <tt class="docutils literal"><span class="pre">max(...)</span></tt>. Regardless of the number of arguments taken, all built-in
+functions will be rendered as <tt class="docutils literal"><span class="pre">&lt;name&gt;(...)</span></tt>, because these primitive
+functions were never explicitly defined.</p>
+</div>
+<div class="section" id="calling-user-defined-functions">
+<h3>1.3.2   Calling User-Defined Functions</h3>
+<p>To evaluate a call expression whose operator names a user-defined function, the
+Python interpreter follows a computational process. As with any call
+expression, the interpreter evaluates the operator and operand expressions, and
+then applies the named function to the resulting arguments.</p>
+<p>Applying a user-defined function introduces a second <em>local</em> frame, which is
+only accessible to that function. To apply a user-defined function to some
+arguments:</p>
+<ol class="arabic simple">
+<li>Bind the arguments to the names of the function's formal parameters in a new
+<em>local</em> frame.</li>
+<li>Execute the body of the function in the environment that starts with this
+frame.</li>
+</ol>
+<p>The environment in which the body is evaluated consists of two frames: first the
+local frame that contains formal parameter bindings, then the global frame that
+contains everything else. Each instance of a function application has its own
+independent local frame.</p>
+<p>To illustrate an example in detail, several steps of the environment diagram
+for the same example are depicted below.  After executing the first import
+statement, only the name <tt class="docutils literal">mul</tt> is bound in the global frame.</p>
+<div class="example" data-output="False" data-step="1" id="example_3" style="">
+from operator import mul
+def square(x):
+    return mul(x, x)
+square(-2)
+</div>
+<script type="text/javascript">
+var example_3_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["mul"], "heap": {"1": ["FUNCTION", "mul(...)", null]}, "globals": {"mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1_z"}], "func_name": "<module>", "line": 4, "stdout": ""}], "code": "from operator import mul\ndef square(x):\n    return mul(x, x)\nsquare(-2)"}</script><p>First, the definition statement for the function <tt class="docutils literal">square</tt> is executed.
+Notice that the entire <tt class="docutils literal">def</tt> statement is processed in a single step. The
+body of a function is not executed until the function is called (not when it is
+defined).</p>
+<div class="example" data-output="False" data-step="2" id="example_4" style="">
+from operator import mul
+def square(x):
+    return mul(x, x)
+square(-2)
+</div>
+<script type="text/javascript">
+var example_4_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["mul"], "heap": {"1": ["FUNCTION", "mul(...)", null]}, "globals": {"mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1_z"}], "func_name": "<module>", "line": 4, "stdout": ""}], "code": "from operator import mul\ndef square(x):\n    return mul(x, x)\nsquare(-2)"}</script><p>Next, The <tt class="docutils literal">square</tt> function is called with the argument <tt class="docutils literal"><span class="pre">-2</span></tt>, and so a
+new frame is created with the formal parameter <tt class="docutils literal">x</tt> bound to the value <tt class="docutils literal"><span class="pre">-2</span></tt>.</p>
+<div class="example" data-output="False" data-step="3" id="example_5" style="">
+from operator import mul
+def square(x):
+    return mul(x, x)
+square(-2)
+</div>
+<script type="text/javascript">
+var example_5_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["mul"], "heap": {"1": ["FUNCTION", "mul(...)", null]}, "globals": {"mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1_z"}], "func_name": "<module>", "line": 4, "stdout": ""}], "code": "from operator import mul\ndef square(x):\n    return mul(x, x)\nsquare(-2)"}</script><p>Then, the name <tt class="docutils literal">x</tt> is looked up in the current environment, which consists of
+the two frames shown.  In both occurrences, <tt class="docutils literal">x</tt> evaluates to <tt class="docutils literal"><span class="pre">-2</span></tt>, and so
+the <tt class="docutils literal">square</tt> function returns 4.</p>
+<div class="example" data-output="False" data-step="4" id="example_6" style="">
+from operator import mul
+def square(x):
+    return mul(x, x)
+square(-2)
+</div>
+<script type="text/javascript">
+var example_6_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["mul"], "heap": {"1": ["FUNCTION", "mul(...)", null]}, "globals": {"mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["mul", "square"], "heap": {"1": ["FUNCTION", "mul(...)", null], "2": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 2], "mul": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 4, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f1_z"}], "func_name": "<module>", "line": 4, "stdout": ""}], "code": "from operator import mul\ndef square(x):\n    return mul(x, x)\nsquare(-2)"}</script><p>The "Return value" in the <tt class="docutils literal">square()</tt> frame is not a name binding; instead it
+indicates the value returned by the function call that created the frame.</p>
+<p>Even in this simple example, two different environments are used.  The
+top-level expression <tt class="docutils literal"><span class="pre">square(-2)</span></tt> is evaluated in the global environment,
+while the return expression <tt class="docutils literal">mul(x, x)</tt> is evaluated in the environment
+created for by calling <tt class="docutils literal">square</tt>. Both <tt class="docutils literal">x</tt> and <tt class="docutils literal">mul</tt> are bound in this
+environment, but in different frames.</p>
+<p>The order of frames in an environment affects the value returned by looking up a
+name in an expression. We stated previously that a name is evaluated to the
+value associated with that name in the current environment. We can now be more
+precise:</p>
+<p><strong>Name Evaluation.</strong> A name evaluates to the value bound to that name in the
+earliest frame of the current environment in which that name is found.</p>
+<p>Our conceptual framework of environments, names, and functions constitutes a
+<em>model of evaluation</em>; while some mechanical details are still unspecified
+(e.g., how a binding is implemented), our model does precisely and correctly
+describe how the interpreter evaluates call expressions. In Chapter 3 we will
+see how this model can serve as a blueprint for implementing a working
+interpreter for a programming language.</p>
+</div>
+<div class="section" id="example-calling-a-user-defined-function">
+<h3>1.3.3   Example: Calling a User-Defined Function</h3>
+<p>Let us again consider our two simple function definitions and illustrate the
+process that evaluates a call expression for a user-defined function.</p>
+<div class="example" data-output="False" data-step="3" id="example_7" style="">
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+def sum_squares(x, y):
+    return add(square(x), square(y))
+
+result = sum_squares(5, 12)
+</div>
+<script type="text/javascript">
+var example_7_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["add", "mul"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null]}, "globals": {"add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares", "result"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "result": 169, "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": true, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "from operator import add, mul\ndef square(x):\n    return mul(x, x)\n\ndef sum_squares(x, y):\n    return add(square(x), square(y))\n\nresult = sum_squares(5, 12)"}</script><p>Python first evaluates the name <tt class="docutils literal">sum_squares</tt>, which is bound to a
+user-defined function in the global frame. The primitive numeric expressions 5
+and 12 evaluate to the numbers they represent.</p>
+<p>Next, Python applies <tt class="docutils literal">sum_squares</tt>, which introduces a local frame that binds x
+to 5 and y to 12.</p>
+<div class="example" data-output="False" data-step="4" id="example_8" style="">
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+def sum_squares(x, y):
+    return add(square(x), square(y))
+
+result = sum_squares(5, 12)
+</div>
+<script type="text/javascript">
+var example_8_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["add", "mul"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null]}, "globals": {"add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares", "result"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "result": 169, "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": true, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "from operator import add, mul\ndef square(x):\n    return mul(x, x)\n\ndef sum_squares(x, y):\n    return add(square(x), square(y))\n\nresult = sum_squares(5, 12)"}</script><p>The body of <tt class="docutils literal">sum_squares</tt> contains this call expression:</p>
+<pre class="literal-block">
+  add     (  square(x)  ,  square(y)  )
+________     _________     _________
+operator     operand 0     operand 1
+</pre>
+<p>All three subexpressions are evalauted in the current environment, which begins
+with the frame labeled <tt class="docutils literal">sum_squares()</tt>.  The operator subexpression <tt class="docutils literal">add</tt>
+is a name found in the global frame, bound to the built-in function for
+addition. The two operand subexpressions must be evaluated in turn, before
+addition is applied.  Both operands are evaluated in the current environment
+beginning with the frame labeled <tt class="docutils literal">sum_squares</tt>.</p>
+<p>In <tt class="docutils literal">operand 0</tt>, <tt class="docutils literal">square</tt> names a user-defined function in the global frame,
+while <tt class="docutils literal">x</tt> names the number 5 in the local frame. Python applies <tt class="docutils literal">square</tt> to
+5 by introducing yet another local frame that binds x to 5.</p>
+<div class="example" data-output="False" data-step="5" id="example_9" style="">
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+def sum_squares(x, y):
+    return add(square(x), square(y))
+
+result = sum_squares(5, 12)
+</div>
+<script type="text/javascript">
+var example_9_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["add", "mul"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null]}, "globals": {"add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares", "result"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "result": 169, "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": true, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "from operator import add, mul\ndef square(x):\n    return mul(x, x)\n\ndef sum_squares(x, y):\n    return add(square(x), square(y))\n\nresult = sum_squares(5, 12)"}</script><p>Using this environment, the expression <tt class="docutils literal">mul(x, x)</tt> evaluates to 25.</p>
+<p>Our evaluation procedure now turns to <tt class="docutils literal">operand 1</tt>, for which <tt class="docutils literal">y</tt> names the
+number 12. Python evaluates the body of <tt class="docutils literal">square</tt> again, this time introducing
+yet another local frame that binds <tt class="docutils literal">x</tt> to 12. Hence, <tt class="docutils literal">operand 1</tt> evaluates
+to 144.</p>
+<div class="example" data-output="False" data-step="8" id="example_10" style="">
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+def sum_squares(x, y):
+    return add(square(x), square(y))
+
+result = sum_squares(5, 12)
+</div>
+<script type="text/javascript">
+var example_10_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["add", "mul"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null]}, "globals": {"add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares", "result"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "result": 169, "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": true, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "from operator import add, mul\ndef square(x):\n    return mul(x, x)\n\ndef sum_squares(x, y):\n    return add(square(x), square(y))\n\nresult = sum_squares(5, 12)"}</script><p>Finally, applying addition to the arguments 25 and 144 yields a final return
+value for <tt class="docutils literal">sum_squares</tt>: 169.</p>
+<div class="example" data-output="False" data-step="-1" id="example_11" style="">
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+def sum_squares(x, y):
+    return add(square(x), square(y))
+
+result = sum_squares(5, 12)
+</div>
+<script type="text/javascript">
+var example_11_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["add", "mul"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null]}, "globals": {"add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null]}, "globals": {"square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 5, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 5}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 2, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"x": 12}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": false, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3"}], "func_name": "square", "line": 3, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": false, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "sum_squares", "line": 6, "stdout": ""}, {"ordered_globals": ["add", "mul", "square", "sum_squares", "result"], "heap": {"1": ["FUNCTION", "add(...)", null], "2": ["FUNCTION", "mul(...)", null], "3": ["FUNCTION", "square(x)", null], "4": ["FUNCTION", "sum_squares(x, y)", null]}, "globals": {"sum_squares": ["REF", 4], "square": ["REF", 3], "add": ["REF", 1], "result": 169, "mul": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "sum_squares", "is_zombie": true, "encoded_locals": {"__return__": 169, "y": 12, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "y", "__return__"], "unique_hash": "sum_squares_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 25, "x": 5}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "square", "is_zombie": true, "encoded_locals": {"__return__": 144, "x": 12}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "square_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "from operator import add, mul\ndef square(x):\n    return mul(x, x)\n\ndef sum_squares(x, y):\n    return add(square(x), square(y))\n\nresult = sum_squares(5, 12)"}</script><p>This example illustrates many of the fundamental ideas we have developed so
+far.  Names are bound to values, which are distributed across many independent
+local frames, along with a single global frame that contains shared names. A
+new local frame is introduced every time a function is called, even if the same
+function is called twice.</p>
+<p>All of this machinery exists to ensure that names resolve to the correct values
+at the correct times during program execution.  This example illustrates why our
+model requires the complexity that we have introduced. All three local frames
+contain a binding for the name <tt class="docutils literal">x</tt>, but that name is bound to different values
+in different frames.  Local frames keep these names separate.</p>
+</div>
+<div class="section" id="local-names">
+<h3>1.3.4   Local Names</h3>
+<p>One detail of a function's implementation that should not affect the function's
+behavior is the implementer's choice of names for the function's formal
+parameters. Thus, the following functions should provide the same behavior:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+<p>This principle -- that the meaning of a function should be independent of the
+parameter names chosen by its author -- has important consequences for
+programming languages. The simplest consequence is that the parameter names of a
+function must remain local to the body of the function.</p>
+<p>If the parameters were not local to the bodies of their respective functions,
+then the parameter <tt class="docutils literal">x</tt> in <tt class="docutils literal">square</tt> could be confused with the parameter <tt class="docutils literal">x</tt> in
+<tt class="docutils literal">sum_squares</tt>. Critically, this is not the case: the binding for <tt class="docutils literal">x</tt> in
+different local frames are unrelated. The model of computation is carefully
+designed to ensure this independence.</p>
+<p>We say that the <em>scope</em> of a local name is limited to the body of the
+user-defined function that defines it. When a name is no longer accessible, it
+is out of scope. This scoping behavior isn't a new fact about our model; it is a
+consequence of the way environments work.</p>
+</div>
+<div class="section" id="choosing-names">
+<h3>1.3.5   Choosing Names</h3>
+<p>The interchangeability of names does not imply that formal parameter names do not
+matter at all. On the contrary, well-chosen function and parameter names are
+essential for the human interpretability of function definitions!</p>
+<p>The following guidelines are adapted from the <a class="reference external" href="http://www.python.org/dev/peps/pep-0008">style guide for Python code</a>,
+which serves as a guide for all (non-rebellious) Python programmers. A shared
+set of conventions smooths communication among members of a developer
+community. As a side effect of following these conventions, you will find that
+your code becomes more internally consistent.</p>
+<ol class="arabic simple">
+<li>Function names are lowercase, with words separated by underscores.
+Descriptive names are encouraged.</li>
+<li>Function names typically evoke operations applied to arguments by the
+interpreter (e.g., <tt class="docutils literal">print</tt>, <tt class="docutils literal">add</tt>, <tt class="docutils literal">square</tt>) or the name of the
+quantity that results (e.g., <tt class="docutils literal">max</tt>, <tt class="docutils literal">abs</tt>, <tt class="docutils literal">sum</tt>).</li>
+<li>Parameter names are lowercase, with words separated by underscores.
+Single-word names are preferred.</li>
+<li>Parameter names should evoke the role of the parameter in the function, not
+just the kind of argument that is allowed.</li>
+<li>Single letter parameter names are acceptable when their role is obvious, but
+avoid "l" (lowercase ell), "O" (capital oh), or "I" (capital i) to avoid
+confusion with numerals.</li>
+</ol>
+<p>There are many exceptions to these guidelines, even in the Python standard
+library. Like the vocabulary of the English language, Python has inherited
+words from a variety of contributors, and the result is not always consistent.</p>
+</div>
+<div class="section" id="functions-as-abstractions">
+<h3>1.3.6   Functions as Abstractions</h3>
+<p>Though it is very simple, <tt class="docutils literal">sum_squares</tt> exemplifies the most powerful
+property of user-defined functions. The function <tt class="docutils literal">sum_squares</tt> is defined in
+terms of the function <tt class="docutils literal">square</tt>, but relies only on the relationship that
+<tt class="docutils literal">square</tt> defines between its input arguments and its output values.</p>
+<p>We can write <tt class="docutils literal">sum_squares</tt> without concerning ourselves with <em>how</em> to square
+a number. The details of how the square is computed can be suppressed, to be
+considered at a later time. Indeed, as far as <tt class="docutils literal">sum_squares</tt> is concerned,
+<tt class="docutils literal">square</tt> is not a particular function body, but rather an abstraction of a
+function, a so-called functional abstraction. At this level of abstraction, any
+function that computes the square is equally good.</p>
+<p>Thus, considering only the values they return, the following two functions for
+squaring a number should be indistinguishable. Each takes a numerical argument
+and produces the square of that number as the value.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span>
+</pre></div>
+
+<p>In other words, a function definition should be able to suppress details. The
+users of the function may not have written the function themselves, but may have
+obtained it from another programmer as a "black box". A programmer should not
+need to know how the function is implemented in order to use it.  The Python
+Library has this property. Many developers use the functions defined there, but
+few ever inspect their implementation.</p>
+<p><strong>Aspects of a functional abstraction.</strong> To master the use of a functional
+abstraction, it is often useful to consider its three core attributes. The
+<em>domain</em> of a function is the set of arguments it can take.  The <em>range</em> of a
+function is the set of values it can return. The <em>intent</em> of a function is the
+relationship it computes between inputs and output (as well as any side effects
+it might generate). Understanding functional abstractions via their domain,
+range, and intent is critical to using them correctly in a complex program.</p>
+<p>For example, any <tt class="docutils literal">square</tt> function that we use to implement <tt class="docutils literal">sum_squares</tt>
+should have these attributes:</p>
+<ul class="simple">
+<li>The <em>domain</em> is any single real number.</li>
+<li>The <em>range</em> is any non-negative real number.</li>
+<li>The <em>intent</em> is that the output is the square of the input.</li>
+</ul>
+<p>These attributes do not specify how the intent is carried out; that detail is
+abstracted away.</p>
+</div>
+<div class="section" id="operators">
+<h3>1.3.7   Operators</h3>
+<p>Mathematical operators (such as <tt class="docutils literal">+</tt> and <tt class="docutils literal">-</tt>) provided our first example of a
+method of combination, but we have yet to define an evaluation procedure for
+expressions that contain these operators.</p>
+<p>Python expressions with infix operators each have their own evaluation procedures,
+but you can often think of them as short-hand for call expressions. When you see</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="go">5</span>
+</pre></div>
+
+<p>simply consider it to be short-hand for</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">5</span>
+</pre></div>
+
+<p>Infix notation can be nested, just like call expressions. Python applies the
+normal mathematical rules of operator precedence, which dictate how to interpret
+a compound expression with multiple operators.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="go">19</span>
+</pre></div>
+
+<p>evaluates to the same result as</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">19</span>
+</pre></div>
+
+<p>The nesting in the call expression is more explicit than the operator
+version, but also harder to read. Python also allows subexpression grouping
+with parentheses, to override the normal precedence rules or make the nested
+structure of an expression more explicit.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">45</span>
+</pre></div>
+
+<p>evaluates to the same result as</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mul</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">add</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">45</span>
+</pre></div>
+
+<p>When it comes to division, Python provides two infix operators: <tt class="docutils literal">/</tt> and
+<tt class="docutils literal">//</tt>. The former is normal division, so that it results in a <em>floating point</em>,
+or decimal value, even if the divisor evenly divides the dividend:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="go">1.25</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">8</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="go">2.0</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">//</tt> operator, on the other hand, rounds the result down to an integer:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="o">//</span> <span class="mi">4</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">-</span><span class="mi">5</span> <span class="o">//</span> <span class="mi">4</span>
+<span class="go">-2</span>
+</pre></div>
+
+<p>These two operators are shorthand for the <tt class="docutils literal">truediv</tt> and <tt class="docutils literal">floordiv</tt>
+functions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">truediv</span><span class="p">,</span> <span class="n">floordiv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truediv</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">1.25</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">floordiv</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+
+<p>You should feel free to use infix operators and parentheses in your programs.
+Idiomatic Python prefers operators over call expressions for simple mathematical
+operations.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/14-designing-functions.html">
+  		1.4 Designing Functions
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

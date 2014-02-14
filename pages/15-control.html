@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>1.5 Control</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 1<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/11-getting-started.html">1.1 Getting Started</a></h3>
+				<li><a href="../pages/11-getting-started.html#programming-in-python">1.1.1 Programming in Python</a>
+				<li><a href="../pages/11-getting-started.html#installing-python-3">1.1.2 Installing Python 3</a>
+				<li><a href="../pages/11-getting-started.html#interactive-sessions">1.1.3 Interactive Sessions</a>
+				<li><a href="../pages/11-getting-started.html#first-example">1.1.4 First Example</a>
+				<li><a href="../pages/11-getting-started.html#errors">1.1.5 Errors</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/12-elements-of-programming.html">1.2 Elements of Programming</a></h3>
+				<li><a href="../pages/12-elements-of-programming.html#expressions">1.2.1 Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#call-expressions">1.2.2 Call Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#importing-library-functions">1.2.3 Importing Library Functions</a>
+				<li><a href="../pages/12-elements-of-programming.html#names-and-the-environment">1.2.4 Names and the Environment</a>
+				<li><a href="../pages/12-elements-of-programming.html#evaluating-nested-expressions">1.2.5 Evaluating Nested Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#the-non-pure-print-function">1.2.6 The Non-Pure Print Function</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/13-defining-new-functions.html">1.3 Defining New Functions</a></h3>
+				<li><a href="../pages/13-defining-new-functions.html#environments">1.3.1 Environments</a>
+				<li><a href="../pages/13-defining-new-functions.html#calling-user-defined-functions">1.3.2 Calling User-Defined Functions</a>
+				<li><a href="../pages/13-defining-new-functions.html#example-calling-a-user-defined-function">1.3.3 Example: Calling a User-Defined Function</a>
+				<li><a href="../pages/13-defining-new-functions.html#local-names">1.3.4 Local Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#choosing-names">1.3.5 Choosing Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#functions-as-abstractions">1.3.6 Functions as Abstractions</a>
+				<li><a href="../pages/13-defining-new-functions.html#operators">1.3.7 Operators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/14-designing-functions.html">1.4 Designing Functions</a></h3>
+				<li><a href="../pages/14-designing-functions.html#documentation">1.4.1 Documentation</a>
+				<li><a href="../pages/14-designing-functions.html#default-argument-values">1.4.2 Default Argument Values</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/15-control.html">1.5 Control</a></h3>
+				<li><a href="../pages/15-control.html#statements">1.5.1 Statements</a>
+				<li><a href="../pages/15-control.html#compound-statements">1.5.2 Compound Statements</a>
+				<li><a href="../pages/15-control.html#defining-functions-ii-local-assignment">1.5.3 Defining Functions II: Local Assignment</a>
+				<li><a href="../pages/15-control.html#conditional-statements">1.5.4 Conditional Statements</a>
+				<li><a href="../pages/15-control.html#iteration">1.5.5 Iteration</a>
+				<li><a href="../pages/15-control.html#testing">1.5.6 Testing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/16-higher-order-functions.html">1.6 Higher-Order Functions</a></h3>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-arguments">1.6.1 Functions as Arguments</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-general-methods">1.6.2 Functions as General Methods</a>
+				<li><a href="../pages/16-higher-order-functions.html#defining-functions-iii-nested-definitions">1.6.3 Defining Functions III: Nested Definitions</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-returned-values">1.6.4 Functions as Returned Values</a>
+				<li><a href="../pages/16-higher-order-functions.html#example-newton-s-method">1.6.5 Example: Newton's Method</a>
+				<li><a href="../pages/16-higher-order-functions.html#currying">1.6.6 Currying</a>
+				<li><a href="../pages/16-higher-order-functions.html#lambda-expressions">1.6.7 Lambda Expressions</a>
+				<li><a href="../pages/16-higher-order-functions.html#abstractions-and-first-class-functions">1.6.8 Abstractions and First-Class Functions</a>
+				<li><a href="../pages/16-higher-order-functions.html#function-decorators">1.6.9 Function Decorators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/17-recursive-functions.html">1.7 Recursive Functions</a></h3>
+				<li><a href="../pages/17-recursive-functions.html#the-anatomy-of-recursive-functions">1.7.1 The Anatomy of Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#mutual-recursion">1.7.2 Mutual Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#printing-in-recursive-functions">1.7.3 Printing in Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#tree-recursion">1.7.4 Tree Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#example-partitions">1.7.5 Example: Partitions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="control">
+<h2>1.5   Control</h2>
+<p>The expressive power of the functions that we can define at this point is very
+limited, because we have not introduced a way to make comparisons and to perform
+different operations depending on the result of a comparison. <em>Control statements</em>
+will give us this ability.  They are statements that control the flow of a
+program's execution based on the results of logical comparisons.</p>
+<p>Statements differ fundamentally from the expressions that we have studied so
+far. They have no value.  Instead of computing something, executing a control
+statement determines what the interpreter should do next.</p>
+<div class="section" id="statements">
+<h3>1.5.1   Statements</h3>
+<p>So far, we have primarily considered how to evaluate expressions. However, we
+have seen three kinds of statements already: assignment, <tt class="docutils literal">def</tt>, and
+<tt class="docutils literal">return</tt> statements. These lines of Python code are not themselves
+expressions, although they all contain expressions as components.</p>
+<p>Rather than being evaluated, statements are <em>executed</em>. Each statement
+describes some change to the interpreter state, and executing a statement
+applies that change. As we have seen for <tt class="docutils literal">return</tt> and assignment statements,
+executing statements can involve evaluating subexpressions contained within
+them.</p>
+<p>Expressions can also be executed as statements, in which case they are
+evaluated, but their value is discarded. Executing a pure function has no
+effect, but executing a non-pure function can cause effects as a consequence of
+function application.</p>
+<p>Consider, for instance,</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="c"># Watch out! This call doesn't return a value.</span>
+</pre></div>
+
+<p>This example is valid Python, but probably not what was intended.  The body of
+the function consists of an expression.  An expression by itself is a valid
+statement, but the effect of the statement is that the <tt class="docutils literal">mul</tt> function is
+called, and the result is discarded.  If you want to do something with the
+result of an expression, you need to say so: you might store it with an
+assignment statement or return it with a return statement:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+<p>Sometimes it does make sense to have a function whose body is an expression,
+when a non-pure function like <tt class="docutils literal">print</tt> is called.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">print_square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+<p>At its highest level, the Python interpreter's job is to execute programs,
+composed of statements. However, much of the interesting work of computation
+comes from evaluating expressions. Statements govern the relationship among
+different expressions in a program and what happens to their results.</p>
+</div>
+<div class="section" id="compound-statements">
+<h3>1.5.2   Compound Statements</h3>
+<p>In general, Python code is a sequence of statements. A simple statement is a
+single line that doesn't end in a colon. A compound statement is so called
+because it is composed of other statements (simple and compound). Compound
+statements typically span multiple lines and start with a one-line header ending
+in a colon, which identifies the type of statement. Together, a header and an
+indented suite of statements is called a clause.  A compound statement consists
+of one or more clauses:</p>
+<pre class="literal-block">
+&lt;header&gt;:
+    &lt;statement&gt;
+    &lt;statement&gt;
+    ...
+&lt;separating header&gt;:
+    &lt;statement&gt;
+    &lt;statement&gt;
+    ...
+...
+</pre>
+<p>We can understand the statements we have already introduced in these terms.</p>
+<ul class="simple">
+<li>Expressions, return statements, and assignment statements are simple statements.</li>
+<li>A <tt class="docutils literal">def</tt> statement is a compound statement. The suite that follows the
+<tt class="docutils literal">def</tt> header defines the function body.</li>
+</ul>
+<p>Specialized evaluation rules for each kind of header dictate when and if the
+statements in its suite are executed. We say that the header controls its suite.
+For example, in the case of <tt class="docutils literal">def</tt> statements, we saw that the return
+expression is not evaluated immediately, but instead stored for later use when
+the defined function is eventually called.</p>
+<p>We can also understand multi-line programs now.</p>
+<ul class="simple">
+<li>To execute a sequence of statements, execute the first statement. If that
+statement does not redirect control, then proceed to execute the rest of the
+sequence of statements, if any remain.</li>
+</ul>
+<p>This definition exposes the essential structure of a recursively defined
+<em>sequence</em>: a sequence can be decomposed into its first element and the rest of
+its elements. The "rest" of a sequence of statements is itself a sequence of
+statements!  Thus, we can recursively apply this execution rule. This view of
+sequences as recursive data structures will appear again in later chapters.</p>
+<p>The important consequence of this rule is that statements are executed in order,
+but later statements may never be reached, because of redirected control.</p>
+<p><strong>Practical Guidance.</strong> When indenting a suite, all lines must be indented the
+same amount and in the same way (use spaces, not tabs).  Any variation in
+indentation will cause an error.</p>
+</div>
+<div class="section" id="defining-functions-ii-local-assignment">
+<h3>1.5.3   Defining Functions II: Local Assignment</h3>
+<p>Originally, we stated that the body of a user-defined function consisted only of
+a <tt class="docutils literal">return</tt> statement with a single return expression. In fact, functions can
+define a sequence of operations that extends beyond a single expression.</p>
+<p>Whenever a user-defined function is applied, the sequence of clauses in the
+suite of its definition is executed in a local environment. A <tt class="docutils literal">return</tt>
+statement redirects control: the process of function application terminates
+whenever the first <tt class="docutils literal">return</tt> statement is executed, and the value of the
+<tt class="docutils literal">return</tt> expression is the returned value of the function being applied.</p>
+<p>Thus, assignment statements can now appear within a function body.
+For instance, this function returns the absolute difference between two
+quantities as a percentage of the first, using a two-step calculation:</p>
+<div class="example" data-output="False" data-step="-1" id="example_12" style="">
+def percent_difference(x, y):
+    difference = abs(x-y)
+    return 100 * difference / x
+result = percent_difference(40, 50)
+</div>
+<script type="text/javascript">
+var example_12_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["percent_difference"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 4, "stdout": ""}, {"ordered_globals": ["percent_difference"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "percent_difference", "is_zombie": false, "encoded_locals": {"y": 50, "x": 40}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "percent_difference_f1"}], "func_name": "percent_difference", "line": 1, "stdout": ""}, {"ordered_globals": ["percent_difference"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "percent_difference", "is_zombie": false, "encoded_locals": {"y": 50, "x": 40}, "is_parent": false, "ordered_varnames": ["x", "y"], "unique_hash": "percent_difference_f1"}], "func_name": "percent_difference", "line": 2, "stdout": ""}, {"ordered_globals": ["percent_difference"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "percent_difference", "is_zombie": false, "encoded_locals": {"difference": 10, "y": 50, "x": 40}, "is_parent": false, "ordered_varnames": ["x", "y", "difference"], "unique_hash": "percent_difference_f1"}], "func_name": "percent_difference", "line": 3, "stdout": ""}, {"ordered_globals": ["percent_difference"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "percent_difference", "is_zombie": false, "encoded_locals": {"difference": 10, "__return__": ["SPECIAL_FLOAT", "25.0"], "y": 50, "x": 40}, "is_parent": false, "ordered_varnames": ["x", "y", "difference", "__return__"], "unique_hash": "percent_difference_f1"}], "func_name": "percent_difference", "line": 3, "stdout": ""}, {"ordered_globals": ["percent_difference", "result"], "heap": {"1": ["FUNCTION", "percent_difference(x, y)", null]}, "globals": {"percent_difference": ["REF", 1], "result": ["SPECIAL_FLOAT", "25.0"]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "percent_difference", "is_zombie": true, "encoded_locals": {"difference": 10, "__return__": ["SPECIAL_FLOAT", "25.0"], "y": 50, "x": 40}, "is_parent": false, "ordered_varnames": ["x", "y", "difference", "__return__"], "unique_hash": "percent_difference_f1_z"}], "func_name": "<module>", "line": 4, "stdout": ""}], "code": "def percent_difference(x, y):\n    difference = abs(x-y)\n    return 100 * difference / x\nresult = percent_difference(40, 50)"}</script><p>The effect of an assignment statement is to bind a name to a value in the
+<em>first</em> frame of the current environment. As a consequence, assignment
+statements within a function body cannot affect the global frame.  The fact that
+functions can only manipulate their local environment is critical to creating
+<em>modular</em> programs, in which pure functions interact only via the values they
+take and return.</p>
+<p>Of course, the <tt class="docutils literal">percent_difference</tt> function could be written as a single
+expression, as shown below, but the return expression is more complex.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">percent_difference</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">percent_difference</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="go">25.0</span>
+</pre></div>
+
+<p>So far, local assignment hasn't increased the expressive power of our function
+definitions. It will do so, when combined with other control statements. In
+addition, local assignment also plays a critical role in clarifying the meaning
+of complex expressions by assigning names to intermediate quantities.</p>
+</div>
+<div class="section" id="conditional-statements">
+<h3>1.5.4   Conditional Statements</h3>
+<p>Python has a built-in function for computing absolute values.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>We would like to be able to implement such a function ourselves, but we have no
+obvious way to define a function that has a comparison and a choice. We would
+like to express that if <tt class="docutils literal">x</tt> is positive, <tt class="docutils literal">abs(x)</tt> returns <tt class="docutils literal">x</tt>.
+Furthermore, if <tt class="docutils literal">x</tt> is 0, <tt class="docutils literal">abs(x)</tt> returns 0. Otherwise, <tt class="docutils literal">abs(x)</tt> returns
+<tt class="docutils literal"><span class="pre">-x</span></tt>. In Python, we can express this choice with a conditional statement.</p>
+<div class="example" data-output="False" data-step="-1" id="example_13" style="">
+def absolute_value(x):
+    """Compute abs(x)."""
+    if x &gt; 0:
+        return x
+    elif x == 0:
+        return 0
+    else:
+        return -x
+
+result = absolute_value(-2)
+</div>
+<script type="text/javascript">
+var example_13_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 10, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "absolute_value_f1"}], "func_name": "absolute_value", "line": 1, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "absolute_value_f1"}], "func_name": "absolute_value", "line": 3, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "absolute_value_f1"}], "func_name": "absolute_value", "line": 5, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": false, "encoded_locals": {"x": -2}, "is_parent": false, "ordered_varnames": ["x"], "unique_hash": "absolute_value_f1"}], "func_name": "absolute_value", "line": 8, "stdout": ""}, {"ordered_globals": ["absolute_value"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": false, "encoded_locals": {"__return__": 2, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "absolute_value_f1"}], "func_name": "absolute_value", "line": 8, "stdout": ""}, {"ordered_globals": ["absolute_value", "result"], "heap": {"1": ["FUNCTION", "absolute_value(x)", null]}, "globals": {"absolute_value": ["REF", 1], "result": 2}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "absolute_value", "is_zombie": true, "encoded_locals": {"__return__": 2, "x": -2}, "is_parent": false, "ordered_varnames": ["x", "__return__"], "unique_hash": "absolute_value_f1_z"}], "func_name": "<module>", "line": 10, "stdout": ""}], "code": "def absolute_value(x):\n    \"\"\"Compute abs(x).\"\"\"\n    if x > 0:\n        return x\n    elif x == 0:\n        return 0\n    else:\n        return -x\n\nresult = absolute_value(-2)"}</script><p>This implementation of <tt class="docutils literal">absolute_value</tt> raises several important issues:</p>
+<p><strong>Conditional statements</strong>. A conditional statement in Python consists of a
+series of headers and suites: a required <tt class="docutils literal">if</tt> clause, an optional sequence of
+<tt class="docutils literal">elif</tt> clauses, and finally an optional <tt class="docutils literal">else</tt> clause:</p>
+<pre class="literal-block">
+if &lt;expression&gt;:
+    &lt;suite&gt;
+elif &lt;expression&gt;:
+    &lt;suite&gt;
+else:
+    &lt;suite&gt;
+</pre>
+<p>When executing a conditional statement, each clause is considered in order. The
+computational process of executing a conditional clause follows.</p>
+<ol class="arabic simple">
+<li>Evaluate the header's expression.</li>
+<li>If it is a true value, execute the suite. Then, skip over all subsequent
+clauses in the conditional statement.</li>
+</ol>
+<p>If the <tt class="docutils literal">else</tt> clause is reached (which only happens if all <tt class="docutils literal">if</tt> and <tt class="docutils literal">elif</tt>
+expressions evaluate to false values), its suite is executed.</p>
+<p><strong>Boolean contexts</strong>. Above, the execution procedures mention "a false value"
+and "a true value." The expressions inside the header statements of conditional
+blocks are said to be in <em>boolean contexts</em>: their truth values matter to
+control flow, but otherwise their values are not assigned or returned.  Python
+includes several false values, including 0, <tt class="docutils literal">None</tt>, and the <em>boolean</em> value
+<tt class="docutils literal">False</tt>.  All other numbers are true values. In Chapter 2, we will see that
+every built-in kind of data in Python has both true and false values.</p>
+<p><strong>Boolean values</strong>. Python has two boolean values, called <tt class="docutils literal">True</tt> and
+<tt class="docutils literal">False</tt>. Boolean values represent truth values in logical expressions.  The
+built-in comparison operations, <tt class="docutils literal">&gt;, &lt;, &gt;=, &lt;=, ==, !=</tt>, return these values.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">4</span> <span class="o">&lt;</span> <span class="mi">2</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">5</span> <span class="o">&gt;=</span> <span class="mi">5</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>This second example reads "5 is greater than or equal to 5", and corresponds to
+the function <tt class="docutils literal">ge</tt> in the <tt class="docutils literal">operator</tt> module.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">0</span> <span class="o">==</span> <span class="o">-</span><span class="mi">0</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>This final example reads "0 equals -0", and corresponds to <tt class="docutils literal">eq</tt> in the
+<tt class="docutils literal">operator</tt> module. Notice that Python distinguishes assignment (<tt class="docutils literal">=</tt>) from
+equality comparison (<tt class="docutils literal">==</tt>), a convention shared across many programming
+languages.</p>
+<p><strong>Boolean operators</strong>. Three basic logical operators are also built into Python:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">True</span> <span class="ow">and</span> <span class="k">False</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">True</span> <span class="ow">or</span> <span class="k">False</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="ow">not</span> <span class="k">False</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>Logical expressions have corresponding evaluation procedures. These procedures
+exploit the fact that the truth value of a logical expression can sometimes be
+determined without evaluating all of its subexpressions, a feature called
+<em>short-circuiting</em>.</p>
+<p>To evaluate the expression <tt class="docutils literal">&lt;left&gt; and &lt;right&gt;</tt>:</p>
+<ol class="arabic simple">
+<li>Evaluate the subexpression <tt class="docutils literal">&lt;left&gt;</tt>.</li>
+<li>If the result is a false value <tt class="docutils literal">v</tt>, then the expression evaluates to <tt class="docutils literal">v</tt>.</li>
+<li>Otherwise, the expression evaluates to the value of the subexpression
+<tt class="docutils literal">&lt;right&gt;</tt>.</li>
+</ol>
+<p>To evaluate the expression <tt class="docutils literal">&lt;left&gt; or &lt;right&gt;</tt>:</p>
+<ol class="arabic simple">
+<li>Evaluate the subexpression <tt class="docutils literal">&lt;left&gt;</tt>.</li>
+<li>If the result is a true value <tt class="docutils literal">v</tt>, then the expression evaluates to <tt class="docutils literal">v</tt>.</li>
+<li>Otherwise, the expression evaluates to the value of the subexpression
+<tt class="docutils literal">&lt;right&gt;</tt>.</li>
+</ol>
+<p>To evaluate the expression <tt class="docutils literal">not &lt;exp&gt;</tt>:</p>
+<ol class="arabic simple">
+<li>Evaluate <tt class="docutils literal">&lt;exp&gt;</tt>; The value is <tt class="docutils literal">True</tt> if the result is a false value, and
+<tt class="docutils literal">False</tt> otherwise.</li>
+</ol>
+<p>These values, rules, and operators provide us with a way to combine the results
+of comparisons.  Functions that perform comparisons and return boolean values
+typically begin with <tt class="docutils literal">is</tt>, not followed by an underscore (e.g., <tt class="docutils literal">isfinite</tt>,
+<tt class="docutils literal">isdigit</tt>, <tt class="docutils literal">isinstance</tt>, etc.).</p>
+</div>
+<div class="section" id="iteration">
+<h3>1.5.5   Iteration</h3>
+<p>In addition to selecting which statements to execute, control statements are
+used to express repetition. If each line of code we wrote were only executed once,
+programming would be a very unproductive exercise. Only through repeated
+execution of statements do we unlock the full potential of computers. We have
+already seen one form of repetition: a function can be applied many times,
+although it is only defined once. Iterative control structures are another
+mechanism for executing the same statements many times.</p>
+<p>Consider the sequence of Fibonacci numbers, in which each number is the sum of
+the preceding two:</p>
+<pre class="literal-block">
+0, 1, 1, 2, 3, 5, 8, 13, 21, ...
+</pre>
+<p>Each value is constructed by repeatedly applying the sum-previous-two rule. The
+first and second are fixed to 0 and 1.  For instance, the eighth Fibonacci
+number is 13.</p>
+<p>We can use a <tt class="docutils literal">while</tt> statement to enumerate <tt class="docutils literal">n</tt> Fibonacci numbers.  We need
+to track how many values we've created (<tt class="docutils literal">k</tt>), along with the kth value
+(<tt class="docutils literal">curr</tt>) and its predecessor (<tt class="docutils literal">pred</tt>). Step through this function and
+observe how the Fibonacci numbers evolve one by one, bound to <tt class="docutils literal">curr</tt>.</p>
+<div class="example" data-output="False" data-step="1" id="example_14" style="">
+def fib(n):
+    """Compute the nth Fibonacci number, for n &gt;= 2."""
+    pred, curr = 0, 1   # Fibonacci numbers 1 and 2
+    k = 2               # Which Fib number is curr?
+    while k &lt; n:
+        pred, curr = curr, pred + curr
+        k = k + 1
+    return curr
+
+result = fib(8)
+</div>
+<script type="text/javascript">
+var example_14_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 10, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 3, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "pred": 0}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 4, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "k": 2, "pred": 0}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "k": 2, "pred": 0}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "k": 2, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "k": 3, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 1, "k": 3, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 2, "k": 3, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 2, "k": 4, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 2, "k": 4, "pred": 1}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 3, "k": 4, "pred": 2}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 3, "k": 5, "pred": 2}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 3, "k": 5, "pred": 2}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 5, "k": 5, "pred": 3}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 5, "k": 6, "pred": 3}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 5, "k": 6, "pred": 3}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 8, "k": 6, "pred": 5}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 8, "k": 7, "pred": 5}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 8, "k": 7, "pred": 5}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 13, "k": 7, "pred": 8}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 7, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 13, "k": 8, "pred": 8}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "curr": 13, "k": 8, "pred": 8}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 8, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 8, "__return__": 13, "k": 8, "curr": 13, "pred": 8}, "is_parent": false, "ordered_varnames": ["n", "pred", "curr", "k", "__return__"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 8, "stdout": ""}, {"ordered_globals": ["fib", "result"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"result": 13, "fib": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 10, "stdout": ""}], "code": "def fib(n):\n    \"\"\"Compute the nth Fibonacci number, for n >= 2.\"\"\"\n    pred, curr = 0, 1   # Fibonacci numbers 1 and 2\n    k = 2               # Which Fib number is curr?\n    while k < n:\n        pred, curr = curr, pred + curr\n        k = k + 1\n    return curr\n\nresult = fib(8)"}</script><p>Remember that commas seperate multiple names and values in an assignment
+statement.  The line:</p>
+<pre class="literal-block">
+pred, curr = curr, pred + curr
+</pre>
+<p>has the effect of rebinding the name <tt class="docutils literal">pred</tt> to the value of <tt class="docutils literal">curr</tt>, and
+simultanously rebinding <tt class="docutils literal">curr</tt> to the value of <tt class="docutils literal">pred + curr</tt>.  All of the
+expressions to the right of <tt class="docutils literal">=</tt> are evaluated before any rebinding takes
+place.</p>
+<p>This order of events -- evaluating everything on the right of <tt class="docutils literal">=</tt> before
+updating any bindings on the left -- is essential for correctness of this
+function.</p>
+<p>A <tt class="docutils literal">while</tt> clause contains a header expression followed by a suite:</p>
+<pre class="literal-block">
+while &lt;expression&gt;:
+    &lt;suite&gt;
+</pre>
+<p>To execute a <tt class="docutils literal">while</tt> clause:</p>
+<ol class="arabic simple">
+<li>Evaluate the header's expression.</li>
+<li>If it is a true value, execute the suite, then return to step 1.</li>
+</ol>
+<p>In step 2, the entire suite of the <tt class="docutils literal">while</tt> clause is executed before the
+header expression is evaluated again.</p>
+<p>In order to prevent the suite of a <tt class="docutils literal">while</tt> clause from being executed
+indefinitely, the suite should always change some binding in each pass.</p>
+<p>A <tt class="docutils literal">while</tt> statement that does not terminate is called an infinite loop.
+Press <tt class="docutils literal"><span class="pre">&lt;Control&gt;-C</span></tt> to force Python to stop looping.</p>
+</div>
+<div class="section" id="testing">
+<h3>1.5.6   Testing</h3>
+<p><em>Testing</em> a function is the act of verifying that the function's behavior
+matches expectations. Our language of functions is now sufficiently complex
+that we need to start testing our implementations.</p>
+<p>A <em>test</em> is a mechanism for systematically performing this verification.  Tests
+typically take the form of another function that contains one or more sample
+calls to the function being tested. The returned value is then verified against
+an expected result. Unlike most functions, which are meant to be general, tests
+involve selecting and validating calls with specific argument values.  Tests
+also serve as documentation: they demonstrate how to call a function and what
+argument values are appropriate.</p>
+<p><strong>Assertions.</strong>  Programmers use <tt class="docutils literal">assert</tt> statements to verify expectations,
+such as the output of a function being tested. An <tt class="docutils literal">assert</tt> statement has an
+expression in a boolean context, followed by a quoted line of text (single or
+double quotes are both fine, but be consistent) that will be displayed if the
+expression evaluates to a false value.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">fib</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">13</span><span class="p">,</span> <span class="s">'The 8th Fibonacci number should be 13'</span>
+</pre></div>
+
+<p>When the expression being asserted evaluates to a true value, executing an
+assert statement has no effect. When it is a false value, <tt class="docutils literal">assert</tt> causes an
+error that halts execution.</p>
+<p>A test function for <tt class="docutils literal">fib</tt> should test several arguments, including extreme
+values of <tt class="docutils literal">n</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fib_test</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="k">assert</span> <span class="n">fib</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'The 2nd Fibonacci number should be 1'</span>
+<span class="gp">    </span>    <span class="k">assert</span> <span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'The 3rd Fibonacci number should be 1'</span>
+<span class="gp">    </span>    <span class="k">assert</span> <span class="n">fib</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7778742049</span><span class="p">,</span> <span class="s">'Error at the 50th Fibonacci number'</span>
+</pre></div>
+
+<p>When writing Python in files, rather than directly into the interpreter, tests
+are typically written in the same file or a neighboring file with the suffix
+<tt class="docutils literal">_test.py</tt>.</p>
+<p><strong>Doctests.</strong> Python provides a convenient method for placing simple tests
+directly in the docstring of a function. The first line of a docstring should
+contain a one-line description of the function, followed by a blank line.  A
+detailed description of arguments and behavior may follow. In addition, the
+docstring may include a sample interactive session that calls the function:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; def sum_naturals(n):
+        """Return the sum of the first n natural numbers.
+
+        &gt;&gt;&gt; sum_naturals(10)
+        55
+        &gt;&gt;&gt; sum_naturals(100)
+        5050
+        """
+        total, k = 0, 1
+        while k &lt;= n:
+            total, k = total + k, k + 1
+        return total
+</pre>
+<p>Then, the interaction can be verified via the <a class="reference external" href="http://docs.python.org/py3k/library/doctest.html">doctest module</a>. Below, the
+<tt class="docutils literal">globals</tt> function returns a representation of the global environment, which
+the interpreter needs in order to evaluate expressions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">doctest</span> <span class="k">import</span> <span class="n">testmod</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">testmod</span><span class="p">()</span>
+<span class="go">TestResults(failed=0, attempted=2)</span>
+</pre></div>
+
+<p>To verify the doctest interactions for only a single function, we use a
+<tt class="docutils literal">doctest</tt> function called <tt class="docutils literal">run_docstring_examples</tt>.  This function is
+(unfortunately) a bit complicated to call.  Its first argument is the function
+to test.  The second should always be the result of the expression
+<tt class="docutils literal">globals()</tt>, a built-in function that returns the global environment.  The
+third argument is <tt class="docutils literal">True</tt> to indicate that we would like "verbose" output: a
+catalog of all tests run.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">doctest</span> <span class="k">import</span> <span class="n">run_docstring_examples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">run_docstring_examples</span><span class="p">(</span><span class="n">sum_naturals</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="k">True</span><span class="p">)</span>
+<span class="go">Finding tests in NoName</span>
+<span class="go">Trying:</span>
+<span class="gp">    </span><span class="n">sum_naturals</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">Expecting:</span>
+<span class="gp">    </span><span class="mi">55</span>
+<span class="go">ok</span>
+<span class="go">Trying:</span>
+<span class="gp">    </span><span class="n">sum_naturals</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">Expecting:</span>
+<span class="gp">    </span><span class="mi">5050</span>
+<span class="go">ok</span>
+</pre></div>
+
+<p>When the return value of a function does not match the expected result, the
+<tt class="docutils literal">run_docstring_examples</tt> function will report this problem as a test failure.</p>
+<p>When writing Python in files, all doctests in a file can be run by starting
+Python with the doctest command line option:</p>
+<pre class="literal-block">
+python3 -m doctest &lt;python_source_file&gt;
+</pre>
+<p>The key to effective testing is to write (and run) tests immediately after
+implementing new functions. It is even good practice to write some tests before
+you implement, in order to have some example inputs and outputs in your mind.
+A test that applies a single function is called a <em>unit test</em>.  Exhaustive unit
+testing is a hallmark of good program design.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/16-higher-order-functions.html">
+  		1.6 Higher-Order Functions
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

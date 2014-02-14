@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>3.5 Interpreters for Languages with Abstraction</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 3<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/31-introduction.html">3.1 Introduction</a></h3>
+				<li><a href="../pages/31-introduction.html#programming-languages">3.1.1 Programming Languages</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/32-functional-programming.html">3.2 Functional Programming</a></h3>
+				<li><a href="../pages/32-functional-programming.html#expressions">3.2.1 Expressions</a>
+				<li><a href="../pages/32-functional-programming.html#definitions">3.2.2 Definitions</a>
+				<li><a href="../pages/32-functional-programming.html#compound-values">3.2.3 Compound values</a>
+				<li><a href="../pages/32-functional-programming.html#symbolic-data">3.2.4 Symbolic Data</a>
+				<li><a href="../pages/32-functional-programming.html#turtle-graphics">3.2.5 Turtle graphics</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/33-exceptions.html">3.3 Exceptions</a></h3>
+				<li><a href="../pages/33-exceptions.html#exception-objects">3.3.1 Exception Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/34-interpreters-for-languages-with-combination.html">3.4 Interpreters for Languages with Combination</a></h3>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">3.4.1 A Scheme-Syntax Calculator</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#expression-trees">3.4.2 Expression Trees</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#parsing-expressions">3.4.3 Parsing Expressions</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#calculator-evaluation">3.4.4 Calculator Evaluation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/35-interpreters-for-languages-with-abstraction.html">3.5 Interpreters for Languages with Abstraction</a></h3>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#structure">3.5.1 Structure</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#environments">3.5.2 Environments</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#data-as-programs">3.5.3 Data as Programs</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="interpreters-for-languages-with-abstraction">
+<h2>3.5   Interpreters for Languages with Abstraction</h2>
+<p>The Calculator language provides a means of combination through nested call
+expressions. However, there is no way to define new operators, give names to
+values, or express general methods of computation. Calculator does not support
+abstraction in any way. As a result, it is not a particularly powerful or
+general programming language. We now turn to the task of defining a general
+programming language that supports abstraction by binding names to values and
+defining new operations.</p>
+<p>Unlike the previous section, which presented a complete interpreter as Python
+source code, this section takes a descriptive approach. The companion project
+asks you to implement the ideas presented here by building a fully functional
+Scheme interpreter.</p>
+<div class="section" id="structure">
+<h3>3.5.1   Structure</h3>
+<p>This section describes the general structure of a Scheme interpreter. Completing
+that project will produce a working implementation of the interpreter described
+here.</p>
+<p>An interpreter for Scheme can share much of the same structure as the
+Calculator interpreter.  A parser produces an expression that is interpreted by
+an evaluator. The evaluation function inspects the form of an expression, and
+for call expressions it calls a function to apply a procedure to some
+arguments. Much of the difference in evaluators is associated with special
+forms, user-defined functions, and implementing the environment model of
+computation.</p>
+<p><strong>Parsing.</strong> The <a class="reference external" href="../examples/scalc/scheme_reader.py.html">scheme_reader</a> and <a class="reference external" href="../examples/scalc/scheme_tokens.py.html">scheme_tokens</a> modules from the Calculator
+interpreter are nearly sufficient to parse any valid Scheme expression.
+However, it does not yet support quotation or dotted lists.  A full Scheme
+interpreter should be able to parse the following input expression.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">read_line</span><span class="p">(</span><span class="s">"(car '(1 . 2))"</span><span class="p">)</span>
+<span class="go">Pair('car', Pair(Pair('quote', Pair(Pair(1, 2), nil)), nil))</span>
+</pre></div>
+
+<p>Your first task in implementing the Scheme interpreter will be to extend
+<a class="reference external" href="../examples/scalc/scheme_reader.py.html">scheme_reader</a> to correctly parse dotted lists and quotation.</p>
+<p><strong>Evaluation.</strong> Scheme is evaluated one expression at a time. A skeleton
+implementation of the evaluator is defined in <tt class="docutils literal">scheme.py</tt> of the companion
+project. Each expression returned from <tt class="docutils literal">scheme_read</tt> is passed to the
+<tt class="docutils literal">scheme_eval</tt> function, which evaluates an expression <tt class="docutils literal">expr</tt> in the current
+environment <tt class="docutils literal">env</tt>.</p>
+<p>The <tt class="docutils literal">scheme_eval</tt> function evaluates the different forms of expressions in
+Scheme: primitives, special forms, and call expressions.  The form of a
+combination in Scheme can be determined by inspecting its first element.  Each
+special form has its own evaluation rule.  A simplified implementation of
+<tt class="docutils literal">scheme_eval</tt> appears below. Some error checking and special form handling
+has been removed in order to focus our discussion. A complete implementation
+appears in the companion project.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">scheme_eval</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Evaluate Scheme expression expr in environment env."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">scheme_symbolp</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">env</span><span class="p">[</span><span class="n">expr</span><span class="p">]</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">scheme_atomp</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">expr</span>
+<span class="gp">    </span>    <span class="n">first</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">second</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">first</span> <span class="o">==</span> <span class="s">"lambda"</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">do_lambda_form</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">first</span> <span class="o">==</span> <span class="s">"define"</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">do_define_form</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">None</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">procedure</span> <span class="o">=</span> <span class="n">scheme_eval</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="n">args</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="n">scheme_eval</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">env</span><span class="p">))</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">scheme_apply</span><span class="p">(</span><span class="n">procedure</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+</pre></div>
+
+<p><strong>Procedure application.</strong> The final case above invokes a second process,
+procedure application, that is implemented by the function <tt class="docutils literal">scheme_apply</tt>.
+The procedure application process in Scheme is considerably more general than
+the <tt class="docutils literal">calc_apply</tt> function in Calculator. It applies two kinds of arguments:
+a <tt class="docutils literal">PrimtiveProcedure</tt> or a <tt class="docutils literal">LambdaProcedure</tt>. A <tt class="docutils literal">PrimitiveProcedure</tt> is
+implemented in Python; it has an instance attribute <tt class="docutils literal">fn</tt> that is bound to a
+Python function. In addition, it may or may not require access to the current
+environment. This Python function is called whenever the procedure is applied.</p>
+<p>A <tt class="docutils literal">LambdaProcedure</tt> is implemented in Scheme.  It has a <tt class="docutils literal">body</tt> attribute
+that is a Scheme expression, evaluated whenever the procedure is applied.
+To apply the procedure to a list of arguments, the body expression is evaluated
+in a new environment.  To construct this environment, a new frame is added to
+the environment, in which the formal parameters of the procedure are bound to
+the arguments. The body is evaluated using <tt class="docutils literal">scheme_eval</tt>.</p>
+<p><strong>Eval/apply recursion.</strong> The functions that implement the evaluation process,
+<tt class="docutils literal">scheme_eval</tt> and <tt class="docutils literal">scheme_apply</tt>, are mutually recursive. Evaluation
+requires application whenever a call expression is encountered.  Application
+uses evaluation to evaluate operand expressions into arguments, as well as to
+evaluate the body of user-defined procedures. The general structure of this
+mutually recursive process appears in interpreters quite generally: evaluation
+is defined in terms of application and application is defined in terms of
+evaluation.</p>
+<p>This recursive cycle ends with language primitives. Evaluation has a base case
+that is evaluating a primitive expression. Some special forms also constitute
+base cases without recursive calls. Function application has a base case that
+is applying a primitive procedure. This mutually recursive structure, between
+an eval function that processes expression forms and an apply function that
+processes functions and their arguments, constitutes the essence of the
+evaluation process.</p>
+</div>
+<div class="section" id="environments">
+<h3>3.5.2   Environments</h3>
+<p>Now that we have described the structure of our Scheme interpreter, we turn to
+implementing the <tt class="docutils literal">Frame</tt> class that forms environments. Each <tt class="docutils literal">Frame</tt> instance
+represents an environment in which symbols are bound to values. A frame has a
+dictionary of <tt class="docutils literal">bindings</tt>, as well as a <tt class="docutils literal">parent</tt> frame that is <tt class="docutils literal">None</tt> for
+the global frame.</p>
+<p>Bindings are not accessed directly, but instead through two <tt class="docutils literal">Frame</tt>
+methods: <tt class="docutils literal">lookup</tt> and <tt class="docutils literal">define</tt>. The first implements the look-up procedure
+of the environment model of computation described in Chapter 1. A symbol is
+matched against the <tt class="docutils literal">bindings</tt> of the current frame.  If it is found, the
+value to which it is bound is returned. If it is not found, look-up proceeds to
+the <tt class="docutils literal">parent</tt> frame.  On the other hand, the <tt class="docutils literal">define</tt> method always binds a
+symbol to a value in the current frame.</p>
+<p>The implementation of <tt class="docutils literal">lookup</tt> and the use of <tt class="docutils literal">define</tt> are left as
+exercises.  As an illustration of their use, consider the following example
+Scheme program:</p>
+<pre class="literal-block">
+&gt; (define (factorial n)
+    (if (= n 0) 1 (* n (factorial (- n 1)))))
+&gt; (factorial 5)
+120
+</pre>
+<p>The first input expression is a <tt class="docutils literal">define</tt> special form, evaluated by the
+<tt class="docutils literal">do_define_form</tt> Python function.  Defining a function has several steps:</p>
+<ol class="arabic simple">
+<li>Check the format of the expression to ensure that it is a well-formed Scheme
+list with at least two elements following the keyword <tt class="docutils literal">define</tt>.</li>
+<li>Analyze the first element, in this case a <tt class="docutils literal">Pair</tt>, to find the function
+name <tt class="docutils literal">factorial</tt> and formal parameter list <tt class="docutils literal">(n)</tt>.</li>
+<li>Create a <tt class="docutils literal">LambdaProcedure</tt> with the supplied formal parameters, body,
+and parent environment.</li>
+<li>Bind the symbol <tt class="docutils literal">factorial</tt> to this function, in the first frame of the
+current environment. In this case, the environment consists only of the
+global frame.</li>
+</ol>
+<p>The second input is a call expression. The <tt class="docutils literal">procedure</tt> passed to <tt class="docutils literal">scheme_apply</tt>
+is the <tt class="docutils literal">LambdaProcedure</tt> just created and bound to the symbol <tt class="docutils literal">factorial</tt>.
+The <tt class="docutils literal">args</tt> passed is a one-element Scheme list <tt class="docutils literal">(5)</tt>. To apply the
+procedure, a new frame is created that extends the global frame (the parent
+environment of the <tt class="docutils literal">factorial</tt> procedure).  In this frame, the symbol <tt class="docutils literal">n</tt>
+is bound to the value 5. Then, the body of <tt class="docutils literal">factorial</tt> is evaluated in
+that environment, and its value is returned.</p>
+</div>
+<div class="section" id="data-as-programs">
+<h3>3.5.3   Data as Programs</h3>
+<p>In thinking about a program that evaluates Scheme expressions, an analogy
+might be helpful. One operational view of the meaning of a program is that a
+program is a description of an abstract machine. For example, consider again
+this procedure to compute factorials:</p>
+<pre class="literal-block">
+&gt; (define (factorial n)
+    (if (= n 0) 1 (* n (factorial (- n 1)))))
+</pre>
+<p>We could express an equivalent program in Python as well, using a conditional
+expression.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<p>We may regard this program as the description of a machine containing parts
+that decrement, multiply, and test for equality, together with a two-position
+switch and another factorial machine. (The factorial machine is infinite
+because it contains another factorial machine within it.) The figure below is a
+flow diagram for the factorial machine, showing how the parts are wired
+together.</p>
+<div class="figure">
+<img alt="" src="../img/factorial_machine.png"/>
+</div>
+<p>In a similar way, we can regard the Scheme interpreter as a very special machine
+that takes as input a description of a machine. Given this input, the
+interpreter configures itself to emulate the machine described. For example, if
+we feed our evaluator the definition of factorial the evaluator will be able to
+compute factorials.</p>
+<p>From this perspective, our Scheme interpreter is seen to be a universal machine.
+It mimics other machines when these are described as Scheme programs.
+It acts as a bridge between the data objects that are manipulated by our
+programming language and the programming language itself. Image that a user
+types a Scheme expression into our running Scheme interpreter. From the perspective
+of the user, an input expression such as <tt class="docutils literal">(+ 2 2)</tt> is an expression in the
+programming language, which the interpreter should evaluate. From the
+perspective of the Scheme interpreter, however, the expression is simply a
+sentence of words that is to be manipulated according to a well-defined set of
+rules.</p>
+<p>That the user's programs are the interpreter's data need not be a source of
+confusion. In fact, it is sometimes convenient to ignore this distinction, and
+to give the user the ability to explicitly evaluate a data object as an
+expression. In Scheme, we use this facility whenever employing the <tt class="docutils literal">run</tt>
+procedure.  Similar functions exist in Python: the <tt class="docutils literal">eval</tt> function will
+evaluate a Python expression and the <tt class="docutils literal">exec</tt> function will execute a Python
+statement. Thus,</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">eval</span><span class="p">(</span><span class="s">'2+2'</span><span class="p">)</span>
+<span class="go">4</span>
+</pre></div>
+
+<p>and</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span>
+<span class="go">4</span>
+</pre></div>
+
+<p>both return the same result. Evaluating expressions that are constructed as a
+part of execution is a common and powerful feature in dynamic programming
+languages. In few languages is this practice as common as in Scheme, but the
+ability to construct and evaluate expressions during the course of execution of
+a program can prove to be a valuable tool for any programmer.</p>
+</div>
+</div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.8 Generic Operations</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="generic-operations">
+<h2>2.8   Generic Operations</h2>
+<p>In this chapter, we introduced compound data values, along with the technique of
+data abstraction using constructors and selectors.   Using message passing, we
+endowed our abstract data types with behavior directly.  Using the object
+metaphor, we bundled together the representation of data and the methods used to
+manipulate that data to modularize data-driven programs with local state.</p>
+<p>However, we have yet to show that our object system allows us to combine
+together different types of objects flexibly in a large program. Message passing
+via dot expressions is only one way of building combined expressions with
+multiple objects.  In this section, we explore alternate methods for combining
+and manipulating objects of different types.</p>
+<div class="section" id="string-conversion">
+<h3>2.8.1   String Conversion</h3>
+<p>We stated in the beginning of this chapter that an object value should behave
+like the kind of data it is meant to represent, including producing a string
+representation of itself.  String representations of data values are especially
+important in an interactive language like Python, where the <tt class="docutils literal"><span class="pre">read-eval-print</span></tt>
+loop requires every value to have some sort of string representation.</p>
+<p>String values provide a fundamental medium for communicating information among
+humans. Sequences of characters can be rendered on a screen, printed to paper,
+read aloud, converted to braille, or broadcast as Morse code.  Strings are also
+fundamental to programming because they can represent Python expressions.  For
+an object, we may want to generate a string that, when interpreted as a Python
+expression, evaluates to an equivalent object.</p>
+<p>Python stipulates that all objects should produce two different string
+representations: one that is human-interpretable text and one that is a
+Python-interpretable expression.  The constructor function for strings, <tt class="docutils literal">str</tt>,
+returns a human-readable string. Where possible, the <tt class="docutils literal">repr</tt> function returns a
+Python expression that evaluates to an equal object. The docstring for <em>repr</em>
+explains this property:</p>
+<pre class="literal-block">
+repr(object) -&gt; string
+
+Return the canonical string representation of the object.
+For most object types, eval(repr(object)) == object.
+</pre>
+<p>The result of calling <tt class="docutils literal">repr</tt> on the value of an expression is what Python
+prints in an interactive session.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">12</span><span class="n">e12</span>
+<span class="go">12000000000000.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="mi">12</span><span class="n">e12</span><span class="p">))</span>
+<span class="go">12000000000000.0</span>
+</pre></div>
+
+<p>In cases where no representation exists that evaluates to the original value,
+Python produces a proxy.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="nb">min</span><span class="p">)</span>
+<span class="go">'&lt;built-in function min&gt;'</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">str</tt> constructor often coincides with <tt class="docutils literal">repr</tt>, but provides a more
+interpretable text representation in some cases.  For instance, we see a
+difference between <tt class="docutils literal">str</tt> and <tt class="docutils literal">repr</tt> with dates.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2011</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+<span class="go">'datetime.date(2011, 9, 12)'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+<span class="go">'2011-09-12'</span>
+</pre></div>
+
+<p>Defining the <tt class="docutils literal">repr</tt> function presents a new challenge: we would like it to
+apply correctly to all data types, even those that did not exist when <tt class="docutils literal">repr</tt>
+was implemented.  We would like it to be a <em>polymorphic function</em>, one that can
+be applied to many (<em>poly</em>) different forms (<em>morph</em>) of data.</p>
+<p>Message passing provides an elegant solution in this case: the <tt class="docutils literal">repr</tt> function
+invokes a method called <tt class="docutils literal">__repr__</tt> on its argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">today</span><span class="o">.</span><span class="n">__repr__</span><span class="p">()</span>
+<span class="go">'datetime.date(2011, 9, 12)'</span>
+</pre></div>
+
+<p>By implementing this same method in user-defined classes, we can extend the
+applicability of <tt class="docutils literal">repr</tt> to any class we create in the future.  This example
+highlights another benefit of message passing in general, that it provides a
+mechanism for extending the domain of existing functions to new object types.</p>
+<p>The <tt class="docutils literal">str</tt> constructor is implemented in a similar manner: it invokes a method
+called <tt class="docutils literal">__str__</tt> on its argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">today</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+<span class="go">'2011-09-12'</span>
+</pre></div>
+
+<p>These polymorphic functions are examples of a more general principle: certain
+functions should apply to multiple data types.  The message passing approach
+exemplified here is only one of a family of techniques for implementing
+polymorphic functions.  The remainder of this section explores some
+alternatives.</p>
+</div>
+<div class="section" id="multiple-representations">
+<h3>2.8.2   Multiple Representations</h3>
+<p>Data abstraction, using objects or functions, is a powerful tool for managing
+complexity.  Abstract data types allow us to construct an abstraction barrier
+between the underlying representation of data and the functions or messages used
+to manipulate it.  However, in large programs, it may not always make sense to
+speak of "the underlying representation" for a data type in a program. For one
+thing, there might be more than one useful representation for a data object, and
+we might like to design systems that can deal with multiple representations.</p>
+<p>To take a simple example, complex numbers may be represented in two almost
+equivalent ways: in rectangular form (real and imaginary parts) and in polar
+form (magnitude and angle). Sometimes the rectangular form is more appropriate
+and sometimes the polar form is more appropriate. Indeed, it is perfectly
+plausible to imagine a system in which complex numbers are represented in both
+ways, and in which the functions for manipulating complex numbers work with
+either representation.</p>
+<p>More importantly, large software systems are often designed by many people
+working over extended periods of time, subject to requirements that change over
+time. In such an environment, it is simply not possible for everyone to agree in
+advance on choices of data representation. In addition to the data-abstraction
+barriers that isolate representation from use, we need abstraction barriers that
+isolate different design choices from each other and permit different choices to
+coexist in a single program. Furthermore, since large programs are often created
+by combining pre-existing modules that were designed in isolation, we need
+conventions that permit programmers to incorporate modules into larger systems
+additively, that is, without having to redesign or re-implement these modules.</p>
+<p>We begin with the simple complex-number example. We will see how message passing
+enables us to design separate rectangular and polar representations for complex
+numbers while maintaining the notion of an abstract "complex-number" object. We
+will accomplish this by defining arithmetic functions for complex numbers
+(<tt class="docutils literal">add_complex</tt>, <tt class="docutils literal">mul_complex</tt>) in terms of generic selectors that access
+parts of a complex number independent of how the number is represented. The
+resulting complex-number system contains two different kinds of abstraction
+barriers. They isolate higher-level operations from lower-level representations.
+In addition, there is a vertical barrier that gives us the ability to separately
+design alternative representations.</p>
+<div class="figure">
+<img alt="" src="../img/interface.png"/>
+</div>
+<p>As a side note, we are developing a system that performs arithmetic operations
+on complex numbers as a simple but unrealistic example of a program that uses
+generic operations.  A <a class="reference external" href="http://docs.python.org/py3k/library/stdtypes.html#typesnumeric">complex number type</a> is actually
+built into Python, but for this example we will implement our own.</p>
+<p>Like rational numbers, complex numbers are naturally represented as pairs.  The
+set of complex numbers can be thought of as a two-dimensional space with two
+orthogonal axes, the real axis and the imaginary axis.  From this point of view,
+the complex number <tt class="docutils literal">z = x + y * i</tt> (where <tt class="docutils literal">i*i = <span class="pre">-1</span></tt>)  can be thought of as
+the point in the plane whose real coordinate is <tt class="docutils literal">x</tt> and whose imaginary
+coordinate is <tt class="docutils literal">y</tt>.  Adding complex numbers involves adding their respective
+<tt class="docutils literal">x</tt> and <tt class="docutils literal">y</tt> coordinates.</p>
+<p>When multiplying complex numbers, it is more natural to think in terms of
+representing a complex number in polar form, as a magnitude and an angle.  The
+product of two complex numbers is the vector obtained by stretching one complex
+number by a factor of the length of the other, and then rotating it through the
+angle of the other.</p>
+<p>Thus, there are two different representations for complex numbers, which are
+appropriate for different operations. Yet, from the viewpoint of someone writing
+a program that uses complex numbers, the principle of data abstraction suggests
+that all the operations for manipulating complex numbers should be available
+regardless of which representation is used by the computer.</p>
+<p><strong>Interfaces.</strong> Message passing not only provides a method for coupling behavior
+and data, it allows different data types to respond to the same message in
+different ways.  A shared set of messages that elicit similar behavior from
+different object classes is a powerful method of abstraction.</p>
+<p>An <em>interface</em> is a set of shared messages, along with a specification of how
+they behave.  Objects that respond to the special <tt class="docutils literal">__repr__</tt> and <tt class="docutils literal">__str__</tt>
+methods all implement a common interface of types that can be represented as
+strings.</p>
+<p>In the case of complex numbers, the interface needed to implement arithmetic
+consists of four messages: <tt class="docutils literal">real</tt>, <tt class="docutils literal">imag</tt>, <tt class="docutils literal">magnitude</tt>, and
+<tt class="docutils literal">angle</tt>.  We can implement addition and multiplication in terms of these
+messages.</p>
+<p>We can have two different abstract data types for complex numbers that differ in
+their constructors.</p>
+<ul class="simple">
+<li><tt class="docutils literal">ComplexRI</tt> constructs a complex number from real and imaginary parts.</li>
+<li><tt class="docutils literal">ComplexMA</tt> constructs a complex number from a magnitude and angle.</li>
+</ul>
+<p>With these messages and constructors, we can implement complex arithmetic.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_complex</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="n">z1</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">z2</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z1</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="n">z2</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mul_complex</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="n">z1</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">*</span> <span class="n">z2</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="n">z1</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="n">z2</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+</pre></div>
+
+<p>The relationship between the terms "abstract data type" (ADT) and "interface" is
+subtle. An ADT includes ways of building complex data types, manipulating them
+as units, and selecting for their components.  In an object-oriented system, an
+ADT corresponds to a class, although we have seen that an object system is not
+needed to implement an ADT.  An interface is a set of messages that have
+associated meanings, and which may or may not include selectors. Conceptually,
+an ADT describes a full representational abstraction of some kind of thing,
+whereas an interface specifies a set of behaviors that may be shared across many
+things.</p>
+<p><strong>Properties.</strong> We would like to use both types of complex numbers
+interchangeably, but it would be wasteful to store redundant information about
+each number.  We would like to store either the real-imaginary representation or
+the magnitude-angle representation.</p>
+<p>Python has a simple feature for computing attributes on the fly from
+zero-argument functions.  The <tt class="docutils literal">@property</tt> decorator allows functions to be
+called without the standard call expression syntax.  An implementation of
+complex numbers in terms of real and imaginary parts illustrates this point.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">atan2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ComplexRI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">real</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span>
+<span class="gp">    </span>    <span class="nd">@property</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">imag</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="gp">    </span>    <span class="nd">@property</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">atan2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="s">'ComplexRI({0}, {1})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+</pre></div>
+
+<p>A second implementation using magnitude and angle provides the same interface
+because it responds to the same set of messages.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ComplexMA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">magnitude</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">=</span> <span class="n">magnitude</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">angle</span>
+<span class="gp">    </span>    <span class="nd">@property</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="nd">@property</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">imag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="s">'ComplexMA({0}, {1})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+</pre></div>
+
+<p>In fact, our implementations of <tt class="docutils literal">add_complex</tt> and <tt class="docutils literal">mul_complex</tt> are now
+complete; either class of complex number can be used for either argument in
+either complex arithmetic function.  It is worth noting that the object system
+does not explicitly connect the two complex types in any way (e.g., through
+inheritance).  We have implemented the complex number abstraction by sharing a
+common set of messages, an interface, across the two classes.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_complex</span><span class="p">(</span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+<span class="go">ComplexRI(1.0000000000000002, 4.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mul_complex</span><span class="p">(</span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">ComplexMA(1.0, 3.141592653589793)</span>
+</pre></div>
+
+<p>The interface approach to encoding multiple representations has appealing
+properties.  The class for each representation can be developed separately; they
+must only agree on the names of the attributes they share.  The interface is
+also <em>additive</em>.  If another programmer wanted to add a third representation of
+complex numbers to the same program, they would only have to create another
+class with the same attributes.</p>
+</div>
+<div class="section" id="special-methods">
+<h3>2.8.3   Special Methods</h3>
+<p>The built-in mathematical operators can be extended in much the same way as
+<tt class="docutils literal">repr</tt>; there are special method names corresponding to Python operators for
+arithmetic, logical, and sequence operations.</p>
+<p>To make our code more legible, we would perhaps like to use the <tt class="docutils literal">+</tt> and <tt class="docutils literal">*</tt>
+operators directly when adding and multiplying complex numbers. Adding the
+following methods to both of our complex number classes will enable these
+operators to be used, as well as the <tt class="docutils literal">add</tt> and <tt class="docutils literal">mul</tt> functions in the
+<tt class="docutils literal">operator</tt> module:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexRI</span><span class="o">.</span><span class="n">__add__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">add_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexMA</span><span class="o">.</span><span class="n">__add__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">add_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexRI</span><span class="o">.</span><span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">mul_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexMA</span><span class="o">.</span><span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">mul_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+</pre></div>
+
+<p>Now, we can use infix notation with our user-defined classes.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">ComplexRI(3.0, 2.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">ComplexMA(1.0, 3.141592653589793)</span>
+</pre></div>
+
+<p><strong>True and false values.</strong> We saw previously that numbers in Python have a truth
+value; more specifically, 0 is a false value and all other numbers are true
+values. In fact, all objects in Python have a truth value. By default, objects
+are considered to be true, but the special <tt class="docutils literal">__bool__</tt> method can be used to
+override this behavior. If an object defines the <tt class="docutils literal">__bool__</tt> method, then
+Python calls that method to determine its truth value.</p>
+<p>As an example, suppose we want the complex number <tt class="docutils literal">0 + 0 * i</tt> to be false. We
+can define the <tt class="docutils literal">__bool__</tt> method for both our complex number implementations.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexRI</span><span class="o">.</span><span class="n">__bool__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">imag</span> <span class="o">!=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ComplexMA</span><span class="o">.</span><span class="n">__bool__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">!=</span> <span class="mi">0</span>
+</pre></div>
+
+<p>We can call the <tt class="docutils literal">bool</tt> constructor to see the truth value of an object, and we
+can use any object in a boolean context.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">ComplexRI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="ow">not</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="s">"complex number is true"</span><span class="p">)</span>
+<span class="go">complex number is true</span>
+</pre></div>
+
+<p><strong>Sequence length.</strong> We have seen that we can call the <tt class="docutils literal">len</tt> function to
+determine the length of a sequence.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="s">'Go Bears!'</span><span class="p">)</span>
+<span class="go">9</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">len</tt> function invokes the <tt class="docutils literal">__len__</tt> method of its argument to determine
+its length. All built-in sequence types implement this method.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">'Go Bears!'</span><span class="o">.</span><span class="n">__len__</span><span class="p">()</span>
+<span class="go">9</span>
+</pre></div>
+
+<p>Python uses a sequence's length to determine its truth value, if it does not
+provide a <tt class="docutils literal">__bool__</tt> method. Empty sequences are false, while non-empty
+sequences are true.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="s">''</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">([])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="s">'Go Bears!'</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+
+<p><strong>Callable objects.</strong> In Python, functions are first-class objects, so they can
+be passed around as data and have attributes like any other object. Python also
+allows us to define objects that can be "called" like functions by including a
+<tt class="docutils literal">__call__</tt> method. With this method, we can define a class that behaves like a
+higher-order function.</p>
+<p>As an example, consider the following higher-order function, which returns a
+function that adds a constant value to its argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_adder</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">adder</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="n">k</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">adder</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add_three</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_three</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">7</span>
+</pre></div>
+
+<p>We can create an <tt class="docutils literal">Adder</tt> class that defines a <tt class="docutils literal">__call__</tt> method to provide
+the same functionality.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Adder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="n">k</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add_three_obj</span> <span class="o">=</span> <span class="n">Adder</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_three_obj</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">7</span>
+</pre></div>
+
+<p>Here, the <tt class="docutils literal">Adder</tt> class behaves like the <tt class="docutils literal">make_adder</tt> higher-order function,
+and the <tt class="docutils literal">add_three_obj</tt> object behaves like the <tt class="docutils literal">add_three</tt> function. We
+have further blurred the line between data and functions.</p>
+<p>Though callable objects are less efficient than higher-order functions, they
+allow us to take full advantage of the object system. For example, we can use
+inheritance to create a family of callable objects with shared functionality.</p>
+<p><strong>Further reading.</strong> Special methods generalize the built-in operators so that
+they can be used with user-defined objects. In order to provide this generality,
+Python follows specific protocols to apply each operator. For example, to
+evaluate expressions that contain the <tt class="docutils literal">+</tt> operator, Python checks for special
+methods on both the left and right operands of the expression. First, Python
+checks for an <tt class="docutils literal">__add__</tt> method on the value of the left operand, then checks
+for an <tt class="docutils literal">__radd__</tt> method on the value of the right operand. If either is
+found, that method is invoked with the value of the other operand as its
+argument.</p>
+<p>Similar protocols exist for evaluating expressions that contain any kind of
+operator in Python, including slice notation and Boolean operators. The Python
+docs list the exhaustive set of <a class="reference external" href="http://docs.python.org/py3k/reference/datamodel.html#special-method-names">method names for operators</a>.
+Dive into Python 3 has a chapter on <a class="reference external" href="http://getpython3.com/diveintopython3/special-method-names.html">special method names</a> that
+describes many details of their use in the Python interpreter.</p>
+</div>
+<div class="section" id="generic-functions">
+<h3>2.8.4   Generic Functions</h3>
+<p>Our implementation of complex numbers has made two data types interchangeable as
+arguments to the <tt class="docutils literal">add_complex</tt> and <tt class="docutils literal">mul_complex</tt> functions.  Now we will see
+how to use this same idea not only to define operations that are generic over
+different representations but also to define operations that are generic over
+different kinds of arguments that do not share a common interface.</p>
+<p>The operations we have defined so far treat the different data types as being
+completely independent. Thus, there are separate packages for adding, say, two
+rational numbers, or two complex numbers. What we have not yet considered is the
+fact that it is meaningful to define operations that cross the type boundaries,
+such as the addition of a complex number to a rational number. We have gone to
+great pains to introduce barriers between parts of our programs so that they can
+be developed and understood separately.</p>
+<p>We would like to introduce the cross-type operations in some carefully
+controlled way, so that we can support them without seriously violating our
+abstraction boundaries.  There is a tension between the outcomes we desire: we
+would like to be able to add a complex number to a rational number, and we would
+like to do so using a generic <tt class="docutils literal">add</tt> function that does the right thing with
+all numeric types.  At the same time, we would like to separate the concerns of
+complex numbers and rational numbers whenever possible, in order to maintain a
+modular program.</p>
+<p>Let us revise our implementation of rational numbers to use Python's built-in
+object system.  As before, we will store a rational number as a numerator and
+denominator in lowest terms.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">fractions</span> <span class="k">import</span> <span class="n">gcd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Rational</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numer</span><span class="p">,</span> <span class="n">denom</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">g</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">numer</span><span class="p">,</span> <span class="n">denom</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">numer</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">//</span> <span class="n">g</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">=</span> <span class="n">denom</span> <span class="o">//</span> <span class="n">g</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="s">'Rational({0}, {1})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">denom</span><span class="p">)</span>
+</pre></div>
+
+<p>Adding and multiplying rational numbers in this new implementation is similar to
+before.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_rationals</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">nx</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">numer</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">denom</span>
+<span class="gp">    </span>    <span class="n">ny</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">numer</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">denom</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">Rational</span><span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dy</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mul_rationals</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">Rational</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">numer</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">numer</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">denom</span><span class="p">)</span>
+</pre></div>
+
+<p><strong>Type dispatching.</strong> One way to handle cross-type operations is to design a
+different function for each possible combination of types for which the
+operation is valid. For example, we could extend our complex number
+implementation so that it provides a function for adding complex numbers to
+rational numbers. We can provide this functionality generically using a
+technique called <em>dispatching on type</em>.</p>
+<p>The idea of type dispatching is to write functions that first inspect the type
+of argument they have received, and then execute code that is appropriate for
+the type.  In Python, the type of an object can be inspected with the built-in
+<tt class="docutils literal">type</tt> function.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">complex</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ComplexRI</span><span class="p">,</span> <span class="n">ComplexMA</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rational</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="n">Rational</span>
+</pre></div>
+
+<p>In this case, we are relying on the fact that each object knows its type, and we
+can look up that type using the Python <tt class="docutils literal">type</tt> function.  Even if the <tt class="docutils literal">type</tt>
+function were not available, we could implement the functions <tt class="docutils literal">complex</tt> and
+<tt class="docutils literal">rational</tt> in terms of a shared class attribute for <tt class="docutils literal">Rational</tt>,
+<tt class="docutils literal">ComplexRI</tt>, and <tt class="docutils literal">ComplexMA</tt>.</p>
+<p>Now consider the following implementation of <tt class="docutils literal">add</tt>, which explicitly checks
+the type of both arguments.  We will not use Python's special methods (i.e.,
+<tt class="docutils literal">__add__</tt>) in this example.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_complex_and_rational</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">numer</span><span class="o">/</span><span class="n">r</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Add z1 and z2, which may be complex or rational."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="nb">complex</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">complex</span><span class="p">(</span><span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">add_complex</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="nb">complex</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">rational</span><span class="p">(</span><span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">add_complex_and_rational</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">rational</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">complex</span><span class="p">(</span><span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">add_complex_and_rational</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="n">z1</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">add_rationals</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+</pre></div>
+
+<p>This simplistic approach to type dispatching, which uses a large conditional
+statement, is not additive.  If another numeric type were included in the
+program, we would have to re-implement <tt class="docutils literal">add</tt> with new clauses.</p>
+<p>We can create a more flexible implementation of <tt class="docutils literal">add</tt> by implementing type
+dispatch through a dictionary.  The first step in extending the flexibility of
+<tt class="docutils literal">add</tt> will be to create a tag set for our classes that abstracts away from the
+two implementations of complex numbers.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">type_tag</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">type_tags</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">type_tags</span> <span class="o">=</span> <span class="p">{</span><span class="n">ComplexRI</span><span class="p">:</span> <span class="s">'com'</span><span class="p">,</span> <span class="n">ComplexMA</span><span class="p">:</span> <span class="s">'com'</span><span class="p">,</span> <span class="n">Rational</span><span class="p">:</span> <span class="s">'rat'</span><span class="p">}</span>
+</pre></div>
+
+<p>We can use these type tags as keys for a dictionary that stores the different
+ways of adding numbers.  The keys of the dictionary are tuples of type tags, and
+the values are type-specific addition functions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_tag</span><span class="p">(</span><span class="n">z1</span><span class="p">),</span> <span class="n">type_tag</span><span class="p">(</span><span class="n">z2</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">add_implementations</span><span class="p">[</span><span class="n">types</span><span class="p">](</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+</pre></div>
+
+<p>This definition of <tt class="docutils literal">add</tt> does not have any functionality itself; it relies
+entirely on a dictionary called <tt class="docutils literal">add_implementations</tt> to implement addition.
+We can populate that dictionary as follows.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add_implementations</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_implementations</span><span class="p">[(</span><span class="s">'com'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">add_complex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_implementations</span><span class="p">[(</span><span class="s">'com'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">add_complex_and_rational</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_implementations</span><span class="p">[(</span><span class="s">'rat'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">)]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">add_complex_and_rational</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_implementations</span><span class="p">[(</span><span class="s">'rat'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">add_rationals</span>
+</pre></div>
+
+<p>This dictionary-based approach to dispatching is extensible because new entries
+can be included in <tt class="docutils literal">add_implementations</tt> and <tt class="docutils literal">type_tags</tt> as new numeric
+types are implemented in the system.</p>
+<p>While we have introduced some complexity to the system, we now have a generic
+<tt class="docutils literal">add</tt> function that handles mixed types.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="n">ComplexRI</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">ComplexRI(3.0, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="n">Rational</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">Rational(13, 6)</span>
+</pre></div>
+
+<p><strong>Data-directed programming.</strong> Our dictionary-based implementation of <tt class="docutils literal">add</tt>
+is not addition-specific at all; it does not contain any direct addition logic.
+It only implements addition because we happen to have populated its
+<tt class="docutils literal">implementations</tt> dictionary with functions that perform addition.</p>
+<p>A more general version of generic arithmetic would apply arbitrary operators to
+arbitrary types and use a dictionary to store implementations of various
+combinations.  This fully generic approach to implementing methods is called
+<em>data-directed programming</em>.  In our case, we can implement both generic
+addition and multiplication without redundant logic.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">operator_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_tag</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">type_tag</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">operator_name</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">apply_implementations</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+<p>In this generic <tt class="docutils literal">apply</tt> function, a key is constructed from the operator name
+(e.g., <tt class="docutils literal">'add'</tt>) and a tuple of type tags for the arguments. Implementations
+are also populated using these tags.  We enable support for multiplication on
+complex and rational numbers below.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mul_complex_and_rational</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">magnitude</span> <span class="o">*</span> <span class="n">r</span><span class="o">.</span><span class="n">numer</span> <span class="o">/</span> <span class="n">r</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mul_rational_and_complex</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">mul_complex_and_rational</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_implementations</span> <span class="o">=</span> <span class="p">{(</span><span class="s">'mul'</span><span class="p">,</span> <span class="p">(</span><span class="s">'com'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">)):</span> <span class="n">mul_complex</span><span class="p">,</span>
+<span class="gp">    </span>                         <span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="p">(</span><span class="s">'com'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">)):</span> <span class="n">mul_complex_and_rational</span><span class="p">,</span>
+<span class="gp">    </span>                         <span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="p">(</span><span class="s">'rat'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">)):</span> <span class="n">mul_rational_and_complex</span><span class="p">,</span>
+<span class="gp">    </span>                         <span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="p">(</span><span class="s">'rat'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">)):</span> <span class="n">mul_rationals</span><span class="p">}</span>
+</pre></div>
+
+<p>We can also include the addition implementations from <tt class="docutils literal">add</tt> to <tt class="docutils literal">apply</tt>,
+using the dictionary <tt class="docutils literal">update</tt> method.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adders</span> <span class="o">=</span> <span class="n">add</span><span class="o">.</span><span class="n">implementations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_implementations</span><span class="o">.</span><span class="n">update</span><span class="p">({(</span><span class="s">'add'</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span><span class="n">fn</span> <span class="k">for</span> <span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="ow">in</span> <span class="n">adders</span><span class="p">})</span>
+</pre></div>
+
+<p>Now that apply supports 8 different implementations in a single dictionary, we
+can use it to manipulate rational and complex numbers quite generically.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">apply</span><span class="p">(</span><span class="s">'add'</span><span class="p">,</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">ComplexRI(3.0, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply</span><span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">ComplexMA(5.0, 1)</span>
+</pre></div>
+
+<p>This data-directed approach does manage the complexity of cross-type operators,
+but it is cumbersome. With such a system, the cost of introducing a new type is
+not just writing methods for that type, but also the construction and
+installation of the functions that implement the cross-type operations. This
+burden can easily require much more code than is needed to define the operations
+on the type itself.</p>
+<p>While the techniques of dispatching on type and data-directed programming do
+create additive implementations of generic functions, they do not effectively
+separate implementation concerns; implementors of the individual numeric types
+need to take account of other types when writing cross-type operations.
+Combining rational numbers and complex numbers isn't strictly the domain of
+either type.  Formulating coherent policies on the division of responsibility
+among types can be an overwhelming task in designing systems with many types and
+cross-type operations.</p>
+<p><strong>Coercion.</strong> In the general situation of completely unrelated operations acting
+on completely unrelated types, implementing explicit cross-type operations,
+cumbersome though it may be, is the best that one can hope for. Fortunately, we
+can sometimes do better by taking advantage of additional structure that may be
+latent in our type system. Often the different data types are not completely
+independent, and there may be ways by which objects of one type may be viewed as
+being of another type. This process is called <em>coercion</em>. For example, if
+we are asked to arithmetically combine a rational number with a complex number,
+we can view the rational number as a complex number whose imaginary part is
+zero. By doing so, we transform the problem to that of combining two complex
+numbers, which can be handled in the ordinary way by <tt class="docutils literal">add_complex</tt> and
+<tt class="docutils literal">mul_complex</tt>.</p>
+<p>In general, we can implement this idea by designing coercion functions that
+transform an object of one type into an equivalent object of another type. Here
+is a typical coercion function, which transforms a rational number to a complex
+number with zero imaginary part:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rational_to_complex</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">numer</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+<p>Now, we can define a dictionary of coercion functions.  This dictionary could be
+extended as more numeric types are introduced.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coercions</span> <span class="o">=</span> <span class="p">{(</span><span class="s">'rat'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">):</span> <span class="n">rational_to_complex</span><span class="p">}</span>
+</pre></div>
+
+<p>It is not generally possible to coerce an arbitrary data object of each type
+into all other types. For example, there is no way to coerce an arbitrary
+complex number to a rational number, so there will be no such conversion
+implementation in the <tt class="docutils literal">coercions</tt> dictionary.</p>
+<p>Using the <tt class="docutils literal">coercions</tt> dictionary, we can write a function called
+<tt class="docutils literal">coerce_apply</tt>, which attempts to coerce arguments into values of the same
+type, and only then applies an operator. The implementations dictionary of
+<tt class="docutils literal">coerce_apply</tt> does not include any cross-type operator implementations.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">coerce_apply</span><span class="p">(</span><span class="n">operator_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">type_tag</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">type_tag</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">tx</span> <span class="o">!=</span> <span class="n">ty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">)</span> <span class="ow">in</span> <span class="n">coercions</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">tx</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ty</span><span class="p">,</span> <span class="n">coercions</span><span class="p">[(</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">)](</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">)</span> <span class="ow">in</span> <span class="n">coercions</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">ty</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">tx</span><span class="p">,</span> <span class="n">coercions</span><span class="p">[(</span><span class="n">ty</span><span class="p">,</span> <span class="n">tx</span><span class="p">)](</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="s">'No coercion possible.'</span>
+<span class="gp">    </span>    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">operator_name</span><span class="p">,</span> <span class="n">tx</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">coerce_apply_implementations</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">implementations</tt> of <tt class="docutils literal">coerce_apply</tt> require only one type tag, because
+they assume that both values share the same type tag.  Hence, we require only
+four implementations to support generic arithmetic over complex and rational
+numbers.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coerce_apply_implementations</span> <span class="o">=</span> <span class="p">{(</span><span class="s">'mul'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">):</span> <span class="n">mul_complex</span><span class="p">,</span>
+<span class="gp">    </span>                                <span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">):</span> <span class="n">mul_rationals</span><span class="p">,</span>
+<span class="gp">    </span>                                <span class="p">(</span><span class="s">'add'</span><span class="p">,</span> <span class="s">'com'</span><span class="p">):</span> <span class="n">add_complex</span><span class="p">,</span>
+<span class="gp">    </span>                                <span class="p">(</span><span class="s">'add'</span><span class="p">,</span> <span class="s">'rat'</span><span class="p">):</span> <span class="n">add_rationals</span><span class="p">}</span>
+</pre></div>
+
+<p>With these implementations in place, <tt class="docutils literal">coerce_apply</tt> can replace <tt class="docutils literal">apply</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coerce_apply</span><span class="p">(</span><span class="s">'add'</span><span class="p">,</span> <span class="n">ComplexRI</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">ComplexRI(3.0, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coerce_apply</span><span class="p">(</span><span class="s">'mul'</span><span class="p">,</span> <span class="n">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ComplexMA</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">ComplexMA(5.0, 1.0)</span>
+</pre></div>
+
+<p>This coercion scheme has some advantages over the method of defining explicit
+cross-type operations. Although we still need to write coercion functions to
+relate the types, we need to write only one function for each pair of types
+rather than a different functions for each collection of types and each generic
+operation. What we are counting on here is the fact that the appropriate
+transformation between types depends only on the types themselves, not on the
+particular operation to be applied.</p>
+<p>Further advantages come from extending coercion.  Some more sophisticated
+coercion schemes do not just try to coerce one type into another, but instead
+may try to coerce two different types each into a third common type.  Consider a
+rhombus and a rectangle: neither is a special case of the other, but both can be
+viewed as quadrilaterals. Another extension to coercion is iterative coercion,
+in which one data type is coerced into another via intermediate types.  Consider
+that an integer can be converted into a real number by first converting it into
+a rational number, then converting that rational number into a real number.
+Chaining coercion in this way can reduce the total number of coercion functions
+that are required by a program.</p>
+<p>Despite its advantages, coercion does have potential drawbacks.  For one,
+coercion functions can lose information when they are applied.  In our example,
+rational numbers are exact representations, but become approximations when they
+are converted to complex numbers.</p>
+<p>Some programming languages have automatic coercion systems built in.  In fact,
+early versions of Python had a <tt class="docutils literal">__coerce__</tt> special method on objects.  In the
+end, the complexity of the built-in coercion system did not justify its use, and
+so it was removed.  Instead, particular operators apply coercion to their
+arguments as needed.  Operators are implemented as method calls on user defined
+types using special methods like <tt class="docutils literal">__add__</tt> and <tt class="docutils literal">__mul__</tt>.  It is left up to
+you, the user, to decide whether to employ type dispatching, data-directed
+programming, message passing, or coercion in order to implement generic
+functions in your programs.</p>
+</div>
+</div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

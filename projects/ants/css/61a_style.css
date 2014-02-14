@@ -1,0 +1,49 @@
+/*
+:Author: John DeNero
+:Contact: denero@google.com
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for use with UC Berkeley 61A course materials.
+
+Color and font schemes adopted from Mark Pilgrim's diveintopython3.org.
+*/
+
+/* fonts and spacing */
+
+body {
+  font: medium/1.75 'Gill Sans', 'Gill Sans MT', Corbel, Helvetica, 'Nimbus Sans L', sans-serif;
+  word-spacing: 0.1em;
+}
+
+h1, h2, h3, h4, aside {
+  font-family: "Book Antiqua", Palatino, Georgia, serif;
+  margin: 0px 0px;
+}
+
+p {
+  margin-bottom: 0.75em;
+  font-size: medium;
+}
+
+html {
+  background: #fff;
+  color: #222;
+}
+
+body {
+  margin: 1em 40px;
+}
+
+pre {
+  margin-top: 2em;
+}
+
+/* links */
+
+a:link, .w a {
+  color: steelblue;
+}
+
+a:visited {
+  color: #b44582;
+}

@@ -1,0 +1,645 @@
+<html>
+<head>
+<title>ants.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>ants.py (<a href="ants.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""The ants module implements game logic for Ants Vs. SomeBees."""
+
+</span><span style="color: green; font-style: italic"># Name:
+# Email:
+
+</span><span style="color: blue; font-weight: bold">import </span>random
+<span style="color: blue; font-weight: bold">import </span>sys
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main<span style="font-weight: bold">, </span>interact<span style="font-weight: bold">, </span>trace
+<span style="color: blue; font-weight: bold">from </span>collections <span style="color: blue; font-weight: bold">import </span>OrderedDict
+
+
+<span style="color: green; font-style: italic">################
+# Core Classes #
+################
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Place<span style="font-weight: bold">:
+    </span><span style="color: darkred">"""A Place holds insects and has an exit to another Place."""
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>name<span style="font-weight: bold">, </span>exit<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create a Place with the given exit.
+
+        name -- A string; the name of this Place.
+        exit -- The Place reached by exiting this Place (may be None).
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>name <span style="font-weight: bold">= </span>name
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>exit <span style="font-weight: bold">= </span>exit
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>bees <span style="font-weight: bold">= []        </span><span style="color: green; font-style: italic"># A list of Bees
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">= </span><span style="color: blue">None       </span><span style="color: green; font-style: italic"># An Ant
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entrance <span style="font-weight: bold">= </span><span style="color: blue">None  </span><span style="color: green; font-style: italic"># A Place
+        # Phase 1: Add an entrance to the exit
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span><span style="color: blue; font-weight: bold">def </span>add_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>insect<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Add an Insect to this Place.
+
+        There can be at most one Ant in a Place, unless exactly one of them is
+        a BodyguardAnt (Phase 2), in which case there can be two. If add_insect
+        tries to add more Ants than is allowed, an assertion error is raised.
+
+        There can be any number of Bees in a Place.
+        """
+        </span><span style="color: blue; font-weight: bold">if </span>insect<span style="font-weight: bold">.</span>is_ant<span style="font-weight: bold">():
+            </span><span style="color: green; font-style: italic"># Phase 2: Special handling for BodyguardAnt
+            </span><span style="color: red">"*** YOUR CODE HERE ***"
+            </span><span style="color: blue; font-weight: bold">assert </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">'Two ants in {0}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">= </span>insect
+        <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>insect<span style="font-weight: bold">)
+        </span>insect<span style="font-weight: bold">.</span>place <span style="font-weight: bold">= </span><span style="color: blue">self
+
+    </span><span style="color: blue; font-weight: bold">def </span>remove_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>insect<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Remove an Insect from this Place."""
+        </span><span style="color: blue; font-weight: bold">if not </span>insect<span style="font-weight: bold">.</span>is_ant<span style="font-weight: bold">():
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees<span style="font-weight: bold">.</span>remove<span style="font-weight: bold">(</span>insect<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">assert </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">== </span>insect<span style="font-weight: bold">, </span><span style="color: red">'{0} is not in {1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>insect<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">)
+            </span><span style="color: red">"*** YOUR CODE HERE ***"
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">= </span><span style="color: blue">None
+
+        </span>insect<span style="font-weight: bold">.</span>place <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>__str__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>name
+
+
+<span style="color: blue; font-weight: bold">class </span>Insect<span style="font-weight: bold">:
+    </span><span style="color: darkred">"""An Insect, the base class of Ant and Bee, has armor and a Place."""
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>armor<span style="font-weight: bold">, </span>place<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create an Insect with an armor amount and a starting Place."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>armor <span style="font-weight: bold">= </span>armor
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>place <span style="font-weight: bold">= </span>place  <span style="color: green; font-style: italic"># set by Place.add_insect and Place.remove_insect
+
+
+    </span><span style="color: blue; font-weight: bold">def </span>reduce_armor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>amount<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Reduce armor by amount, and remove the insect from its place if it
+        has no armor remaining.
+
+        &gt;&gt;&gt; test_insect = Insect(5)
+        &gt;&gt;&gt; test_insect.reduce_armor(2)
+        &gt;&gt;&gt; test_insect.armor
+        3
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>armor <span style="font-weight: bold">-= </span>amount
+        <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>armor <span style="font-weight: bold">&lt;= </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'{0} ran out of armor and expired'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">))
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>remove_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Perform the default action that this Insect takes each turn.
+
+        colony -- The AntColony, used to access game state information.
+        """
+
+    </span><span style="color: blue; font-weight: bold">def </span>is_ant<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return whether this Insect is an Ant."""
+        </span><span style="color: blue; font-weight: bold">return False
+
+    def </span>__repr__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>cname <span style="font-weight: bold">= </span>type<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">).</span>__name__
+        <span style="color: blue; font-weight: bold">return </span><span style="color: red">'{0}({1}, {2})'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>cname<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>armor<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Bee<span style="font-weight: bold">(</span>Insect<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Bee moves from place to place, following exits and stinging ants."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Bee'
+
+    </span><span style="color: blue; font-weight: bold">def </span>sting<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>ant<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Attack an Ant, reducing the Ant's armor by 1."""
+        </span>ant<span style="font-weight: bold">.</span>reduce_armor<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>move_to<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>place<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Move from the Bee's current Place to a new Place."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>remove_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+        </span>place<span style="font-weight: bold">.</span>add_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>blocked<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return True if this Bee cannot advance to the next Place."""
+        </span><span style="color: green; font-style: italic"># Phase 2: Special handling for NinjaAnt
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""A Bee's action stings the Ant that blocks its exit if it is blocked,
+        or moves to the exit of its current place otherwise.
+
+        colony -- The AntColony, used to access game state information.
+        """
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>blocked<span style="font-weight: bold">():
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>sting<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>name <span style="font-weight: bold">!= </span><span style="color: red">'Hive' </span><span style="color: blue; font-weight: bold">and </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>armor <span style="font-weight: bold">&gt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>move_to<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>exit<span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Ant<span style="font-weight: bold">(</span>Insect<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""An Ant occupies a place and does work for the colony."""
+
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False  </span><span style="color: green; font-style: italic"># Only implemented Ant classes should be instantiated
+    </span>damage <span style="font-weight: bold">= </span><span style="color: red">0
+    </span>food_cost <span style="font-weight: bold">= </span><span style="color: red">0
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>armor<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create an Ant with an armor quantity."""
+        </span>Insect<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>armor<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>is_ant<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+
+class </span>HarvesterAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""HarvesterAnt produces 1 additional food per turn for the colony."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Harvester'
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+
+    def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Produce 1 additional food for the colony.
+
+        colony -- The AntColony, used to access game state information.
+        """
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>random_or_none<span style="font-weight: bold">(</span>l<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a random element of list l, or return None if l is empty."""
+    </span><span style="color: blue; font-weight: bold">return </span>random<span style="font-weight: bold">.</span>choice<span style="font-weight: bold">(</span>l<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">if </span>l <span style="color: blue; font-weight: bold">else </span><span style="color: blue">None
+
+
+</span><span style="color: blue; font-weight: bold">class </span>ThrowerAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Thrower'
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+    </span>damage <span style="font-weight: bold">= </span><span style="color: red">1
+
+    </span><span style="color: blue; font-weight: bold">def </span>nearest_bee<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>hive<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return the nearest Bee in a Place that is not the Hive, connected to
+        the ThrowerAnt's Place by following entrances.
+
+        This method returns None if there is no such Bee.
+
+        Problem B5: This method returns None if there is no Bee in range.
+        """
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+        </span><span style="color: blue; font-weight: bold">return </span>random_or_none<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>place<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>throw_at<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>target<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Throw a leaf at the target Bee, reducing its armor."""
+        </span><span style="color: blue; font-weight: bold">if </span>target <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>target<span style="font-weight: bold">.</span>reduce_armor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>damage<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Throw a leaf at the nearest Bee in range."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>throw_at<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>nearest_bee<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">.</span>hive<span style="font-weight: bold">))
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Hive<span style="font-weight: bold">(</span>Place<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""The Place from which the Bees launch their assault.
+
+    assault_plan -- An AssaultPlan; when &amp; where bees enter the colony.
+    """
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Hive'
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>assault_plan<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>name <span style="font-weight: bold">= </span><span style="color: red">'Hive'
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>assault_plan <span style="font-weight: bold">= </span>assault_plan
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>bees <span style="font-weight: bold">= []
+        </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span>assault_plan<span style="font-weight: bold">.</span>all_bees<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>add_insect<span style="font-weight: bold">(</span>bee<span style="font-weight: bold">)
+        </span><span style="color: green; font-style: italic"># The following attributes are always None for a Hive
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>entrance <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>exit <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>strategy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span>exits <span style="font-weight: bold">= [</span>p <span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>colony<span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>values<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">if </span>p<span style="font-weight: bold">.</span>entrance <span style="color: blue; font-weight: bold">is </span><span style="color: blue">self</span><span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>assault_plan<span style="font-weight: bold">.</span>get<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">.</span>time<span style="font-weight: bold">, []):
+            </span>bee<span style="font-weight: bold">.</span>move_to<span style="font-weight: bold">(</span>random<span style="font-weight: bold">.</span>choice<span style="font-weight: bold">(</span>exits<span style="font-weight: bold">))
+
+
+</span><span style="color: blue; font-weight: bold">class </span>AntColony<span style="font-weight: bold">:
+    </span><span style="color: darkred">"""An ant collective that manages global game state and simulates time.
+
+    Attributes:
+    time -- elapsed time
+    food -- the colony's available food total
+    queen -- the place where the queen resides
+    places -- A list of all places in the colony (including a Hive)
+    bee_entrances -- A list of places that bees can enter
+    """
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>strategy<span style="font-weight: bold">, </span>hive<span style="font-weight: bold">, </span>ant_types<span style="font-weight: bold">, </span>create_places<span style="font-weight: bold">, </span>food<span style="font-weight: bold">=</span><span style="color: red">2</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create an AntColony for simulating a game.
+
+        Arguments:
+        strategy -- a function to deploy ants to places
+        hive -- a Hive full of bees
+        ant_types -- a list of ant constructors
+        create_places -- a function that creates the set of places
+        """
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>time <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food <span style="font-weight: bold">= </span>food
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>strategy <span style="font-weight: bold">= </span>strategy
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>hive <span style="font-weight: bold">= </span>hive
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_types <span style="font-weight: bold">= </span>OrderedDict<span style="font-weight: bold">((</span>a<span style="font-weight: bold">.</span>name<span style="font-weight: bold">, </span>a<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>a <span style="color: blue; font-weight: bold">in </span>ant_types<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>configure<span style="font-weight: bold">(</span>hive<span style="font-weight: bold">, </span>create_places<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>configure<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>hive<span style="font-weight: bold">, </span>create_places<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Configure the places in the colony."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queen <span style="font-weight: bold">= </span>Place<span style="font-weight: bold">(</span><span style="color: red">'AntQueen'</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places <span style="font-weight: bold">= </span>OrderedDict<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bee_entrances <span style="font-weight: bold">= []
+        </span><span style="color: blue; font-weight: bold">def </span>register_place<span style="font-weight: bold">(</span>place<span style="font-weight: bold">, </span>is_bee_entrance<span style="font-weight: bold">):
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places<span style="font-weight: bold">[</span>place<span style="font-weight: bold">.</span>name<span style="font-weight: bold">] = </span>place
+            <span style="color: blue; font-weight: bold">if </span>is_bee_entrance<span style="font-weight: bold">:
+                </span>place<span style="font-weight: bold">.</span>entrance <span style="font-weight: bold">= </span>hive
+                <span style="color: blue">self</span><span style="font-weight: bold">.</span>bee_entrances<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>place<span style="font-weight: bold">)
+        </span>register_place<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>hive<span style="font-weight: bold">, </span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">)
+        </span>create_places<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>simulate<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Simulate an attack on the ant colony (i.e., play the game)."""
+        </span><span style="color: blue; font-weight: bold">while </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queen<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">) == </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">and </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees<span style="font-weight: bold">) &gt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>hive<span style="font-weight: bold">.</span>strategy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)    </span><span style="color: green; font-style: italic"># Bees invade
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>strategy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)         </span><span style="color: green; font-style: italic"># Ants deploy
+            </span><span style="color: blue; font-weight: bold">for </span>ant <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ants<span style="font-weight: bold">:       </span><span style="color: green; font-style: italic"># Ants take actions
+                </span><span style="color: blue; font-weight: bold">if </span>ant<span style="font-weight: bold">.</span>armor <span style="font-weight: bold">&gt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+                    </span>ant<span style="font-weight: bold">.</span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees<span style="font-weight: bold">:       </span><span style="color: green; font-style: italic"># Bees take actions
+                </span><span style="color: blue; font-weight: bold">if </span>bee<span style="font-weight: bold">.</span>armor <span style="font-weight: bold">&gt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+                    </span>bee<span style="font-weight: bold">.</span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>time <span style="font-weight: bold">+= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queen<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">) &gt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'The ant queen has perished. Please try again.'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'All bees are vanquished. You win!'</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>deploy_ant<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>place_name<span style="font-weight: bold">, </span>ant_type_name<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Place an ant if enough food is available.
+
+        This method is called by the current strategy to deploy ants.
+        """
+        </span>constructor <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant_types<span style="font-weight: bold">[</span>ant_type_name<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food <span style="font-weight: bold">&lt; </span>constructor<span style="font-weight: bold">.</span>food_cost<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Not enough food remains to place ' </span><span style="font-weight: bold">+ </span>ant_type_name<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places<span style="font-weight: bold">[</span>place_name<span style="font-weight: bold">].</span>add_insect<span style="font-weight: bold">(</span>constructor<span style="font-weight: bold">())
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food <span style="font-weight: bold">-= </span>constructor<span style="font-weight: bold">.</span>food_cost
+
+    <span style="color: blue; font-weight: bold">def </span>remove_ant<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>place_name<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Remove an Ant from the Colony."""
+        </span>place <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places<span style="font-weight: bold">[</span>place_name<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">if </span>place<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>place<span style="font-weight: bold">.</span>remove_insect<span style="font-weight: bold">(</span>place<span style="font-weight: bold">.</span>ant<span style="font-weight: bold">)
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>ants<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>p<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>values<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">if </span>p<span style="font-weight: bold">.</span>ant <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">]
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>bees<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>b <span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>places<span style="font-weight: bold">.</span>values<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">for </span>b <span style="color: blue; font-weight: bold">in </span>p<span style="font-weight: bold">.</span>bees<span style="font-weight: bold">]
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>insects<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ants <span style="font-weight: bold">+ </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees
+
+    <span style="color: blue; font-weight: bold">def </span>__str__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>status <span style="font-weight: bold">= </span><span style="color: red">' (Food: {0}, Time: {1})'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>food<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>time<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>str<span style="font-weight: bold">([</span>str<span style="font-weight: bold">(</span>i<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ants <span style="font-weight: bold">+ </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bees<span style="font-weight: bold">]) + </span>status
+
+<span style="color: blue; font-weight: bold">def </span>ant_types<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Return a list of all implemented Ant classes."""
+    </span>all_ant_types <span style="font-weight: bold">= []
+    </span>new_types <span style="font-weight: bold">= [</span>Ant<span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">while </span>new_types<span style="font-weight: bold">:
+        </span>new_types <span style="font-weight: bold">= [</span>t <span style="color: blue; font-weight: bold">for </span>c <span style="color: blue; font-weight: bold">in </span>new_types <span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>c<span style="font-weight: bold">.</span>__subclasses__<span style="font-weight: bold">()]
+        </span>all_ant_types<span style="font-weight: bold">.</span>extend<span style="font-weight: bold">(</span>new_types<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>t <span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>all_ant_types <span style="color: blue; font-weight: bold">if </span>t<span style="font-weight: bold">.</span>implemented<span style="font-weight: bold">]
+
+</span><span style="color: blue; font-weight: bold">def </span>interactive_strategy<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A strategy that starts an interactive session and lets the user make
+    changes to the colony.
+
+    For example, one might deploy a ThrowerAnt to the first tunnel by invoking:
+    colony.deploy_ant('tunnel_0_0', 'Thrower')
+    """
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'colony: ' </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>colony<span style="font-weight: bold">))
+    </span>msg <span style="font-weight: bold">= </span><span style="color: red">'&lt;Control&gt;-D (&lt;Control&gt;-Z &lt;Enter&gt; on Windows) completes a turn.\n'
+    </span>interact<span style="font-weight: bold">(</span>msg<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>start_with_strategy<span style="font-weight: bold">(</span>args<span style="font-weight: bold">, </span>strategy<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Reads command-line arguments and starts Ants vs. SomeBees with those
+    options."""
+    </span><span style="color: blue; font-weight: bold">import </span>argparse
+    parser <span style="font-weight: bold">= </span>argparse<span style="font-weight: bold">.</span>ArgumentParser<span style="font-weight: bold">(</span>description<span style="font-weight: bold">=</span><span style="color: red">"Play Ants vs. SomeBees"</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-t'</span><span style="font-weight: bold">, </span><span style="color: red">'--ten'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'start with ten food'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-f'</span><span style="font-weight: bold">, </span><span style="color: red">'--full'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'loads a full layout and assault plan'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-w'</span><span style="font-weight: bold">, </span><span style="color: red">'--water'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'loads a full layout with water'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'-i'</span><span style="font-weight: bold">, </span><span style="color: red">'--insane'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">,
+                        </span>help<span style="font-weight: bold">=</span><span style="color: red">'loads a difficult assault plan'</span><span style="font-weight: bold">)
+    </span>args <span style="font-weight: bold">= </span>parser<span style="font-weight: bold">.</span>parse_args<span style="font-weight: bold">()
+
+    </span>assault_plan <span style="font-weight: bold">= </span>make_test_assault_plan<span style="font-weight: bold">()
+    </span>layout <span style="font-weight: bold">= </span>test_layout
+    food <span style="font-weight: bold">= </span><span style="color: red">2
+    </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">.</span>ten<span style="font-weight: bold">:
+        </span>food <span style="font-weight: bold">= </span><span style="color: red">10
+    </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">.</span>full<span style="font-weight: bold">:
+        </span>assault_plan <span style="font-weight: bold">= </span>make_full_assault_plan<span style="font-weight: bold">()
+        </span>layout <span style="font-weight: bold">= </span>dry_layout
+    <span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">.</span>water<span style="font-weight: bold">:
+        </span>layout <span style="font-weight: bold">= </span>mixed_layout
+    <span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">.</span>insane<span style="font-weight: bold">:
+        </span>assault_plan <span style="font-weight: bold">= </span>make_insane_assault_plan<span style="font-weight: bold">()
+    </span>hive <span style="font-weight: bold">= </span>Hive<span style="font-weight: bold">(</span>assault_plan<span style="font-weight: bold">)
+    </span>AntColony<span style="font-weight: bold">(</span>strategy<span style="font-weight: bold">, </span>hive<span style="font-weight: bold">, </span>ant_types<span style="font-weight: bold">(), </span>layout<span style="font-weight: bold">, </span>food<span style="font-weight: bold">).</span>simulate<span style="font-weight: bold">()
+
+
+</span><span style="color: green; font-style: italic">###########
+# Layouts #
+###########
+
+</span><span style="color: blue; font-weight: bold">def </span>mixed_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">=</span><span style="color: red">8</span><span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">=</span><span style="color: red">3</span><span style="font-weight: bold">, </span>moat_frequency<span style="font-weight: bold">=</span><span style="color: red">3</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Register Places with the colony."""
+    </span><span style="color: blue; font-weight: bold">for </span>tunnel <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>tunnels<span style="font-weight: bold">):
+        </span>exit <span style="font-weight: bold">= </span>queen
+        <span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>length<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">if </span>moat_frequency <span style="font-weight: bold">!= </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">and </span><span style="font-weight: bold">(</span>step <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">) % </span>moat_frequency <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+                </span>exit <span style="font-weight: bold">= </span>Water<span style="font-weight: bold">(</span><span style="color: red">'water_{0}_{1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>tunnel<span style="font-weight: bold">, </span>step<span style="font-weight: bold">), </span>exit<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+                </span>exit <span style="font-weight: bold">= </span>Place<span style="font-weight: bold">(</span><span style="color: red">'tunnel_{0}_{1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>tunnel<span style="font-weight: bold">, </span>step<span style="font-weight: bold">), </span>exit<span style="font-weight: bold">)
+            </span>register_place<span style="font-weight: bold">(</span>exit<span style="font-weight: bold">, </span>step <span style="font-weight: bold">== </span>length <span style="font-weight: bold">- </span><span style="color: red">1</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>test_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">=</span><span style="color: red">8</span><span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+    </span>mixed_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>test_layout_multi_tunnels<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">=</span><span style="color: red">8</span><span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">=</span><span style="color: red">2</span><span style="font-weight: bold">):
+    </span>mixed_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>dry_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">=</span><span style="color: red">8</span><span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">=</span><span style="color: red">3</span><span style="font-weight: bold">):
+    </span>mixed_layout<span style="font-weight: bold">(</span>queen<span style="font-weight: bold">, </span>register_place<span style="font-weight: bold">, </span>length<span style="font-weight: bold">, </span>tunnels<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+
+</span><span style="color: green; font-style: italic">#################
+# Assault Plans #
+#################
+
+
+</span><span style="color: blue; font-weight: bold">class </span>AssaultPlan<span style="font-weight: bold">(</span>dict<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""The Bees' plan of attack for the Colony.  Attacks come in timed waves.
+
+    An AssaultPlan is a dictionary from times (int) to waves (list of Bees).
+
+    &gt;&gt;&gt; AssaultPlan().add_wave(4, 2)
+    {4: [Bee(3, None), Bee(3, None)]}
+    """
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>bee_armor<span style="font-weight: bold">=</span><span style="color: red">3</span><span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bee_armor <span style="font-weight: bold">= </span>bee_armor
+
+    <span style="color: blue; font-weight: bold">def </span>add_wave<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>time<span style="font-weight: bold">, </span>count<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Add a wave at time with count Bees that have the specified armor."""
+        </span>bees <span style="font-weight: bold">= [</span>Bee<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>bee_armor<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>count<span style="font-weight: bold">)]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>setdefault<span style="font-weight: bold">(</span>time<span style="font-weight: bold">, []).</span>extend<span style="font-weight: bold">(</span>bees<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>all_bees<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Place all Bees in the hive and return the list of Bees."""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>bee <span style="color: blue; font-weight: bold">for </span>wave <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>values<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">for </span>bee <span style="color: blue; font-weight: bold">in </span>wave<span style="font-weight: bold">]
+
+</span><span style="color: blue; font-weight: bold">def </span>make_test_assault_plan<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">return </span>AssaultPlan<span style="font-weight: bold">().</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">).</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>make_full_assault_plan<span style="font-weight: bold">():
+    </span>plan <span style="font-weight: bold">= </span>AssaultPlan<span style="font-weight: bold">().</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">for </span>time <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">15</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">):
+        </span>plan<span style="font-weight: bold">.</span>add_wave<span style="font-weight: bold">(</span>time<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>plan<span style="font-weight: bold">.</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">15</span><span style="font-weight: bold">, </span><span style="color: red">8</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>make_insane_assault_plan<span style="font-weight: bold">():
+    </span>plan <span style="font-weight: bold">= </span>AssaultPlan<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">).</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">for </span>time <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">15</span><span style="font-weight: bold">):
+        </span>plan<span style="font-weight: bold">.</span>add_wave<span style="font-weight: bold">(</span>time<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>plan<span style="font-weight: bold">.</span>add_wave<span style="font-weight: bold">(</span><span style="color: red">15</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">)
+
+
+
+</span><span style="color: green; font-style: italic">##############
+# Extensions #
+##############
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Water<span style="font-weight: bold">(</span>Place<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Water is a place that can only hold 'watersafe' insects."""
+
+    </span><span style="color: blue; font-weight: bold">def </span>add_insect<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>insect<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Add insect if it is watersafe, otherwise reduce its armor to 0."""
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'added'</span><span style="font-weight: bold">, </span>insect<span style="font-weight: bold">, </span>insect<span style="font-weight: bold">.</span>watersafe<span style="font-weight: bold">)
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+
+</span><span style="color: blue; font-weight: bold">class </span>FireAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""FireAnt cooks any Bee in its Place when it expires."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Fire'
+    </span>damage <span style="font-weight: bold">= </span><span style="color: red">3
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>reduce_armor<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>amount<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+
+</span><span style="color: blue; font-weight: bold">class </span>LongThrower<span style="font-weight: bold">(</span>ThrowerAnt<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A ThrowerAnt that only throws leaves at Bees at least 4 places away."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Long'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+
+class </span>ShortThrower<span style="font-weight: bold">(</span>ThrowerAnt<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A ThrowerAnt that only throws leaves at Bees within 3 places."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Short'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+
+class </span>WallAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""WallAnt is an Ant which has a large amount of armor."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Wall'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+        </span>Ant<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>NinjaAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""NinjaAnt is an Ant which does not block the path and does 1 damage to
+    all Bees in the exact same Place."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Ninja'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+
+</span><span style="color: blue; font-weight: bold">class </span>ScubaThrower<span style="font-weight: bold">(</span>ThrowerAnt<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""ScubaThrower is a ThrowerAnt which is watersafe."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Scuba'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+
+class </span>HungryAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""HungryAnt will take three "turns" to eat a Bee in the same space as it.
+    While eating, the HungryAnt can't eat another Bee.
+    """
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Hungry'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>Ant<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">)
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span><span style="color: blue; font-weight: bold">def </span>eat_bee<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>bee<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+
+</span><span style="color: blue; font-weight: bold">class </span>BodyguardAnt<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""BodyguardAnt provides protection to other Ants."""
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Bodyguard'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>Ant<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ant <span style="font-weight: bold">= </span><span style="color: blue">None  </span><span style="color: green; font-style: italic"># The Ant hidden in this bodyguard
+
+    </span><span style="color: blue; font-weight: bold">def </span>contain_ant<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>ant<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">class </span>QueenPlace<span style="font-weight: bold">:
+    </span><span style="color: darkred">"""A place that represents both places in which the bees find the queen.
+
+    (1) The original colony queen location at the end of all tunnels, and
+    (2) The place in which the QueenAnt resides.
+    """
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony_queen<span style="font-weight: bold">, </span>ant_queen<span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>bees<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">class </span>QueenAnt<span style="font-weight: bold">(</span>ScubaThrower<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""The Queen of the colony.  The game is over if a bee enters her place."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Queen'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>ScubaThrower<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+    </span><span style="color: blue; font-weight: bold">def </span>action<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>colony<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""A queen ant throws a leaf, but also doubles the damage of ants
+        in her tunnel.  Impostor queens do only one thing: die."""
+        </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">class </span>AntRemover<span style="font-weight: bold">(</span>Ant<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Allows the player to remove ants from the board in the GUI."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Remover'
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+
+    def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>Ant<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+
+</span><span style="color: green; font-style: italic">##################
+# Status Effects #
+##################
+
+</span><span style="color: blue; font-weight: bold">def </span>make_slow<span style="font-weight: bold">(</span>action<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a new action method that calls action every other turn.
+
+    action -- An action method of some Bee
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>make_stun<span style="font-weight: bold">(</span>action<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a new action method that does nothing.
+
+    action -- An action method of some Bee
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>apply_effect<span style="font-weight: bold">(</span>effect<span style="font-weight: bold">, </span>bee<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Apply a status effect to a Bee that lasts for duration turns."""
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+
+</span><span style="color: blue; font-weight: bold">class </span>SlowThrower<span style="font-weight: bold">(</span>ThrowerAnt<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""ThrowerAnt that causes Slow on Bees."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Slow'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>throw_at<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>target<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>target<span style="font-weight: bold">:
+            </span>apply_effect<span style="font-weight: bold">(</span>make_slow<span style="font-weight: bold">, </span>target<span style="font-weight: bold">, </span><span style="color: red">3</span><span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>StunThrower<span style="font-weight: bold">(</span>ThrowerAnt<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""ThrowerAnt that causes Stun on Bees."""
+
+    </span>name <span style="font-weight: bold">= </span><span style="color: red">'Stun'
+    "*** YOUR CODE HERE ***"
+    </span>implemented <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+    def </span>throw_at<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>target<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>target<span style="font-weight: bold">:
+            </span>apply_effect<span style="font-weight: bold">(</span>make_stun<span style="font-weight: bold">, </span>target<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>start_with_strategy<span style="font-weight: bold">(</span>args<span style="font-weight: bold">, </span>interactive_strategy<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

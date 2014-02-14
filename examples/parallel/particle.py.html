@@ -1,0 +1,559 @@
+<html>
+<head>
+<title>particle.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>particle.py (<a href="particle.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""A basic particle simulator that simulates a short-range 1/r^2 repulsive force
+between particles in an enclosed 2D space. Uses an O(n^2) all-to-all algorithm.
+Supports multithreading, multiprocessing, and graphical visualization.
+
+Usage: python3 particle.py [-t &lt;num_threads&gt;] [-p &lt;num_processes]
+           [-n &lt;num_particles&gt;] [-s &lt;num_steps&gt;] [-v] [-g]
+           [-u &lt;update_interval&gt;] [-dt &lt;step_length&gt;]
+
+The -t flag enables multithreading, with the given number of threads.
+The -p flag enables multiprocessing, with the given number of processes.
+(This code does not currently support combining multithreading and
+multiprocessing.)
+The -n flag simulates the given number of particles; default is 20.
+The -s flag simulates for the given number of steps; default is 1000.
+The -v and -g flags enable visualization, updating after every step.
+The -u flag enables visualization, updating after the given number of steps.
+The -dt flag sets the length of a timestep; default is 0.0005. Long-running
+simulations should decrease this to avoid blowup due to discretization effects.
+The -e flag enables energy normalization, which normalizes energy in each
+timestep to match the initial energy. This also avoids blowup.
+
+This code is based on the particle simulation project in CS267 at UC Berkeley.
+Visualization uses John Zelle's Python graphics library
+(http://mcsp.wartburg.edu/zelle/python/).
+"""
+
+</span><span style="color: blue; font-weight: bold">from </span>random <span style="color: blue; font-weight: bold">import </span>random<span style="font-weight: bold">, </span>seed<span style="font-weight: bold">, </span>shuffle
+<span style="color: blue; font-weight: bold">from </span>math <span style="color: blue; font-weight: bold">import </span>ceil<span style="font-weight: bold">, </span>sqrt
+<span style="color: blue; font-weight: bold">from </span>functools <span style="color: blue; font-weight: bold">import </span>reduce
+<span style="color: blue; font-weight: bold">from </span>time <span style="color: blue; font-weight: bold">import </span>time
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main
+<span style="color: blue; font-weight: bold">import </span>threading<span style="font-weight: bold">, </span>multiprocessing
+<span style="color: blue; font-weight: bold">import </span>graphics
+<span style="color: blue; font-weight: bold">import </span>sys
+
+default_num_particles <span style="font-weight: bold">= </span><span style="color: red">20
+</span>default_steps <span style="font-weight: bold">= </span><span style="color: red">1000
+</span>colors <span style="font-weight: bold">= [</span><span style="color: red">'blue'</span><span style="font-weight: bold">, </span><span style="color: red">'orange'</span><span style="font-weight: bold">, </span><span style="color: red">'red'</span><span style="font-weight: bold">, </span><span style="color: red">'green'</span><span style="font-weight: bold">, </span><span style="color: red">'brown'</span><span style="font-weight: bold">, </span><span style="color: red">'purple'</span><span style="font-weight: bold">, </span><span style="color: red">'cyan'</span><span style="font-weight: bold">, </span><span style="color: red">'black'</span><span style="font-weight: bold">]
+
+</span><span style="color: green; font-style: italic">###########################
+# Particle Representation #
+###########################
+
+</span><span style="color: blue; font-weight: bold">class </span>Particle<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Representation of a single particle in the simulation. A particle has a
+    2D position, velocity, and acceleration, and interacts with other nearby
+    particles. In this simulation, all particles have the same mass. Particles
+    also maintain their graphical representation in the visualization."""
+    </span>density <span style="font-weight: bold">= </span><span style="color: red">0.0005
+    </span>mass <span style="font-weight: bold">= </span><span style="color: red">0.01
+    </span>cutoff <span style="font-weight: bold">= </span><span style="color: red">0.01
+    </span><span style="color: green; font-style: italic"># prevent very large forces due to discretization/fp inaccuracy
+    </span>min_r2 <span style="font-weight: bold">= (</span>cutoff <span style="font-weight: bold">/ </span><span style="color: red">100</span><span style="font-weight: bold">) ** </span><span style="color: red">2
+    </span>dt <span style="font-weight: bold">= </span><span style="color: red">0.0005
+    </span>box_size <span style="font-weight: bold">= </span><span style="color: blue">None
+    </span>scale_pos <span style="font-weight: bold">= </span><span style="color: blue">None
+    </span>next_id <span style="font-weight: bold">= </span><span style="color: red">0
+    </span>energy_correction <span style="font-weight: bold">= </span><span style="color: red">1 </span><span style="color: green; font-style: italic"># energy normalization
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>vx<span style="font-weight: bold">, </span>vy<span style="font-weight: bold">, </span>ax<span style="font-weight: bold">, </span>ay<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span>x
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span>y
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>vx <span style="font-weight: bold">= </span>vx
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>vy <span style="font-weight: bold">= </span>vy
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ax <span style="font-weight: bold">= </span>ax
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ay <span style="font-weight: bold">= </span>ay
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>id <span style="font-weight: bold">= </span>Particle<span style="font-weight: bold">.</span>next_id
+        Particle<span style="font-weight: bold">.</span>next_id <span style="font-weight: bold">+= </span><span style="color: red">1
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>init_graphic<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>win<span style="font-weight: bold">, </span>rad<span style="font-weight: bold">, </span>owner<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Create a graphical representation of this particle for visualization.
+        win is the graphics windown in which the particle should be drawn, rad
+        is the radius of the particle, and owner is the thread/process number of
+        the thread that owns this particle."""
+        </span>p <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>Point<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>scale_pos <span style="font-weight: bold">+ </span>rad <span style="font-weight: bold">+ </span><span style="color: red">5</span><span style="font-weight: bold">,
+                           </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>scale_pos <span style="font-weight: bold">+ </span>rad <span style="font-weight: bold">+ </span><span style="color: red">5</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>Circle<span style="font-weight: bold">(</span>p<span style="font-weight: bold">, </span>rad<span style="font-weight: bold">)
+        </span>color <span style="font-weight: bold">= </span>colors<span style="font-weight: bold">[</span>owner <span style="font-weight: bold">% </span>len<span style="font-weight: bold">(</span>colors<span style="font-weight: bold">)] </span><span style="color: blue; font-weight: bold">if </span>owner <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">else </span><span style="color: red">'blue'
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic<span style="font-weight: bold">.</span>setOutline<span style="font-weight: bold">(</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic<span style="font-weight: bold">.</span>setFill<span style="font-weight: bold">(</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic<span style="font-weight: bold">.</span>draw<span style="font-weight: bold">(</span>win<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>apply_force<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>other<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Apply a simple short range repulsive force from another particle on
+        this particle."""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>apply_force_from_coords<span style="font-weight: bold">(</span>other<span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span>other<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>apply_force_from_coords<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>ox<span style="font-weight: bold">, </span>oy<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Apply a simple short range repulsive force from a particle at
+        the given coordinates on this particle."""
+        </span>dx <span style="font-weight: bold">= </span>ox <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x
+        dy <span style="font-weight: bold">= </span>oy <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y
+        <span style="color: blue; font-weight: bold">if </span>dx <span style="font-weight: bold">== </span>dy <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: green; font-style: italic"># no directional force from particle at same location
+        </span>r2 <span style="font-weight: bold">= </span>max<span style="font-weight: bold">(</span>dx <span style="font-weight: bold">* </span>dx <span style="font-weight: bold">+ </span>dy <span style="font-weight: bold">* </span>dy<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>min_r2<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>r2 <span style="font-weight: bold">&gt; </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>cutoff <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>cutoff<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: green; font-style: italic"># out of force range
+        </span>r <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>r2<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Very simple short range repulsive force
+        </span>coef <span style="font-weight: bold">= (</span><span style="color: red">1 </span><span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>cutoff <span style="font-weight: bold">/ </span>r<span style="font-weight: bold">) / </span>r2 <span style="font-weight: bold">/ </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mass
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ax <span style="font-weight: bold">+= </span>coef <span style="font-weight: bold">* </span>dx
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>ay <span style="font-weight: bold">+= </span>coef <span style="font-weight: bold">* </span>dy
+
+    <span style="color: blue; font-weight: bold">def </span>move<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Move a particle for one timestep. Slightly simplified Velocity Verlet
+        integration conserves energy better than explicit Euler method."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldx<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldy <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y
+
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>vx <span style="font-weight: bold">+= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ax <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dt
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>vy <span style="font-weight: bold">+= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ay <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dt
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">+= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vx <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dt
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">+= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vy <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>dt
+
+        <span style="color: green; font-style: italic"># Bounce from walls
+        </span>size <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>box_size
+        <span style="color: blue; font-weight: bold">while </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">&lt; </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">or </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">&gt; </span>size<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">= -</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">&lt; </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">else </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>size <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>vx <span style="font-weight: bold">= -</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vx
+        <span style="color: blue; font-weight: bold">while </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">&lt; </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">or </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">&gt; </span>size<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">= -</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">&lt; </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">else </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>size <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>vy <span style="font-weight: bold">= -</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vy
+
+    <span style="color: blue; font-weight: bold">def </span>move_graphic<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Move the assoicated graphic of this particle to its new location."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic<span style="font-weight: bold">:
+            </span>dx<span style="font-weight: bold">, </span>dy <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldx<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">- </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldy
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>graphic<span style="font-weight: bold">.</span>move<span style="font-weight: bold">(</span>dx <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>scale_pos<span style="font-weight: bold">, </span>dy <span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>scale_pos<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>move_to<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Move particle and graphic directly to the given position."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldx<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>oldy <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span>x<span style="font-weight: bold">, </span>y
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>move_graphic<span style="font-weight: bold">()
+
+    </span>@property
+    <span style="color: blue; font-weight: bold">def </span>energy<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return the kinetic energy of this particle."""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">0.5 </span><span style="font-weight: bold">* </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>mass <span style="font-weight: bold">* (</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vx <span style="font-weight: bold">** </span><span style="color: red">2 </span><span style="font-weight: bold">+ </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vy <span style="font-weight: bold">** </span><span style="color: red">2</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>__repr__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>fmt <span style="font-weight: bold">= </span><span style="color: red">"Particle({0}, {1}, {2}, {3}, {4}, {5})"
+        </span><span style="color: blue; font-weight: bold">return </span>fmt<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>y<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vx<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>vy<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ax<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>ay<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>__getstate__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Remove graphic from state that is transferred to another process."""
+        </span>state <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>__dict__<span style="font-weight: bold">.</span>copy<span style="font-weight: bold">()
+        </span>state<span style="font-weight: bold">[</span><span style="color: red">'graphic'</span><span style="font-weight: bold">] = </span><span style="color: blue">None
+        </span><span style="color: blue; font-weight: bold">return </span>state
+
+        
+<span style="color: green; font-style: italic">##################
+# Initialization #
+##################
+
+</span><span style="color: blue; font-weight: bold">def </span>make_particles<span style="font-weight: bold">(</span>n<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Construct a list of n particles in two dimensions, initially distributed
+    evenly but with random velocities. The resulting list is not spatially
+    sorted."""
+    </span>seed<span style="font-weight: bold">(</span><span style="color: red">1000</span><span style="font-weight: bold">)
+    </span>sx <span style="font-weight: bold">= </span>ceil<span style="font-weight: bold">(</span>sqrt<span style="font-weight: bold">(</span>n<span style="font-weight: bold">))
+    </span>sy <span style="font-weight: bold">= (</span>n <span style="font-weight: bold">+ </span>sx <span style="font-weight: bold">- </span><span style="color: red">1</span><span style="font-weight: bold">) // </span>sx
+    start_id <span style="font-weight: bold">= </span>Particle<span style="font-weight: bold">.</span>next_id
+    Particle<span style="font-weight: bold">.</span>box_size <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>Particle<span style="font-weight: bold">.</span>density <span style="font-weight: bold">* </span>n<span style="font-weight: bold">)
+    </span>particles <span style="font-weight: bold">= [</span>Particle<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)]
+    </span>size <span style="font-weight: bold">= </span>Particle<span style="font-weight: bold">.</span>box_size
+
+    <span style="color: green; font-style: italic"># Make sure particles are not spatially sorted
+    </span>shuffle<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+        </span><span style="color: green; font-style: italic"># Distribute particles evenly to ensure proper spacing
+        </span>i <span style="font-weight: bold">= </span>p<span style="font-weight: bold">.</span>id <span style="font-weight: bold">- </span>start_id
+        p<span style="font-weight: bold">.</span>x <span style="font-weight: bold">= </span>size <span style="font-weight: bold">* (</span><span style="color: red">1 </span><span style="font-weight: bold">+ </span>i <span style="font-weight: bold">% </span>sx<span style="font-weight: bold">) / (</span><span style="color: red">1 </span><span style="font-weight: bold">+ </span>sx<span style="font-weight: bold">)
+        </span>p<span style="font-weight: bold">.</span>y <span style="font-weight: bold">= </span>size <span style="font-weight: bold">* (</span><span style="color: red">1 </span><span style="font-weight: bold">+ </span>i <span style="font-weight: bold">/ </span>sx<span style="font-weight: bold">) / (</span><span style="color: red">1 </span><span style="font-weight: bold">+ </span>sy<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Assign random velocities within a bound
+        </span>p<span style="font-weight: bold">.</span>vx <span style="font-weight: bold">= </span>random<span style="font-weight: bold">() * </span><span style="color: red">2 </span><span style="font-weight: bold">- </span><span style="color: red">1
+        </span>p<span style="font-weight: bold">.</span>vy <span style="font-weight: bold">= </span>random<span style="font-weight: bold">() * </span><span style="color: red">2 </span><span style="font-weight: bold">- </span><span style="color: red">1
+
+    </span><span style="color: blue; font-weight: bold">return </span>particles
+
+<span style="color: blue; font-weight: bold">def </span>divide_items<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">, </span>threads<span style="font-weight: bold">, </span>exact<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Divide the given items among threads threads or processes. If exact,
+    threads must evenly divide the number of items. Returns a list of particle
+    lists for each thread.
+
+    &gt;&gt;&gt; divide_items([1, 2, 3, 4, 5, 6, 7, 8, 9], 3)
+    [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    &gt;&gt;&gt; divide_items([1, 2, 3, 4, 5, 6, 7, 8], 3)
+    [[1, 2, 3], [4, 5, 6], [7, 8]]
+    """
+    </span>num <span style="font-weight: bold">= </span>len<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">) // </span>threads
+    rem <span style="font-weight: bold">= </span>len<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">) % </span>threads
+    <span style="color: blue; font-weight: bold">if </span>exact <span style="color: blue; font-weight: bold">and </span>rem<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>ValueError<span style="font-weight: bold">(</span><span style="color: red">"threads don't evenly divide particles"</span><span style="font-weight: bold">)
+
+    </span>divided <span style="font-weight: bold">= []
+    </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>threads<span style="font-weight: bold">):
+        </span>start <span style="font-weight: bold">= </span>num <span style="font-weight: bold">* </span>i <span style="font-weight: bold">+ (</span>i <span style="color: blue; font-weight: bold">if </span>i <span style="font-weight: bold">&lt; </span>rem <span style="color: blue; font-weight: bold">else </span>rem<span style="font-weight: bold">)
+        </span>end <span style="font-weight: bold">= </span>start <span style="font-weight: bold">+ </span>num <span style="font-weight: bold">+ (</span><span style="color: red">1 </span><span style="color: blue; font-weight: bold">if </span>i <span style="font-weight: bold">&lt; </span>rem <span style="color: blue; font-weight: bold">else </span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span>divided<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">[</span>start<span style="font-weight: bold">:</span>end<span style="font-weight: bold">])
+
+    </span><span style="color: blue; font-weight: bold">return </span>divided
+
+<span style="color: blue; font-weight: bold">def </span>init_graphics<span style="font-weight: bold">(</span>distribution<span style="font-weight: bold">, </span>total<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">, </span>size<span style="font-weight: bold">=</span><span style="color: red">600</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Initialize the visualization, if update_interval is nonzero. distribution
+    is the set of particles, divided into lists for each thread or process.
+    total is the total number of particles. size is the base size of the
+    simulation; the window size will be slightly larger."""
+    </span><span style="color: blue; font-weight: bold">if not </span>update_interval<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None
+
+    </span>psize <span style="font-weight: bold">= </span>ceil<span style="font-weight: bold">(</span>sqrt<span style="font-weight: bold">(</span><span style="color: red">10000 </span><span style="font-weight: bold">/ </span>total<span style="font-weight: bold">)) </span><span style="color: green; font-style: italic"># particle size
+    # Adjust window size so that particle edges do not go off the screen
+    </span>wsize <span style="font-weight: bold">= </span>size <span style="font-weight: bold">+ </span>psize <span style="font-weight: bold">* </span><span style="color: red">2 </span><span style="font-weight: bold">+ </span><span style="color: red">5
+    </span>win <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>GraphWin<span style="font-weight: bold">(</span><span style="color: red">'Particle Simulation'</span><span style="font-weight: bold">, </span>wsize<span style="font-weight: bold">, </span>wsize<span style="font-weight: bold">,
+                            </span>autoflush<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">)
+    </span>win<span style="font-weight: bold">.</span>setBackground<span style="font-weight: bold">(</span><span style="color: red">'white'</span><span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Initialize particle graphics
+    </span>Particle<span style="font-weight: bold">.</span>scale_pos <span style="font-weight: bold">= </span>size <span style="font-weight: bold">/ </span>Particle<span style="font-weight: bold">.</span>box_size
+    energy <span style="font-weight: bold">= </span><span style="color: red">0
+    </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>len<span style="font-weight: bold">(</span>distribution<span style="font-weight: bold">)):
+        </span>particles <span style="font-weight: bold">= </span>distribution<span style="font-weight: bold">[</span>t<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>init_graphic<span style="font-weight: bold">(</span>win<span style="font-weight: bold">, </span>psize<span style="font-weight: bold">, </span>t<span style="font-weight: bold">)
+            </span>energy <span style="font-weight: bold">+= </span>p<span style="font-weight: bold">.</span>energy
+
+    <span style="color: green; font-style: italic"># Initialize step number
+    </span>text <span style="font-weight: bold">= </span>graphics<span style="font-weight: bold">.</span>Text<span style="font-weight: bold">(</span>graphics<span style="font-weight: bold">.</span>Point<span style="font-weight: bold">(</span>wsize <span style="font-weight: bold">// </span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">),
+                         </span><span style="color: red">'step = 0, energy = ' </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>energy<span style="font-weight: bold">))
+    </span>text<span style="font-weight: bold">.</span>setSize<span style="font-weight: bold">(</span><span style="color: red">18</span><span style="font-weight: bold">)
+    </span>text<span style="font-weight: bold">.</span>draw<span style="font-weight: bold">(</span>win<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">return </span>win<span style="font-weight: bold">, </span>text
+
+<span style="color: blue; font-weight: bold">def </span>update_step<span style="font-weight: bold">(</span>win<span style="font-weight: bold">, </span>text<span style="font-weight: bold">, </span>step<span style="font-weight: bold">, </span>energy<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Update the visualization if appropriate given the step number and update
+    interval."""
+    </span><span style="color: blue; font-weight: bold">if </span>update_interval <span style="color: blue; font-weight: bold">and </span>step <span style="font-weight: bold">% </span>update_interval <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span>format_str <span style="font-weight: bold">= </span><span style="color: red">'step = {0}, energy = {1}'
+        </span>text<span style="font-weight: bold">.</span>setText<span style="font-weight: bold">(</span>format_str<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>step<span style="font-weight: bold">, </span>round<span style="font-weight: bold">(</span><span style="color: red">1000 </span><span style="font-weight: bold">* </span>energy<span style="font-weight: bold">)))
+        </span>win<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+</span><span style="color: green; font-style: italic">#####################
+# Serial Simulation #
+#####################
+
+</span><span style="color: blue; font-weight: bold">def </span>serial_simulation<span style="font-weight: bold">(</span>n<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">,
+                      </span>update_interval<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simulate n particles sequentially for steps steps. num_threads should
+    always be 1. update_interval is the visualization update interval."""
+    </span><span style="color: blue; font-weight: bold">assert </span>num_threads <span style="font-weight: bold">== </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'serial_simulation cannot use multiple threads'
+
+    </span><span style="color: green; font-style: italic"># Create particles
+    </span>particles <span style="font-weight: bold">= </span>make_particles<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)
+    </span>initial_energy <span style="font-weight: bold">= </span>reduce<span style="font-weight: bold">(</span><span style="color: blue; font-weight: bold">lambda </span>x<span style="font-weight: bold">, </span>p<span style="font-weight: bold">: </span>x <span style="font-weight: bold">+ </span>p<span style="font-weight: bold">.</span>energy<span style="font-weight: bold">, </span>particles<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Initialize visualization
+    </span>win<span style="font-weight: bold">, </span>text <span style="font-weight: bold">= </span>init_graphics<span style="font-weight: bold">((</span>particles<span style="font-weight: bold">,), </span>n<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Perform simulation
+    </span>start <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>steps<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Compute forces
+        </span><span style="color: blue; font-weight: bold">for </span>p1 <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+            </span>p1<span style="font-weight: bold">.</span>ax <span style="font-weight: bold">= </span>p1<span style="font-weight: bold">.</span>ay <span style="font-weight: bold">= </span><span style="color: red">0 </span><span style="color: green; font-style: italic"># reset accleration to 0
+            </span><span style="color: blue; font-weight: bold">for </span>p2 <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+                </span>p1<span style="font-weight: bold">.</span>apply_force<span style="font-weight: bold">(</span>p2<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Move particles
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move<span style="font-weight: bold">()
+            </span><span style="color: green; font-style: italic"># Energy normalization
+            </span>p<span style="font-weight: bold">.</span>vx <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+            p<span style="font-weight: bold">.</span>vy <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+
+        <span style="color: green; font-style: italic"># Update visualization
+        </span>energy <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move_graphic<span style="font-weight: bold">()
+            </span>energy <span style="font-weight: bold">+= </span>p<span style="font-weight: bold">.</span>energy
+        update_step<span style="font-weight: bold">(</span>win<span style="font-weight: bold">, </span>text<span style="font-weight: bold">, </span>step<span style="font-weight: bold">, </span>energy<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Energy normalization
+        </span><span style="color: blue; font-weight: bold">if </span>normalize_energy<span style="font-weight: bold">:
+            </span>Particle<span style="font-weight: bold">.</span>energy_correction <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>initial_energy <span style="font-weight: bold">/ </span>energy<span style="font-weight: bold">)
+    </span>end <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'serial simulation took {0} seconds'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>end <span style="font-weight: bold">- </span>start<span style="font-weight: bold">))
+
+</span><span style="color: green; font-style: italic">############################
+# Multithreaded Simulation #
+############################
+
+</span><span style="color: blue; font-weight: bold">def </span>thread_simulation<span style="font-weight: bold">(</span>n<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">=</span><span style="color: red">4</span><span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">,
+                      </span>update_interval<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simulate n particles using num_threads threads for steps steps.
+    update_interval is the visualization update interval.
+
+    This algorithm uses a barrier to separate the phases that read the
+    particles' positions from the phases that write to those positions."""
+    </span><span style="color: green; font-style: italic"># Create particles
+    </span>particles <span style="font-weight: bold">= </span>make_particles<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)
+    </span>distribution <span style="font-weight: bold">= </span>divide_items<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">)
+    </span>initial_energy <span style="font-weight: bold">= </span>reduce<span style="font-weight: bold">(</span><span style="color: blue; font-weight: bold">lambda </span>x<span style="font-weight: bold">, </span>p<span style="font-weight: bold">: </span>x <span style="font-weight: bold">+ </span>p<span style="font-weight: bold">.</span>energy<span style="font-weight: bold">, </span>particles<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Create computation threads and barrier
+    </span>barrier <span style="font-weight: bold">= </span>threading<span style="font-weight: bold">.</span>Barrier<span style="font-weight: bold">(</span>num_threads <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span>threads <span style="font-weight: bold">= [</span>threading<span style="font-weight: bold">.</span>Thread<span style="font-weight: bold">(</span>target<span style="font-weight: bold">=</span>thread_simulate<span style="font-weight: bold">,
+                                </span>args<span style="font-weight: bold">=(</span>particles<span style="font-weight: bold">, </span>distribution<span style="font-weight: bold">[</span>i<span style="font-weight: bold">], </span>barrier<span style="font-weight: bold">,
+                                      </span>steps<span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">))
+               </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+
+    </span><span style="color: green; font-style: italic"># Initialize visualization
+    </span>win<span style="font-weight: bold">, </span>text <span style="font-weight: bold">= </span>init_graphics<span style="font-weight: bold">(</span>distribution<span style="font-weight: bold">, </span>n<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Start simulation
+    </span>start <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>threads<span style="font-weight: bold">:
+        </span>t<span style="font-weight: bold">.</span>start<span style="font-weight: bold">() </span><span style="color: green; font-style: italic"># launch computation threads
+
+    # Handle visualization
+    </span><span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>steps<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Wait for all forces to be computed
+        </span>barrier<span style="font-weight: bold">.</span>wait<span style="font-weight: bold">()
+
+        </span><span style="color: green; font-style: italic"># Wait for all particles to move
+        </span>barrier<span style="font-weight: bold">.</span>wait<span style="font-weight: bold">()
+
+        </span><span style="color: green; font-style: italic"># Update visualization
+        </span>energy <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move_graphic<span style="font-weight: bold">()
+            </span>energy <span style="font-weight: bold">+= </span>p<span style="font-weight: bold">.</span>energy
+        update_step<span style="font-weight: bold">(</span>win<span style="font-weight: bold">, </span>text<span style="font-weight: bold">, </span>step<span style="font-weight: bold">, </span>energy<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Energy normalization
+        </span><span style="color: blue; font-weight: bold">if </span>normalize_energy<span style="font-weight: bold">:
+            </span>Particle<span style="font-weight: bold">.</span>energy_correction <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>initial_energy <span style="font-weight: bold">/ </span>energy<span style="font-weight: bold">)
+    </span>end <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'multithreaded simulation took {0} seconds'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>end <span style="font-weight: bold">- </span>start<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">def </span>thread_simulate<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">, </span>my_particles<span style="font-weight: bold">, </span>barrier<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Perform one thread's part of the simulation for steps steps. particles
+    contains all particles in the simulation, my_particles contains just the
+    thread's particles, and barrier is the barrier to use for
+    synchronization."""
+    </span><span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>steps<span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Compute forces on my particles
+        </span><span style="color: blue; font-weight: bold">for </span>p1 <span style="color: blue; font-weight: bold">in </span>my_particles<span style="font-weight: bold">:
+            </span>p1<span style="font-weight: bold">.</span>ax <span style="font-weight: bold">= </span>p1<span style="font-weight: bold">.</span>ay <span style="font-weight: bold">= </span><span style="color: red">0 </span><span style="color: green; font-style: italic"># reset accleration to 0
+            </span><span style="color: blue; font-weight: bold">for </span>p2 <span style="color: blue; font-weight: bold">in </span>particles<span style="font-weight: bold">:
+                </span>p1<span style="font-weight: bold">.</span>apply_force<span style="font-weight: bold">(</span>p2<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Wait for all forces to be computed
+        </span>barrier<span style="font-weight: bold">.</span>wait<span style="font-weight: bold">()
+
+        </span><span style="color: green; font-style: italic"># Move my particles
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>my_particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move<span style="font-weight: bold">()
+            </span><span style="color: green; font-style: italic"># Energy normalization
+            </span>p<span style="font-weight: bold">.</span>vx <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+            p<span style="font-weight: bold">.</span>vy <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+
+        <span style="color: green; font-style: italic"># Wait for all particles to move
+        </span>barrier<span style="font-weight: bold">.</span>wait<span style="font-weight: bold">()
+
+</span><span style="color: green; font-style: italic">###########################
+# Multiprocess Simulation #
+###########################
+
+</span><span style="color: blue; font-weight: bold">def </span>process_simulation<span style="font-weight: bold">(</span>n<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">=</span><span style="color: red">4</span><span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">,
+                       </span>update_interval<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simulate n particles using num_threads processes for steps steps.
+    update_interval is the visualization update interval.
+
+    This algorithm sets up a circular message passing pipeline between the
+    computation processes. In each step, a process injects its particles'
+    positions into the pipeline. A process interacts its particles with the
+    positions in its own pipeline stage before sending those positions on to the
+    next stage. Data in the pipeline completes an entire rotation in each
+    step.
+
+    Processes also send their particles' positions to the master in each step in
+    order to update the visualization."""
+    </span><span style="color: green; font-style: italic"># Create particles
+    </span>particles <span style="font-weight: bold">= </span>make_particles<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)
+    </span>distribution <span style="font-weight: bold">= </span>divide_items<span style="font-weight: bold">(</span>particles<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">)
+    </span>initial_energy <span style="font-weight: bold">= </span>reduce<span style="font-weight: bold">(</span><span style="color: blue; font-weight: bold">lambda </span>x<span style="font-weight: bold">, </span>p<span style="font-weight: bold">: </span>x <span style="font-weight: bold">+ </span>p<span style="font-weight: bold">.</span>energy<span style="font-weight: bold">, </span>particles<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Create processes and message-passing pipes
+    </span>master_pipes <span style="font-weight: bold">= [</span>multiprocessing<span style="font-weight: bold">.</span>Pipe<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+    </span>p2p_pipes <span style="font-weight: bold">= [</span>multiprocessing<span style="font-weight: bold">.</span>Pipe<span style="font-weight: bold">(</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+    </span>processes <span style="font-weight: bold">= [</span>multiprocessing<span style="font-weight: bold">.</span>Process<span style="font-weight: bold">(</span>target<span style="font-weight: bold">=</span>process_simulate<span style="font-weight: bold">,
+                                         </span>args<span style="font-weight: bold">=(</span>distribution<span style="font-weight: bold">[</span>i<span style="font-weight: bold">],
+                                               </span>num_threads<span style="font-weight: bold">,
+                                               </span>master_pipes<span style="font-weight: bold">[</span>i<span style="font-weight: bold">][</span><span style="color: red">1</span><span style="font-weight: bold">],
+                                               </span>p2p_pipes<span style="font-weight: bold">[</span>i<span style="font-weight: bold">][</span><span style="color: red">1</span><span style="font-weight: bold">],
+                                               </span>p2p_pipes<span style="font-weight: bold">[(</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">) % </span>num_threads<span style="font-weight: bold">][</span><span style="color: red">0</span><span style="font-weight: bold">],
+                                               </span>steps<span style="font-weight: bold">,
+                                               </span>Particle<span style="font-weight: bold">.</span>dt<span style="font-weight: bold">, </span>Particle<span style="font-weight: bold">.</span>box_size<span style="font-weight: bold">,
+                                               </span>normalize_energy<span style="font-weight: bold">))
+               </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+    </span>in_pipes <span style="font-weight: bold">= [</span>pipe<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] </span><span style="color: blue; font-weight: bold">for </span>pipe <span style="color: blue; font-weight: bold">in </span>master_pipes<span style="font-weight: bold">]
+
+    </span><span style="color: green; font-style: italic"># Initialize visualization
+    </span>win<span style="font-weight: bold">, </span>text <span style="font-weight: bold">= </span>init_graphics<span style="font-weight: bold">(</span>distribution<span style="font-weight: bold">, </span>n<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+    </span><span style="color: green; font-style: italic"># Start simulation
+    </span>start <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>processes<span style="font-weight: bold">:
+        </span>p<span style="font-weight: bold">.</span>start<span style="font-weight: bold">() </span><span style="color: green; font-style: italic"># launch computation processes
+
+    </span><span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>steps<span style="font-weight: bold">):
+        </span>energy <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">):
+            </span><span style="color: green; font-style: italic"># Read particle positions from each process
+            </span>x_coords<span style="font-weight: bold">, </span>y_coords<span style="font-weight: bold">, </span>partial_energy <span style="font-weight: bold">= </span>in_pipes<span style="font-weight: bold">[</span>t<span style="font-weight: bold">].</span>recv<span style="font-weight: bold">()
+            </span>energy <span style="font-weight: bold">+= </span>partial_energy
+
+            <span style="color: green; font-style: italic"># Move local particle copies to the appropriate positions
+            </span>curr_particles <span style="font-weight: bold">= </span>distribution<span style="font-weight: bold">[</span>t<span style="font-weight: bold">]
+            </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>len<span style="font-weight: bold">(</span>x_coords<span style="font-weight: bold">)):
+                </span>curr_particles<span style="font-weight: bold">[</span>i<span style="font-weight: bold">].</span>move_to<span style="font-weight: bold">(</span>x_coords<span style="font-weight: bold">[</span>i<span style="font-weight: bold">], </span>y_coords<span style="font-weight: bold">[</span>i<span style="font-weight: bold">])
+        
+        </span><span style="color: green; font-style: italic"># Update visualization
+        </span>update_step<span style="font-weight: bold">(</span>win<span style="font-weight: bold">, </span>text<span style="font-weight: bold">, </span>step<span style="font-weight: bold">, </span>energy<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Energy normalization
+        </span><span style="color: blue; font-weight: bold">if </span>normalize_energy<span style="font-weight: bold">:
+            </span>ratio <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>initial_energy <span style="font-weight: bold">/ </span>energy<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">):
+                </span>in_pipes<span style="font-weight: bold">[</span>t<span style="font-weight: bold">].</span>send<span style="font-weight: bold">(</span>ratio<span style="font-weight: bold">)
+    </span>end <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'multiprocess simulation took {0} seconds'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>end <span style="font-weight: bold">- </span>start<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">def </span>process_simulate<span style="font-weight: bold">(</span>my_particles<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">, </span>master<span style="font-weight: bold">, </span>left<span style="font-weight: bold">, </span>right<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">,
+                     </span>dt<span style="font-weight: bold">, </span>box_size<span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Perform one process's part of the simulation for steps steps.
+    my_particles contains just the process's particles. num_threads is the total
+    number of computation processes. master is a pipe to send data to the master
+    process, left is a pipe to send data to the process on the left, and right
+    is a pipe to send data to the process on the right. dt is the length of the
+    timestep, and box_size is the size of the box."""
+    </span><span style="color: green; font-style: italic"># Set local attributes to match global
+    </span>Particle<span style="font-weight: bold">.</span>dt <span style="font-weight: bold">= </span>dt
+    Particle<span style="font-weight: bold">.</span>box_size <span style="font-weight: bold">= </span>box_size
+
+    <span style="color: blue; font-weight: bold">for </span>step <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>steps <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">):
+        </span>x_coords<span style="font-weight: bold">, </span>y_coords <span style="font-weight: bold">= [], []
+        </span>energy <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>my_particles<span style="font-weight: bold">:
+            </span><span style="color: green; font-style: italic"># Copy my particle coordinates to my pipeline stage
+            </span>x_coords<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>x<span style="font-weight: bold">)
+            </span>y_coords<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>p<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+            </span>energy <span style="font-weight: bold">+= </span>p<span style="font-weight: bold">.</span>energy
+
+            <span style="color: green; font-style: italic"># Reset acceleration to 0
+            </span>p<span style="font-weight: bold">.</span>ax <span style="font-weight: bold">= </span>p<span style="font-weight: bold">.</span>ay <span style="font-weight: bold">= </span><span style="color: red">0
+
+        </span><span style="color: green; font-style: italic"># Send coordinates to master
+        </span><span style="color: blue; font-weight: bold">if </span>step <span style="font-weight: bold">!= </span><span style="color: red">0</span><span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># no need to send in first step
+            </span>master<span style="font-weight: bold">.</span>send<span style="font-weight: bold">((</span>x_coords<span style="font-weight: bold">, </span>y_coords<span style="font-weight: bold">, </span>energy<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">if </span>step <span style="font-weight: bold">== </span>steps<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: green; font-style: italic"># last step only sends to master
+
+        # Process data for each pipeline rotation
+        </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">):
+            </span><span style="color: green; font-style: italic"># Initiate rotation in all but last iteration
+            </span><span style="color: blue; font-weight: bold">if </span>t <span style="font-weight: bold">!= </span>num_threads <span style="font-weight: bold">- </span><span style="color: red">1</span><span style="font-weight: bold">:
+                </span>left<span style="font-weight: bold">.</span>send<span style="font-weight: bold">((</span>x_coords<span style="font-weight: bold">, </span>y_coords<span style="font-weight: bold">))
+
+            </span><span style="color: green; font-style: italic"># Apply forces from coordinates currently in this pipeline stage
+            </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>my_particles<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>len<span style="font-weight: bold">(</span>x_coords<span style="font-weight: bold">)):
+                    </span>p<span style="font-weight: bold">.</span>apply_force_from_coords<span style="font-weight: bold">(</span>x_coords<span style="font-weight: bold">[</span>i<span style="font-weight: bold">], </span>y_coords<span style="font-weight: bold">[</span>i<span style="font-weight: bold">])
+
+            </span><span style="color: green; font-style: italic"># Complete rotation in all but last iteration
+            </span><span style="color: blue; font-weight: bold">if </span>t <span style="font-weight: bold">!= </span>num_threads <span style="font-weight: bold">- </span><span style="color: red">1</span><span style="font-weight: bold">:
+                </span>x_coords<span style="font-weight: bold">, </span>y_coords <span style="font-weight: bold">= </span>right<span style="font-weight: bold">.</span>recv<span style="font-weight: bold">()
+
+        </span><span style="color: green; font-style: italic"># Energy normalization
+        </span><span style="color: blue; font-weight: bold">if </span>step <span style="font-weight: bold">!= </span><span style="color: red">0 </span><span style="color: blue; font-weight: bold">and </span>normalize_energy<span style="font-weight: bold">:
+            </span>Particle<span style="font-weight: bold">.</span>energy_correction <span style="font-weight: bold">= </span>master<span style="font-weight: bold">.</span>recv<span style="font-weight: bold">()
+
+        </span><span style="color: green; font-style: italic"># Move my particles for this step
+        </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>my_particles<span style="font-weight: bold">:
+            </span>p<span style="font-weight: bold">.</span>move<span style="font-weight: bold">()
+            </span><span style="color: green; font-style: italic"># Energy normalization
+            </span>p<span style="font-weight: bold">.</span>vx <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+            p<span style="font-weight: bold">.</span>vy <span style="font-weight: bold">*= </span>Particle<span style="font-weight: bold">.</span>energy_correction
+
+<span style="color: green; font-style: italic">##########################
+# Command Line Interface #
+##########################
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>simulation<span style="font-weight: bold">, </span>num_threads <span style="font-weight: bold">= </span>serial_simulation<span style="font-weight: bold">, </span><span style="color: red">1
+    </span>num_particles<span style="font-weight: bold">, </span>steps <span style="font-weight: bold">= </span>default_num_particles<span style="font-weight: bold">, </span>default_steps
+    normalize_energy <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+    </span>update_interval <span style="font-weight: bold">= </span><span style="color: red">0
+    </span>i <span style="font-weight: bold">= </span><span style="color: red">0
+    </span><span style="color: blue; font-weight: bold">while </span>i <span style="font-weight: bold">&lt; </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-t'</span><span style="font-weight: bold">:
+            </span>simulation <span style="font-weight: bold">= </span>thread_simulation
+            num_threads <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-p'</span><span style="font-weight: bold">:
+            </span>simulation <span style="font-weight: bold">= </span>process_simulation
+            num_threads <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-n'</span><span style="font-weight: bold">:
+            </span>num_particles <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-s'</span><span style="font-weight: bold">:
+            </span>steps <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-g' </span><span style="color: blue; font-weight: bold">or </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-v'</span><span style="font-weight: bold">:
+            </span>update_interval <span style="font-weight: bold">= </span><span style="color: red">1
+            </span>i <span style="font-weight: bold">-= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-u'</span><span style="font-weight: bold">:
+            </span>update_interval <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-dt'</span><span style="font-weight: bold">:
+            </span>Particle<span style="font-weight: bold">.</span>dt <span style="font-weight: bold">= </span>float<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-e'</span><span style="font-weight: bold">:
+            </span>normalize_energy <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+            </span>i <span style="font-weight: bold">-= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] != </span><span style="color: red">'-h' </span><span style="color: blue; font-weight: bold">and </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] != </span><span style="color: red">'-help'</span><span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'unknown argument:'</span><span style="font-weight: bold">, </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">], </span>file<span style="font-weight: bold">=</span>sys<span style="font-weight: bold">.</span>stderr<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Options:\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -t &lt;num&gt;     run with &lt;num&gt; threads\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -p &lt;num&gt;     run with &lt;num&gt; processes\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -n &lt;num&gt;     simulate &lt;num&gt; particles\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -s &lt;num&gt;     run for &lt;num&gt; timesteps\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -v, -g       enable visualization\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -u &lt;num&gt;     update visualization every &lt;num&gt; steps\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -dt &lt;num&gt;    use &lt;num&gt; as length of timestep\n'</span><span style="font-weight: bold">,
+                  </span><span style="color: red">'  -e           normalize total energy in each timestep'</span><span style="font-weight: bold">,
+                  </span>file<span style="font-weight: bold">=</span>sys<span style="font-weight: bold">.</span>stderr<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">return
+        </span>i <span style="font-weight: bold">+= </span><span style="color: red">2
+    </span>simulation<span style="font-weight: bold">(</span>num_particles<span style="font-weight: bold">, </span>steps<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">, </span>normalize_energy<span style="font-weight: bold">, </span>update_interval<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

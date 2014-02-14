@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>geo.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>geo.py (<a href="geo.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Geography and projection utilities."""
+
+</span><span style="color: blue; font-weight: bold">from </span>data <span style="color: blue; font-weight: bold">import </span>DATA_PATH
+<span style="color: blue; font-weight: bold">from </span>math <span style="color: blue; font-weight: bold">import </span>sin<span style="font-weight: bold">, </span>cos<span style="font-weight: bold">, </span>atan2<span style="font-weight: bold">, </span>radians<span style="font-weight: bold">, </span>sqrt
+<span style="color: blue; font-weight: bold">from </span>json <span style="color: blue; font-weight: bold">import </span>JSONDecoder
+
+<span style="color: blue; font-weight: bold">def </span>make_position<span style="font-weight: bold">(</span>lat<span style="font-weight: bold">, </span>lon<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a geographic position, which has a latitude and longitude."""
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>lat<span style="font-weight: bold">, </span>lon<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>latitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the latitudinal coordinate of a geographic position."""
+    </span><span style="color: blue; font-weight: bold">return </span>position<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+
+</span><span style="color: blue; font-weight: bold">def </span>longitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the longitudinal coordinate of a geographic position."""
+    </span><span style="color: blue; font-weight: bold">return </span>position<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+
+</span><span style="color: blue; font-weight: bold">def </span>geo_distance<span style="font-weight: bold">(</span>position1<span style="font-weight: bold">, </span>position2<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the great circle distance (in miles) between two
+    geographic positions.
+
+    Uses the "haversine" formula.
+    http://en.wikipedia.org/wiki/Haversine_formula
+
+    &gt;&gt;&gt; round(geo_distance(make_position(50, 5), make_position(58, 3)), 1)
+    559.2
+    """
+    </span>earth_radius <span style="font-weight: bold">= </span><span style="color: red">3963.2  </span><span style="color: green; font-style: italic"># miles
+    </span>lat1<span style="font-weight: bold">, </span>lat2 <span style="font-weight: bold">= [</span>radians<span style="font-weight: bold">(</span>latitude<span style="font-weight: bold">(</span>p<span style="font-weight: bold">)) </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span>position1<span style="font-weight: bold">, </span>position2<span style="font-weight: bold">)]
+    </span>lon1<span style="font-weight: bold">, </span>lon2 <span style="font-weight: bold">= [</span>radians<span style="font-weight: bold">(</span>longitude<span style="font-weight: bold">(</span>p<span style="font-weight: bold">)) </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span>position1<span style="font-weight: bold">, </span>position2<span style="font-weight: bold">)]
+    </span>dlat<span style="font-weight: bold">, </span>dlon <span style="font-weight: bold">= </span>lat2<span style="font-weight: bold">-</span>lat1<span style="font-weight: bold">, </span>lon2<span style="font-weight: bold">-</span>lon1
+    a <span style="font-weight: bold">= </span>sin<span style="font-weight: bold">(</span>dlat<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">) ** </span><span style="color: red">2  </span><span style="font-weight: bold">+ </span>sin<span style="font-weight: bold">(</span>dlon<span style="font-weight: bold">/</span><span style="color: red">2</span><span style="font-weight: bold">) ** </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>cos<span style="font-weight: bold">(</span>lat1<span style="font-weight: bold">) * </span>cos<span style="font-weight: bold">(</span>lat2<span style="font-weight: bold">)
+    </span>c <span style="font-weight: bold">= </span><span style="color: red">2 </span><span style="font-weight: bold">* </span>atan2<span style="font-weight: bold">(</span>sqrt<span style="font-weight: bold">(</span>a<span style="font-weight: bold">), </span>sqrt<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">-</span>a<span style="font-weight: bold">))</span>;
+    <span style="color: blue; font-weight: bold">return </span>earth_radius <span style="font-weight: bold">* </span>c;
+
+<span style="color: blue; font-weight: bold">def </span>position_to_xy<span style="font-weight: bold">(</span>position<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Convert a geographic position within the US to a planar x-y point."""
+    </span>lat <span style="font-weight: bold">= </span>latitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)
+    </span>lon <span style="font-weight: bold">= </span>longitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>lat <span style="font-weight: bold">&lt; </span><span style="color: red">25</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>_hawaii<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>lat <span style="font-weight: bold">&gt; </span><span style="color: red">52</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>_alaska<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>_lower48<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>albers_projection<span style="font-weight: bold">(</span>origin<span style="font-weight: bold">, </span>parallels<span style="font-weight: bold">, </span>translate<span style="font-weight: bold">, </span>scale<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return an Albers projection from geographic positions to x-y positions.
+
+    Derived from Mike Bostock's Albers javascript implementation for D3
+    http://mbostock.github.com/d3
+    http://mathworld.wolfram.com/AlbersEqual-AreaConicProjection.html
+
+    origin -- a geographic position
+    parallels -- bounding latitudes
+    translate -- x-y translation to place the projection within a larger map
+    scale -- scaling factor
+    """
+    </span>phi1<span style="font-weight: bold">, </span>phi2 <span style="font-weight: bold">= [</span>radians<span style="font-weight: bold">(</span>p<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>parallels<span style="font-weight: bold">]
+    </span>base_lat <span style="font-weight: bold">= </span>radians<span style="font-weight: bold">(</span>latitude<span style="font-weight: bold">(</span>origin<span style="font-weight: bold">))
+    </span>s<span style="font-weight: bold">, </span>c <span style="font-weight: bold">= </span>sin<span style="font-weight: bold">(</span>phi1<span style="font-weight: bold">), </span>cos<span style="font-weight: bold">(</span>phi1<span style="font-weight: bold">)
+    </span>base_lon <span style="font-weight: bold">= </span>radians<span style="font-weight: bold">(</span>longitude<span style="font-weight: bold">(</span>origin<span style="font-weight: bold">))
+    </span>n <span style="font-weight: bold">= </span><span style="color: red">0.5 </span><span style="font-weight: bold">* (</span>s <span style="font-weight: bold">+ </span>sin<span style="font-weight: bold">(</span>phi2<span style="font-weight: bold">))
+    </span>C <span style="font-weight: bold">= </span>c<span style="font-weight: bold">*</span>c <span style="font-weight: bold">+ </span><span style="color: red">2</span><span style="font-weight: bold">*</span>n<span style="font-weight: bold">*</span>s
+    p0 <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>C <span style="font-weight: bold">- </span><span style="color: red">2</span><span style="font-weight: bold">*</span>n<span style="font-weight: bold">*</span>sin<span style="font-weight: bold">(</span>base_lat<span style="font-weight: bold">))/</span>n
+
+    <span style="color: blue; font-weight: bold">def </span>project<span style="font-weight: bold">(</span>position<span style="font-weight: bold">):
+        </span>lat<span style="font-weight: bold">, </span>lon <span style="font-weight: bold">= </span>radians<span style="font-weight: bold">(</span>latitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">)), </span>radians<span style="font-weight: bold">(</span>longitude<span style="font-weight: bold">(</span>position<span style="font-weight: bold">))
+        </span>t <span style="font-weight: bold">= </span>n <span style="font-weight: bold">* (</span>lon <span style="font-weight: bold">- </span>base_lon<span style="font-weight: bold">)
+        </span>p <span style="font-weight: bold">= </span>sqrt<span style="font-weight: bold">(</span>C <span style="font-weight: bold">- </span><span style="color: red">2</span><span style="font-weight: bold">*</span>n<span style="font-weight: bold">*</span>sin<span style="font-weight: bold">(</span>lat<span style="font-weight: bold">))/</span>n
+        x <span style="font-weight: bold">= </span>scale <span style="font-weight: bold">* </span>p <span style="font-weight: bold">* </span>sin<span style="font-weight: bold">(</span>t<span style="font-weight: bold">) + </span>translate<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span>y <span style="font-weight: bold">= </span>scale <span style="font-weight: bold">* (</span>p <span style="font-weight: bold">* </span>cos<span style="font-weight: bold">(</span>t<span style="font-weight: bold">) - </span>p0<span style="font-weight: bold">) + </span>translate<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>project
+
+_lower48 <span style="font-weight: bold">= </span>albers_projection<span style="font-weight: bold">(</span>make_position<span style="font-weight: bold">(</span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">98</span><span style="font-weight: bold">), [</span><span style="color: red">29.5</span><span style="font-weight: bold">, </span><span style="color: red">45.5</span><span style="font-weight: bold">], [</span><span style="color: red">480</span><span style="font-weight: bold">,</span><span style="color: red">250</span><span style="font-weight: bold">], </span><span style="color: red">1000</span><span style="font-weight: bold">)
+</span>_alaska <span style="font-weight: bold">= </span>albers_projection<span style="font-weight: bold">(</span>make_position<span style="font-weight: bold">(</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">160</span><span style="font-weight: bold">), [</span><span style="color: red">55</span><span style="font-weight: bold">,</span><span style="color: red">65</span><span style="font-weight: bold">], [</span><span style="color: red">150</span><span style="font-weight: bold">,</span><span style="color: red">440</span><span style="font-weight: bold">], </span><span style="color: red">400</span><span style="font-weight: bold">)
+</span>_hawaii <span style="font-weight: bold">= </span>albers_projection<span style="font-weight: bold">(</span>make_position<span style="font-weight: bold">(</span><span style="color: red">20</span><span style="font-weight: bold">, -</span><span style="color: red">160</span><span style="font-weight: bold">), [</span><span style="color: red">8</span><span style="font-weight: bold">,</span><span style="color: red">18</span><span style="font-weight: bold">], [</span><span style="color: red">300</span><span style="font-weight: bold">,</span><span style="color: red">450</span><span style="font-weight: bold">], </span><span style="color: red">1000</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>load_states<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Load the coordinates of all the state outlines and return them
+    in a dictionary, from names to shapes lists.
+
+    &gt;&gt;&gt; len(load_states()['HI'])  # Hawaii has 5 islands
+    5
+    """
+    </span>json_data_file <span style="font-weight: bold">= </span>open<span style="font-weight: bold">(</span>DATA_PATH <span style="font-weight: bold">+ </span><span style="color: red">'states.json'</span><span style="font-weight: bold">, </span>encoding<span style="font-weight: bold">=</span><span style="color: red">'utf8'</span><span style="font-weight: bold">)
+    </span>states <span style="font-weight: bold">= </span>JSONDecoder<span style="font-weight: bold">().</span>decode<span style="font-weight: bold">(</span>json_data_file<span style="font-weight: bold">.</span>read<span style="font-weight: bold">())
+    </span><span style="color: blue; font-weight: bold">for </span>state<span style="font-weight: bold">, </span>shapes <span style="color: blue; font-weight: bold">in </span>states<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">for </span>index<span style="font-weight: bold">, </span>shape <span style="color: blue; font-weight: bold">in </span>enumerate<span style="font-weight: bold">(</span>shapes<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>shape<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">][</span><span style="color: red">0</span><span style="font-weight: bold">]) == </span>list<span style="font-weight: bold">:  </span><span style="color: green; font-style: italic"># the shape is a single polygon
+                </span><span style="color: blue; font-weight: bold">assert </span>len<span style="font-weight: bold">(</span>shape<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Multi-polygon shape'
+                </span>shape <span style="font-weight: bold">= </span>shape<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+            </span>shapes<span style="font-weight: bold">[</span>index<span style="font-weight: bold">] = [</span>make_position<span style="font-weight: bold">(*</span>reversed<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">)) </span><span style="color: blue; font-weight: bold">for </span>pos <span style="color: blue; font-weight: bold">in </span>shape<span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">return </span>states
+
+us_states <span style="font-weight: bold">= </span>load_states<span style="font-weight: bold">()
+</span>
+</pre>
+</body>
+</html>

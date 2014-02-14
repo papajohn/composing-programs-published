@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.1 Introduction</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+	<h1>Chapter 2: Building Abstractions with Objects</h1>
+  <div class="section" id="introduction">
+<h2>2.1   Introduction</h2>
+<p>We concentrated in Chapter 1 on computational processes and on the role of
+functions in program design. We saw how to use primitive data (numbers) and
+primitive operations (arithmetic operations), how to form compound functions
+through composition and control, and how to create functional abstractions by
+giving names to processes. We also saw that higher-order functions enhance the
+power of our language by enabling us to manipulate, and thereby to reason, in
+terms of general methods of computation. This is much of the essence of
+programming.</p>
+<p>This chapter focuses on data.  Data allow us to represent and manipulate
+information about the world using the computational tools we have acquired so
+far.  Programs without data structures may suffice for exploring mathematical
+properties. But real-world phenomena have complex structure that is best
+represented using <em>compound data</em>.  With structured data, programs can simulate
+and reason about any domain of human knowledge and experience.  Due to the
+explosive growth of the Internet, a vast amount of structured information about
+the world is freely available to all of us online.</p>
+<div class="section" id="the-object-metaphor">
+<h3>2.1.1   The Object Metaphor</h3>
+<p>In the beginning of this text, we distinguished between functions and data:
+functions performed operations and data were operated upon.  When we included
+function values among our data, we acknowledged that data too can have behavior.
+Functions could be manipulated as data, but could also be called to perform
+computation.</p>
+<p>In this text, <em>objects</em> will serve as our central programming metaphor for
+data values that also have behavior.  Objects represent information, but also
+<em>behave</em> like the abstract concepts that they represent.  The logic of how an
+object interacts with other objects is bundled along with the information that
+encodes the object's value.  When an object is printed, it knows how to spell
+itself out as letters and numerals.  If an object is composed of parts, it knows
+how to reveal those parts on demand.  Objects are both information and
+processes, bundled together to represent the properties, interactions, and
+behaviors of complex things.</p>
+<p>The object metaphor is implemented in Python through specialized object syntax
+and associated terminology, which we can introduce by example.  A date is a kind
+of simple object.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span>
+</pre></div>
+
+<p>The name <tt class="docutils literal">date</tt> is bound to a <em>class</em>. A class represents a kind of object.
+Individual dates are called <em>instances</em> of that class, and they can be
+<em>constructed</em> by calling the class on arguments that characterize the instance.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+</pre></div>
+
+<p>While <tt class="docutils literal">today</tt> was constructed from primitive numbers, it behaves like a date.
+For instance, subtracting it from another date will give a time difference,
+which we can display as a line of text by calling <tt class="docutils literal">str</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">today</span><span class="p">)</span>
+<span class="go">'6 days, 0:00:00'</span>
+</pre></div>
+
+<p>Objects have <em>attributes</em>, which are named values that are part of the object.
+In Python, like many other programming languages, we use dot notation to
+designated an attribute of an object.</p>
+<blockquote>
+&lt;expression&gt; . &lt;name&gt;</blockquote>
+<p>Above, the <tt class="docutils literal">&lt;expression&gt;</tt> evaluates to an object, and <tt class="docutils literal">&lt;name&gt;</tt> is the name
+of an attribute for that object.</p>
+<p>Unlike the names that we have considered so far, these attribute names are not
+available in the general environment.  Instead, attribute names are particular
+to the object instance preceding the dot.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">today</span><span class="o">.</span><span class="n">year</span>
+<span class="go">2013</span>
+</pre></div>
+
+<p>Objects also have <em>methods</em>, which are function-valued attributes.
+Metaphorically, we say that the object "knows" how to carry out those methods.
+By implementation, methods are functions that compute their results from both
+their arguments and their object.  For example, The <tt class="docutils literal">strftime</tt> method
+(a classic function name meant to evoke "string format of time") of <tt class="docutils literal">today</tt>
+takes a single argument that specifies how to display a date (e.g., <tt class="docutils literal">%A</tt>
+means that the day of the week should be spelled out in full).</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">today</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%A, %B %d'</span><span class="p">)</span>
+<span class="go">'Wednesday, September 25'</span>
+</pre></div>
+
+<p>Computing the return value  of <tt class="docutils literal">strftime</tt> requires two inputs: the string that
+describes the format of the output and the date information bundled into
+<tt class="docutils literal">today</tt>.  Date-specific logic is applied within this method to yield this
+result.  We never stated that the 25th of September, 2013, was a Wednesday, but
+knowing one's weekday is part of what it means to be a date.  By bundling
+behavior and information together, this Python object offers us a convincing,
+self-contained abstraction of a date.</p>
+<p>Dot notation provides another form of combined expression in Python. Dot
+notation also has a well-defined evaluation procedure.  However, developing a
+precise account of how dot notation is evaluated will have to wait until we
+introduce the full paradigm of object-oriented programming over the next several
+sections.</p>
+</div>
+<div class="section" id="native-data-types">
+<h3>2.1.2   Native Data Types</h3>
+<p>Every object in Python has a <em>type</em>. The <tt class="docutils literal">type</tt> function allows us to inspect
+the type of an object.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+<span class="go">&lt;class 'datetime.date'&gt;</span>
+</pre></div>
+
+<p>So far, the types of objects we have used extensively are relatively few:
+numbers, functions, Booleans, and now dates.  We also briefly encountered sets
+and strings in Chapter 1, but we will need to study those in more depth.  There
+are many other kinds of objects: sounds, images, locations, web addresses,
+network connections, and more. These can be defined by the means of combination
+and abstraction that we develop in this chapter.  Python has only a handful of
+primitive or <em>native</em> data types built into the language.</p>
+<p>Native data types have the following properties:</p>
+<ol class="arabic simple">
+<li>There are primitive expressions that evaluate to objects of these types,
+called <em>literals</em>.</li>
+<li>There are built-in functions, operators, and methods to manipulate these
+types of values.</li>
+</ol>
+<p>As we have seen, numbers are native; numeric literals evaluate to numbers, and
+mathematical operators manipulate number objects.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">12</span> <span class="o">+</span> <span class="mi">3000000000000000000000000</span>
+<span class="go">3000000000000000000000012</span>
+</pre></div>
+
+<p>In fact, Python includes three native numeric types: integers (<tt class="docutils literal">int</tt>),
+real numbers (<tt class="docutils literal">float</tt>), and complex numbers (<tt class="docutils literal">complex</tt>).</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&lt;class 'int'&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="go">&lt;class 'float'&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+<span class="go">&lt;class 'complex'&gt;</span>
+</pre></div>
+
+<p>The name <tt class="docutils literal">float</tt> comes from the way in which real numbers are represented in
+Python: a "floating point" representation.  While the details of how numbers are
+represented is not a topic for this text, some high-level differences between
+<tt class="docutils literal">int</tt> and <tt class="docutils literal">float</tt> objects are important to know.  In particular, <tt class="docutils literal">int</tt>
+objects can only represent integers, but they represent them exactly, without
+any approximation.  On the other hand, <tt class="docutils literal">float</tt> objects can represent a wide
+range of fractional numbers, but not all rational numbers are representable.
+Nonetheless, float objects are often used to represent real and rational numbers
+approximately, up to some number of significant figures.</p>
+<p><strong>Further reading.</strong> The following sections introduce more of Python's native
+data types, focusing on the role they play in creating useful data abstractions.
+A chapter on <a class="reference external" href="http://getpython3.com/diveintopython3/native-datatypes.html">native data types</a> in the online book Dive
+Into Python 3 gives a pragmatic overview of all Python's native data types and
+how to use them effectively, including numerous usage examples and practical
+tips.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/22-data-abstraction.html">
+  		2.2 Data Abstraction
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

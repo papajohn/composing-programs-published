@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.2 Data Abstraction</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="data-abstraction">
+<h2>2.2   Data Abstraction</h2>
+<p>As we consider the wide set of things in the world that we would like to
+represent in our programs, we find that most of them have compound structure.  A
+date has a year, a month, and a day; a geographic position has latitude and
+longitude coordinates.  To represent positions, we  would like our programming
+language to have the capacity to couple together a latitude and longitude to
+form a pair, a <em>compound data</em> value that our programs can manipulate
+as a single conceptual unit, but which also has two parts that can be
+considered individually.</p>
+<p>The use of compound data enables us to increase the modularity of our programs.
+If we can manipulate geographic positions directly as objects in their own
+right, then we can separate the part of our program that deals with values from
+the details of how those values may be represented. The general technique of
+isolating the parts of a program that deal with how data are represented from
+the parts of a program that deal with how those data are manipulated is a
+powerful design methodology called <em>data abstraction</em>. Data abstraction makes
+programs much easier to design, maintain, and modify.</p>
+<p>Data abstraction is similar in character to functional abstraction.  When we
+create a functional abstraction, the details of how a function is implemented
+can be suppressed, and the particular function itself can be replaced by any
+other function with the same overall behavior.  In other words, we can make an
+abstraction that separates the way the function is used from the details of how
+the function is implemented.  Analogously, data abstraction is a methodology
+that enables us to isolate how a compound data object is used from the details
+of how it is constructed.</p>
+<p>The basic idea of data abstraction is to structure programs so that they operate
+on abstract data. That is, our programs should use data in such a way as to make
+as few assumptions about the data as possible. At the same time, a concrete data
+representation is defined, independently of the programs that use the data. The
+interface between these two parts of our system will be a set of functions,
+called selectors and constructors, that implement the abstract data in terms of
+the concrete representation. To illustrate this technique, we will consider how
+to design a set of functions for manipulating rational numbers.</p>
+<p>As you read the next few sections, keep in mind that most Python code written
+today uses very high-level abstract data types that are built into the language,
+such as classes, dictionaries, and lists.  Since we're building up an
+understanding of how these abstractions work, we won't use them yet ourselves.
+As a consequence, we will write some code that isn't typical of the way most
+Python programmers would implement these ideas in the language.  What we write
+is instructive, however, because it demonstrates how these abstractions can be
+constructed.  Remember that computer science isn't just about learning to use
+programming languages, but also understanding how they work.</p>
+<div class="section" id="example-arithmetic-on-rational-numbers">
+<h3>2.2.1   Example: Arithmetic on Rational Numbers</h3>
+<p>Recall that a rational number is a ratio of integers, and rational numbers
+constitute an important sub-class of real numbers.  A rational number such as
+<tt class="docutils literal">1/3</tt> or <tt class="docutils literal">17/29</tt> is typically written as:</p>
+<pre class="literal-block">
+&lt;numerator&gt;/&lt;denominator&gt;
+</pre>
+<p>where both the <tt class="docutils literal">&lt;numerator&gt;</tt> and <tt class="docutils literal">&lt;denominator&gt;</tt> are placeholders for
+integer values.  Both parts are needed to exactly characterize the value of the
+rational number.</p>
+<p>Rational numbers are important in computer science because they, like integers,
+can be represented exactly.  Irrational numbers (like <tt class="docutils literal">pi</tt> or <tt class="docutils literal">e</tt> or
+<tt class="docutils literal">sqrt(2)</tt>) are instead approximated using a finite binary expansion.  Thus,
+working with rational numbers should, in principle, allow us to avoid
+approximation errors in our arithmetic.</p>
+<p>However, as soon as we actually divide the numerator by the denominator, we can
+be left with a truncated decimal approximation (a <tt class="docutils literal">float</tt>).</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span>
+<span class="go">0.3333333333333333</span>
+</pre></div>
+
+<p>and the problems with this approximation appear when we start to conduct tests:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">==</span> <span class="mf">0.333333333333333300000</span>  <span class="c"># Beware of approximations</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>How computers approximate real numbers with finite-length decimal expansions is
+a topic for another class. The important idea here is that by representing
+rational numbers as ratios of integers, we avoid the approximation problem
+entirely. Hence, we would like to keep the numerator and denominator separate
+for the sake of precision, but treat them as a single unit.</p>
+<p>We know from using functional abstractions that we can start programming
+productively before we have an implementation of some parts of our program.  Let
+us begin by assuming that we already have a way of constructing a rational
+number from a numerator and a denominator. We also assume that, given a rational
+number, we have a way of extracting (or selecting) its numerator and its
+denominator. Let us further assume that the constructor and selectors are
+available as the following three functions:</p>
+<ul class="simple">
+<li><tt class="docutils literal">rational(n, d)</tt> returns the rational number with numerator <tt class="docutils literal">n</tt> and
+denominator <tt class="docutils literal">d</tt>.</li>
+<li><tt class="docutils literal">numer(x)</tt> returns the numerator of the rational number <tt class="docutils literal">x</tt>.</li>
+<li><tt class="docutils literal">denom(x)</tt> returns the denominator of the rational number <tt class="docutils literal">x</tt>.</li>
+</ul>
+<p>We are using here a powerful strategy of synthesis: <em>wishful thinking</em>. We
+haven't yet said how a rational number is represented, or how the functions
+<tt class="docutils literal">numer</tt>, <tt class="docutils literal">denom</tt>, and <tt class="docutils literal">rational</tt> should be implemented. Even so, if we did
+have these three functions, we could then add, multiply, and test equality of
+rational numbers by calling them:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_rationals</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">nx</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="n">ny</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">rational</span><span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dy</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mul_rationals</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">rational</span><span class="p">(</span><span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">equal_rationals</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">numer</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+<p>Now we have the operations on rational numbers defined in terms of the selector
+functions <tt class="docutils literal">numer</tt> and <tt class="docutils literal">denom</tt>, and the constructor function <tt class="docutils literal">rational</tt>,
+but we haven't yet defined these functions. What we need is some way to glue
+together a numerator and a denominator into a unit.</p>
+</div>
+<div class="section" id="pairs">
+<h3>2.2.2   Pairs</h3>
+<p>To enable us to implement the concrete level of our data abstraction, Python
+provides a compound structure called a <tt class="docutils literal">tuple</tt>, which can be constructed by
+separating values by commas.  Although not strictly required, parentheses almost
+always surround tuples.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">(1, 2)</span>
+</pre></div>
+
+<p>The elements of a tuple can be unpacked in two ways.  The first way is via our
+familiar method of multiple assignment.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pair</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pair</span>
+<span class="go">(1, 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">pair</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>In fact, multiple assignment has been creating and unpacking tuples all along.</p>
+<p>A second method for accessing the elements in a tuple is by the indexing
+operator, expressed using square brackets.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>Tuples in Python (and sequences in most other programming languages) are
+0-indexed, meaning that the index 0 selects the first element, index 1
+selects the second, and so on.  One intuition that underlies this indexing
+convention is that the index represents how far an element is offset from the
+beginning of the tuple.</p>
+<p>The equivalent function for the element selection operator is called
+<tt class="docutils literal">getitem</tt>, and it also uses 0-indexed positions to select elements from a
+tuple.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">getitem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getitem</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+
+<p>Tuples are native types, which means that there are built-in Python operators to
+manipulate them.  We'll return to the full properties of tuples shortly.  At
+present, we are only interested in how tuples can serve as the glue that
+implements abstract data types.</p>
+<p><strong>Representing Rational Numbers.</strong> Tuples offer a natural way to implement
+rational numbers as a pair of two integers: a numerator and a denominator. We
+can implement our constructor and selector functions for rational numbers by
+manipulating 2-element tuples.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rational</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">numer</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">getitem</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">denom</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">getitem</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<p>A function for printing rational numbers completes our implementation of this
+abstract data type.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rational_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a string 'n/d' for numerator n and denominator d."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="s">'{0}/{1}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numer</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">denom</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+<p>Together with the arithmetic operations we defined earlier, we can manipulate
+rational numbers with the functions we have defined.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">half</span> <span class="o">=</span> <span class="n">rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rational_to_string</span><span class="p">(</span><span class="n">half</span><span class="p">)</span>
+<span class="go">'1/2'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">third</span> <span class="o">=</span> <span class="n">rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rational_to_string</span><span class="p">(</span><span class="n">mul_rationals</span><span class="p">(</span><span class="n">half</span><span class="p">,</span> <span class="n">third</span><span class="p">))</span>
+<span class="go">'1/6'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rational_to_string</span><span class="p">(</span><span class="n">add_rationals</span><span class="p">(</span><span class="n">third</span><span class="p">,</span> <span class="n">third</span><span class="p">))</span>
+<span class="go">'6/9'</span>
+</pre></div>
+
+<p>As the example above shows, our rational number implementation does not reduce
+rational numbers to lowest terms. We can remedy this by changing <tt class="docutils literal">rational</tt>.
+If we have a function for computing the greatest common denominator of two
+integers, we can use it to reduce the numerator and the denominator to lowest
+terms before constructing the pair.  As with many useful tools, such a function
+already exists in the Python Library.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">fractions</span> <span class="k">import</span> <span class="n">gcd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rational</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">g</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="n">g</span><span class="p">,</span> <span class="n">d</span><span class="o">//</span><span class="n">g</span><span class="p">)</span>
+</pre></div>
+
+<p>The double slash operator, <tt class="docutils literal">//</tt>, expresses integer division, which rounds down
+the fractional part of the result of division.  Since we know that <tt class="docutils literal">g</tt> divides
+both <tt class="docutils literal">n</tt> and <tt class="docutils literal">d</tt> evenly, integer division is exact in this case.  Now we
+have</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">rational_to_string</span><span class="p">(</span><span class="n">add_rationals</span><span class="p">(</span><span class="n">third</span><span class="p">,</span> <span class="n">third</span><span class="p">))</span>
+<span class="go">'2/3'</span>
+</pre></div>
+
+<p>as desired. This modification was accomplished by changing the constructor
+without changing any of the functions that implement the actual arithmetic
+operations.</p>
+<p><strong>Further reading.</strong> The <tt class="docutils literal">rational_to_string</tt> implementation above uses
+<em>format strings</em>, which contain placeholders for values.  The details of how to
+use format strings and the <tt class="docutils literal">format</tt> method appear in the <a class="reference external" href="http://getpython3.com/diveintopython3/strings.html#formatting-strings">formatting strings</a>
+section of Dive Into Python 3.</p>
+</div>
+<div class="section" id="abstraction-barriers">
+<h3>2.2.3   Abstraction Barriers</h3>
+<p>Before continuing with more examples of compound data and data abstraction, let
+us consider some of the issues raised by the rational number example. We defined
+operations in terms of a constructor <tt class="docutils literal">rational</tt> and selectors <tt class="docutils literal">numer</tt> and
+<tt class="docutils literal">denom</tt>. In general, the underlying idea of data abstraction is to identify
+for each type of value a basic set of operations in terms of which all
+manipulations of values of that type will be expressed, and then to use
+only those operations in manipulating the data.</p>
+<p>We can envision the structure of the rational number system as a series of
+layers.</p>
+<div class="figure">
+<img alt="" src="../img/barriers.png"/>
+</div>
+<p>The horizontal lines represent abstraction barriers that isolate different
+levels of the system. At each level, the barrier separates the functions (above)
+that use the data abstraction from the functions (below) that implement the data
+abstraction. Programs that use rational numbers manipulate them solely in terms
+of the their arithmetic functions: <tt class="docutils literal">add_rationals</tt>, <tt class="docutils literal">mul_rationals</tt>, and
+<tt class="docutils literal">equal_rationals</tt>. These, in turn, are implemented solely in terms of the
+constructor and selectors <tt class="docutils literal">rational</tt>, <tt class="docutils literal">numer</tt>, and <tt class="docutils literal">denom</tt>, which
+themselves are implemented in terms of tuples. The details of how tuples are
+implemented are irrelevant to the rest of the layers as long as tuples enable
+the implementation of the selectors and constructor.</p>
+<p>At each layer, the functions within the box enforce the abstraction boundary
+because they are the only functions that depend upon both the representation
+above them (by their use) and the implementation below them (by their
+definitions). In this way, abstraction barriers are expressed as sets of
+functions.</p>
+<p>Abstraction barriers provide many advantages. One advantage is that they makes
+programs much easier to maintain and to modify. The fewer functions that depend
+on a particular representation, the fewer changes are required when one wants to
+change that representation.</p>
+</div>
+<div class="section" id="the-properties-of-data">
+<h3>2.2.4   The Properties of Data</h3>
+<p>We began the rational number implementation by implementing arithmetic
+operations in terms of three unspecified functions: <tt class="docutils literal">rational</tt>, <tt class="docutils literal">numer</tt>, and
+<tt class="docutils literal">denom</tt>. At that point, we could think of the operations as being defined in
+terms of data objects — numerators, denominators, and rational numbers — whose
+behavior was specified by the latter three functions.</p>
+<p>But what exactly is meant by data? It is not enough to say "whatever is
+implemented by the given selectors and constructors." We need to guarantee that
+these functions together specify the right behavior.  That is, if we construct a
+rational number <tt class="docutils literal">x</tt> from integers <tt class="docutils literal">n</tt> and <tt class="docutils literal">d</tt>, then it should be the case
+that <tt class="docutils literal"><span class="pre">numer(x)/denom(x)</span></tt> is equal to <tt class="docutils literal">n/d</tt>.</p>
+<p>In general, we can think of an abstract data type as defined by some collection
+of selectors and constructors, together with some behavior conditions.  As long
+as the behavior conditions are met (such as the division property above), these
+functions constitute a valid representation of the data type.</p>
+<p>This point of view can be applied to other data types as well, such as the
+two-element tuple that we used in order to implement rational numbers. We never
+actually said much about what a tuple was, only that the language supplied
+operators to create and manipulate tuples. We can now describe the behavior
+conditions of two-element tuples, also called pairs, that are relevant to the
+problem of representing rational numbers.</p>
+<p>In order to implement rational numbers, we needed a form of glue for two
+integers, which had the following behavior:</p>
+<ul class="simple">
+<li>If a pair <tt class="docutils literal">p</tt> was constructed from values <tt class="docutils literal">x</tt> and <tt class="docutils literal">y</tt>, then
+<tt class="docutils literal">getitem_pair(p, 0)</tt> returns <tt class="docutils literal">x</tt>, and <tt class="docutils literal">getitem_pair(p, 1)</tt> returns
+<tt class="docutils literal">y</tt>.</li>
+</ul>
+<p>We can implement functions <tt class="docutils literal">pair</tt> and <tt class="docutils literal">getitem_pair</tt> that fulfill this
+description just as well as a tuple.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pair</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a function that behaves like a two-element tuple."""</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">x</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">y</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">dispatch</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">getitem_pair</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return the element at index i of pair p."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">p</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+
+<p>With this implementation, we can create and manipulate pairs.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pair</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getitem_pair</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getitem_pair</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">13</span>
+</pre></div>
+
+<p>This use of functions corresponds to nothing like our intuitive notion of what
+data should be. Nevertheless, these functions suffice to represent compound
+data in our programs.</p>
+<p>The subtle point to notice is that the value returned by <tt class="docutils literal">pair</tt> is a
+function called <tt class="docutils literal">dispatch</tt>, which takes an argument <tt class="docutils literal">m</tt> and returns either
+<tt class="docutils literal">x</tt> or <tt class="docutils literal">y</tt>. Then, <tt class="docutils literal">getitem_pair</tt> calls this function to retrieve the
+appropriate value.  We will return to the topic of dispatch functions several
+times throughout this chapter.</p>
+<p>The point of exhibiting the functional representation of a pair is not that
+Python actually works this way (tuples are implemented more directly, for
+efficiency reasons) but that it could work this way. The functional
+representation, although obscure, is a perfectly adequate way to represent
+pairs, since it fulfills the only conditions that pairs need to fulfill. This
+example also demonstrates that the ability to manipulate functions as values
+automatically provides us the ability to represent compound data.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/23-sequences.html">
+  		2.3 Sequences
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

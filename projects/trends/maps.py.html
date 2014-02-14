@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>maps.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>maps.py (<a href="maps.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Map drawing utilities for U.S. sentiment data."""
+
+</span><span style="color: blue; font-weight: bold">from </span>graphics <span style="color: blue; font-weight: bold">import </span>Canvas
+<span style="color: blue; font-weight: bold">from </span>geo <span style="color: blue; font-weight: bold">import </span>position_to_xy<span style="font-weight: bold">, </span>us_states
+
+<span style="color: green; font-style: italic"># A fixed gradient of sentiment colors from negative (blue) to positive (red)
+# Colors chosen via Cynthia Brewer's Color Brewer (colorbrewer2.com)
+</span>SENTIMENT_COLORS <span style="font-weight: bold">= [</span><span style="color: red">"#313695"</span><span style="font-weight: bold">, </span><span style="color: red">"#4575B4"</span><span style="font-weight: bold">, </span><span style="color: red">"#74ADD1"</span><span style="font-weight: bold">, </span><span style="color: red">"#ABD9E9"</span><span style="font-weight: bold">, </span><span style="color: red">"#E0F3F8"</span><span style="font-weight: bold">,
+                    </span><span style="color: red">"#FFFFFF"</span><span style="font-weight: bold">, </span><span style="color: red">"#FEE090"</span><span style="font-weight: bold">, </span><span style="color: red">"#FDAE61"</span><span style="font-weight: bold">, </span><span style="color: red">"#F46D43"</span><span style="font-weight: bold">, </span><span style="color: red">"#D73027"</span><span style="font-weight: bold">,
+                    </span><span style="color: red">"#A50026"</span><span style="font-weight: bold">]
+</span>GRAY <span style="font-weight: bold">= </span><span style="color: red">"#AAAAAA"
+
+</span><span style="color: blue; font-weight: bold">def </span>get_sentiment_color<span style="font-weight: bold">(</span>sentiment<span style="font-weight: bold">, </span>sentiment_scale<span style="font-weight: bold">=</span><span style="color: red">4</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Returns a color corresponding to the sentiment value.
+
+    sentiment -- a number between -1 (negative) and +1 (positive)
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>sentiment <span style="color: blue; font-weight: bold">is </span><span style="color: blue">None</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>GRAY
+    scaled <span style="font-weight: bold">= (</span>sentiment_scale <span style="font-weight: bold">* </span>sentiment <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">)/</span><span style="color: red">2
+    </span>index <span style="font-weight: bold">= </span>int<span style="font-weight: bold">( </span>scaled <span style="font-weight: bold">* </span>len<span style="font-weight: bold">(</span>SENTIMENT_COLORS<span style="font-weight: bold">) ) </span><span style="color: green; font-style: italic"># Rounds down
+    </span><span style="color: blue; font-weight: bold">if </span>index <span style="font-weight: bold">&lt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span>index <span style="font-weight: bold">= </span><span style="color: red">0
+    </span><span style="color: blue; font-weight: bold">if </span>index <span style="font-weight: bold">&gt;= </span>len<span style="font-weight: bold">(</span>SENTIMENT_COLORS<span style="font-weight: bold">):
+        </span>index <span style="font-weight: bold">= </span>len<span style="font-weight: bold">(</span>SENTIMENT_COLORS<span style="font-weight: bold">) - </span><span style="color: red">1
+    </span><span style="color: blue; font-weight: bold">return </span>SENTIMENT_COLORS<span style="font-weight: bold">[</span>index<span style="font-weight: bold">]
+
+</span><span style="color: blue; font-weight: bold">def </span>draw_state<span style="font-weight: bold">(</span>shapes<span style="font-weight: bold">, </span>sentiment_value<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Draw the named state in the given color on the canvas.
+
+    state -- a list of list of polygons (which are lists of positions)
+    sentiment_value -- a number between -1 (negative) and 1 (positive)
+    canvas -- the graphics.Canvas object
+    """
+    </span><span style="color: blue; font-weight: bold">for </span>polygon <span style="color: blue; font-weight: bold">in </span>shapes<span style="font-weight: bold">:
+        </span>vertices <span style="font-weight: bold">= [</span>position_to_xy<span style="font-weight: bold">(</span>position<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>position <span style="color: blue; font-weight: bold">in </span>polygon<span style="font-weight: bold">]
+        </span>color <span style="font-weight: bold">= </span>get_sentiment_color<span style="font-weight: bold">(</span>sentiment_value<span style="font-weight: bold">)
+        </span>get_canvas<span style="font-weight: bold">().</span>draw_polygon<span style="font-weight: bold">(</span>vertices<span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>draw_name<span style="font-weight: bold">(</span>name<span style="font-weight: bold">, </span>location<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Draw the two-letter postal code at the center of the state.
+
+    location -- a position
+    """
+    </span>center <span style="font-weight: bold">= </span>position_to_xy<span style="font-weight: bold">(</span>location<span style="font-weight: bold">)
+    </span>get_canvas<span style="font-weight: bold">().</span>draw_text<span style="font-weight: bold">(</span>name<span style="font-weight: bold">.</span>upper<span style="font-weight: bold">(), </span>center<span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span><span style="color: red">'center'</span><span style="font-weight: bold">, </span>style<span style="font-weight: bold">=</span><span style="color: red">'bold'</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>draw_dot<span style="font-weight: bold">(</span>location<span style="font-weight: bold">, </span>sentiment_value<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>radius<span style="font-weight: bold">=</span><span style="color: red">3</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Draw a small dot at location.
+
+    location -- a position
+    sentiment_value -- a number between -1 (negative) and 1 (positive)
+    """
+    </span>center <span style="font-weight: bold">= </span>position_to_xy<span style="font-weight: bold">(</span>location<span style="font-weight: bold">)
+    </span>color <span style="font-weight: bold">= </span>get_sentiment_color<span style="font-weight: bold">(</span>sentiment_value<span style="font-weight: bold">)
+    </span>get_canvas<span style="font-weight: bold">().</span>draw_circle<span style="font-weight: bold">(</span>center<span style="font-weight: bold">, </span>radius<span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>memoize<span style="font-weight: bold">(</span>fn<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A decorator for caching the results of the decorated function."""
+    </span>cache <span style="font-weight: bold">= {}
+    </span><span style="color: blue; font-weight: bold">def </span>memoized<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>args <span style="color: blue; font-weight: bold">in </span>cache<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>cache<span style="font-weight: bold">[</span>args<span style="font-weight: bold">]
+        </span>result <span style="font-weight: bold">= </span>fn<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">)
+        </span>cache<span style="font-weight: bold">[</span>args<span style="font-weight: bold">] = </span>result
+        <span style="color: blue; font-weight: bold">return </span>result
+    <span style="color: blue; font-weight: bold">return </span>memoized
+
+@memoize
+<span style="color: blue; font-weight: bold">def </span>get_canvas<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Return a Canvas, which is a drawing window."""
+    </span><span style="color: blue; font-weight: bold">return </span>Canvas<span style="font-weight: bold">(</span>width<span style="font-weight: bold">=</span><span style="color: red">960</span><span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span><span style="color: red">500</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>wait<span style="font-weight: bold">(</span>secs<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Wait for mouse click."""
+    </span>get_canvas<span style="font-weight: bold">().</span>wait_for_click<span style="font-weight: bold">(</span>secs<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>message<span style="font-weight: bold">(</span>s<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Display a message."""
+    </span>c <span style="font-weight: bold">= </span>get_canvas<span style="font-weight: bold">()
+    </span>c<span style="font-weight: bold">.</span>draw_text<span style="font-weight: bold">(</span>s<span style="font-weight: bold">, (</span>c<span style="font-weight: bold">.</span>width<span style="font-weight: bold">//</span><span style="color: red">2</span><span style="font-weight: bold">, </span>c<span style="font-weight: bold">.</span>height<span style="font-weight: bold">//</span><span style="color: red">2</span><span style="font-weight: bold">), </span>size<span style="font-weight: bold">=</span><span style="color: red">36</span><span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span><span style="color: red">'center'</span><span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

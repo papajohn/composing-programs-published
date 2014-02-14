@@ -1,0 +1,84 @@
+/*
+:Author: John DeNero
+:Contact: denero@google.com
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for use with the 61A course project descriptions.
+*/
+
+@import url(61a_style.css);
+
+/* layout */
+
+h2,h3,h4,h5 {
+	color: #333333;
+	font-weight: 600;
+	font-size: 200%;
+}
+
+h2 {
+	border-bottom: 1px solid steelblue;
+	padding-top: 10px;
+	padding-bottom: 8px;
+	padding-left: 0px;
+	padding-right: 75px;
+	line-height: 100%;
+}
+
+h3 {
+	font-size: 140%;
+	line-height: 90%;
+	border-bottom: 1px dotted steelblue;
+	margin-top: 30px;
+}
+
+h4 {
+	font-size: 120%;
+	margin: 20px 0 10px 0;
+	text-decoration: underline;
+}
+
+h5 {
+	font-size: 90%;
+}
+
+.code {
+  margin-top: -1.5em;
+  margin-bottom: 1em;
+  font-family: monospace;
+  white-space: pre;
+  display: block;
+  font-color: #333333;
+}
+
+/* IE5 Mac hack \*/
+
+pre {
+	overflow: auto;
+	overflow-y: hidden;
+  margin-bottom: 30px;
+}
+
+/* End IE5 Mac hack */
+
+ul,ol,li {
+	margin: 0;
+	padding: 1px;
+}
+
+ul,ol {
+	margin-left: 25px;
+}
+
+
+table.ant {
+    margin: 10px auto;
+    border-collapse: collapse;
+}
+
+table.ant td {
+    margin: 0;
+    padding: 0.5em;
+    border: 1px solid #000000;
+    text-align: center;
+}

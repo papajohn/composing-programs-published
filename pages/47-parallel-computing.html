@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>4.7 Parallel Computing</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 4<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/41-introduction.html">4.1 Introduction</a></h3>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/42-implicit-sequences.html">4.2 Implicit Sequences</a></h3>
+				<li><a href="../pages/42-implicit-sequences.html#python-iterators">4.2.1 Python Iterators</a>
+				<li><a href="../pages/42-implicit-sequences.html#iterables">4.2.2 Iterables</a>
+				<li><a href="../pages/42-implicit-sequences.html#for-statements">4.2.3 For Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#generators-and-yield-statements">4.2.4 Generators and Yield Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#creating-iterables-with-yield">4.2.5 Creating Iterables with Yield</a>
+				<li><a href="../pages/42-implicit-sequences.html#streams">4.2.6 Streams</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/43-declarative-programming.html">4.3 Declarative Programming</a></h3>
+				<li><a href="../pages/43-declarative-programming.html#facts-and-queries">4.3.1 Facts and Queries</a>
+				<li><a href="../pages/43-declarative-programming.html#recursive-facts">4.3.2 Recursive Facts</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/44-unification.html">4.4 Unification</a></h3>
+				<li><a href="../pages/44-unification.html#pattern-matching">4.4.1 Pattern Matching</a>
+				<li><a href="../pages/44-unification.html#representing-facts-and-queries">4.4.2 Representing Facts and Queries</a>
+				<li><a href="../pages/44-unification.html#the-unification-algorithm">4.4.3 The Unification Algorithm</a>
+				<li><a href="../pages/44-unification.html#proofs">4.4.4 Proofs</a>
+				<li><a href="../pages/44-unification.html#search">4.4.5 Search</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/45-distributed-computing.html">4.5 Distributed Computing</a></h3>
+				<li><a href="../pages/45-distributed-computing.html#messages">4.5.1 Messages</a>
+				<li><a href="../pages/45-distributed-computing.html#client-server-architecture">4.5.2 Client/Server Architecture</a>
+				<li><a href="../pages/45-distributed-computing.html#peer-to-peer-systems">4.5.3 Peer-to-Peer Systems</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/46-distributed-data-processing.html">4.6 Distributed Data Processing</a></h3>
+				<li><a href="../pages/46-distributed-data-processing.html#id1">4.6.1 MapReduce</a>
+				<li><a href="../pages/46-distributed-data-processing.html#local-implementation">4.6.2 Local Implementation</a>
+				<li><a href="../pages/46-distributed-data-processing.html#distributed-implementation">4.6.3 Distributed Implementation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/47-parallel-computing.html">4.7 Parallel Computing</a></h3>
+				<li><a href="../pages/47-parallel-computing.html#parallelism-in-python">4.7.1 Parallelism in Python</a>
+				<li><a href="../pages/47-parallel-computing.html#the-problem-with-shared-state">4.7.2 The Problem with Shared State</a>
+				<li><a href="../pages/47-parallel-computing.html#when-no-synchronization-is-necessary">4.7.3 When No Synchronization is Necessary</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronized-data-structures">4.7.4 Synchronized Data Structures</a>
+				<li><a href="../pages/47-parallel-computing.html#locks">4.7.5 Locks</a>
+				<li><a href="../pages/47-parallel-computing.html#barriers">4.7.6 Barriers</a>
+				<li><a href="../pages/47-parallel-computing.html#message-passing">4.7.7 Message Passing</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronization-pitfalls">4.7.8 Synchronization Pitfalls</a>
+				<li><a href="../pages/47-parallel-computing.html#conclusion">4.7.9 Conclusion</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="parallel-computing">
+<h2>4.7   Parallel Computing</h2>
+<p>From the 1970s through the mid-2000s, the speed of individual processor cores
+grew at an exponential rate. Much of this increase in speed was accomplished by
+increasing the <em>clock frequency</em>, the rate at which a processor performs basic
+operations. In the mid-2000s, however, this exponential increase came to an
+abrupt end, due to power and thermal constraints, and the speed of individual
+processor cores has increased much more slowly since then. Instead, CPU
+manufacturers began to place multiple cores in a single processor, enabling more
+operations to be performed concurrently.</p>
+<p>Parallelism is not a new concept. Large-scale parallel machines have been used
+for decades, primarily for scientific computing and data analysis. Even in
+personal computers with a single processor core, operating systems and
+interpreters have provided the abstraction of concurrency. This is done through
+<em>context switching</em>, or rapidly switching between different tasks without
+waiting for them to complete. Thus, multiple programs can run on the same
+machine concurrently, even if it only has a single processing core.</p>
+<p>Given the current trend of increasing the number of processor cores, individual
+applications must now take advantage of parallelism in order to run faster.
+Within a single program, computation must be arranged so that as much work can
+be done in parallel as possible. However, parallelism introduces new challenges
+in writing correct code, particularly in the presence of shared, mutable state.</p>
+<p>For problems that can be solved efficiently in the functional model, with no
+shared mutable state, parallelism poses few problems. Pure functions provide
+<em>referential transparency</em>, meaning that expressions can be replaced with their
+values, and vice versa, without affecting the behavior of a program. This
+enables expressions that do not depend on each other to be evaluated in
+parallel. As discussed in the previous section, the MapReduce framework allows
+functional programs to be specified and run in parallel with minimal programmer
+effort.</p>
+<p>Unfortunately, not all problems can be solved efficiently using functional
+programming. The Berkeley View project has identified <a class="reference external" href="http://view.eecs.berkeley.edu/wiki/Dwarf_Mine">thirteen common
+computational patterns</a> in
+science and engineering, only one of which is MapReduce. The remaining patterns
+require shared state.</p>
+<p>In the remainder of this section, we will see how mutable shared state can
+introduce bugs into parallel programs and a number of approaches to prevent such
+bugs. We will examine these techniques in the context of two applications, a
+web <a class="reference external" href="../examples/parallel/crawler.py.html">crawler</a> and a particle <a class="reference external" href="../examples/parallel/particle.py.html">simulator</a>.</p>
+<div class="section" id="parallelism-in-python">
+<h3>4.7.1   Parallelism in Python</h3>
+<p>Before we dive deeper into the details of parallelism, let us first explore
+Python's support for parallel computation. Python provides two means of
+parallel execution: threading and multiprocessing.</p>
+<p><strong>Threading</strong>. In <em>threading</em>, multiple "threads" of execution exist within a
+single interpreter. Each thread executes code independently from the others,
+though they share the same data. However, the CPython interpreter, the main
+implementation of Python, only interprets code in one thread at a time,
+switching between them in order to provide the illusion of parallelism. On
+the other hand, operations external to the interpreter, such as writing to a
+file or accessing the network, may run in parallel.</p>
+<p>The <tt class="docutils literal">threading</tt> module contains classes that enable threads to be created
+and synchronized. The following is a simple example of a multithreaded program:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">threading</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">thread_hello</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="n">other</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread_say_hello</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
+<span class="gp">    </span>    <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="gp">    </span>    <span class="n">thread_say_hello</span><span class="p">()</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">thread_say_hello</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="s">'hello from'</span><span class="p">,</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">thread_hello</span><span class="p">()</span>
+<span class="go">hello from Thread-1</span>
+<span class="go">hello from MainThread</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">Thread</tt> constructor creates a new thread. It requires a target function
+that the new thread should run, as well as the arguments to that function.
+Calling <tt class="docutils literal">start</tt> on a <tt class="docutils literal">Thread</tt> object marks it ready to run. The
+<tt class="docutils literal">current_thread</tt> function returns the <tt class="docutils literal">Thread</tt> object associated with the
+current thread of execution.</p>
+<p>In this example, the prints can happen in any order, since we haven't
+synchronized them in any way.</p>
+<p><strong>Multiprocessing</strong>. Python also supports <em>multiprocessing</em>, which allows a
+program to spawn multiple interpreters, or <em>processes</em>, each of which can run
+code independently. These processes do not generally share data, so any shared
+state must be communicated between processes. On the other hand, processes
+execute in parallel according to the level of parallelism provided by the
+underlying operating system and hardware. Thus, if the CPU has multiple
+processor cores, Python processes can truly run concurrently.</p>
+<p>The <tt class="docutils literal">multiprocessing</tt> module contains classes for creating and synchronizing
+processes. The following is the hello example using processes:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">process_hello</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="n">other</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process_say_hello</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
+<span class="gp">    </span>    <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="gp">    </span>    <span class="n">process_say_hello</span><span class="p">()</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">process_say_hello</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="s">'hello from'</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">process_hello</span><span class="p">()</span>
+<span class="go">hello from MainProcess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hello</span> <span class="kn">from</span> <span class="nn">Process</span><span class="o">-</span><span class="mi">1</span>
+</pre></div>
+
+<p>As this example demonstrates, many of the classes and functions in
+<tt class="docutils literal">multiprocessing</tt> are analogous to those in <tt class="docutils literal">threading</tt>. This example also
+demonstrates how lack of synchronization affects shared state, as the display
+can be considered shared state. Here, the interpreter prompt from the
+interactive process appears before the print output from the other process.</p>
+</div>
+<div class="section" id="the-problem-with-shared-state">
+<h3>4.7.2   The Problem with Shared State</h3>
+<p>To further illustrate the problem with shared state, let's look at a simple
+example of a counter that is shared between two threads:</p>
+<pre class="literal-block">
+import threading
+from time import sleep
+
+counter = [0]
+
+def increment():
+    count = counter[0]
+    sleep(0) # try to force a switch to the other thread
+    counter[0] = count + 1
+
+other = threading.Thread(target=increment, args=())
+other.start()
+increment()
+print('count is now: ', counter[0])
+</pre>
+<p>In this program, two threads attempt to increment the same counter. The CPython
+interpreter can switch between threads at almost any time. Only the most basic
+operations are <em>atomic</em>, meaning that they appear to occur instantly, with no
+switch possible during their evaluation or execution. Incrementing a counter
+requires multiple basic operations: read the old value, add one to it, and write
+the new value. The interpreter can switch threads between any of these
+operations.</p>
+<p>In order to show what happens when the interpreter switches threads at the wrong
+time, we have attempted to force a switch by sleeping for 0 seconds. When this
+code is run, the interpreter often does switch threads at the <tt class="docutils literal">sleep</tt> call.
+This can result in the following sequence of operations:</p>
+<pre class="literal-block">
+Thread 0                    Thread 1
+read counter[0]: 0
+                            read counter[0]: 0
+calculate 0 + 1: 1
+write 1 -&gt; counter[0]
+                            calculate 0 + 1: 1
+                            write 1 -&gt; counter[0]
+</pre>
+<p>The end result is that the counter has a value of 1, even though it was
+incremented twice! Worse, the interpreter may only switch at the wrong time very
+rarely, making this difficult to debug. Even with the <tt class="docutils literal">sleep</tt> call, this
+program sometimes produces a correct count of 2 and sometimes an incorrect count
+of 1.</p>
+<p>This problem arises only in the presence of shared data that may be mutated by
+one thread while another thread accesses it. Such a conflict is called a <em>race
+condition</em>, and it is an example of a bug that only exists in the parallel
+world.</p>
+<p>In order to avoid race conditions, shared data that may be mutated and accessed
+by multiple threads must be protected against concurrent access. For example, if
+we can ensure that thread 1 only accesses the counter after thread 0 finishes
+accessing it, or vice versa, we can guarantee that the right result is computed.
+We say that shared data is <em>synchronized</em> if it is protected from concurrent
+access. In the next few subsections, we will see multiple mechanisms providing
+synchronization.</p>
+</div>
+<div class="section" id="when-no-synchronization-is-necessary">
+<h3>4.7.3   When No Synchronization is Necessary</h3>
+<p>In some cases, access to shared data need not be synchronized, if concurrent
+access cannot result in incorrect behavior. The simplest example is read-only
+data. Since such data is never mutated, all threads will always read the same
+values regardless when they access the data.</p>
+<p>In rare cases, shared data that is mutated may not require synchronization.
+However, understanding when this is the case requires a deep knowledge of how
+the interpreter and underlying software and hardware work. Consider the
+following example:</p>
+<pre class="literal-block">
+items = []
+flag = []
+
+def consume():
+    while not flag:
+        pass
+    print('items is', items)
+
+def produce():
+    consumer = threading.Thread(target=consume, args=())
+    consumer.start()
+    for i in range(10):
+        items.append(i)
+    flag.append('go')
+
+produce()
+</pre>
+<p>Here, the producer thread adds items to <tt class="docutils literal">items</tt>, while the consumer waits
+until <tt class="docutils literal">flag</tt> is non-empty. When the producer finishes adding items, it adds an
+element to <tt class="docutils literal">flag</tt>, allowing the consumer to proceed.</p>
+<p>In most Python implementations, this example will work correctly. However, a
+common optimization in other compilers and interpreters, and even the hardware
+itself, is to reorder operations within a single thread that do not depend on
+each other for data. In such a system, the statement <tt class="docutils literal"><span class="pre">flag.append('go')</span></tt> may
+be moved before the loop, since neither depends on the other for data. In
+general, you should avoid code like this unless you are certain that the
+underlying system won't reorder the relevant operations.</p>
+</div>
+<div class="section" id="synchronized-data-structures">
+<h3>4.7.4   Synchronized Data Structures</h3>
+<p>The simplest means of synchronizing shared data is to use a data structure
+that provides synchronized operations. The <tt class="docutils literal">queue</tt> module contains a
+<tt class="docutils literal">Queue</tt> class that provides synchronized first in, first out access to
+data. The <tt class="docutils literal">put</tt> method adds an item to the <tt class="docutils literal">Queue</tt>, and the <tt class="docutils literal">get</tt>
+method retrieves an item. The class itself ensures that these methods are
+synchronized, so items are not lost no matter how thread operations are
+interleaved. Here is a producer/consumer example that uses a <tt class="docutils literal">Queue</tt>:</p>
+<pre class="literal-block">
+from queue import Queue
+
+queue = Queue()
+
+def synchronized_consume():
+    while True:
+        print('got an item:', queue.get())
+        queue.task_done()
+
+def synchronized_produce():
+    consumer = threading.Thread(target=synchronized_consume, args=())
+    consumer.daemon = True
+    consumer.start()
+    for i in range(10):
+        queue.put(i)
+    queue.join()
+
+synchronized_produce()
+</pre>
+<p>There are a few changes to this code, in addition to the <tt class="docutils literal">Queue</tt> and <tt class="docutils literal">get</tt>
+and <tt class="docutils literal">put</tt> calls. We have marked the consumer thread as a <em>daemon</em>, which means
+that the program will not wait for that thread to complete before exiting. This
+allows us to use an infinite loop in the consumer. However, we do need to ensure
+that the main thread exits, but only after all items have been consumed from the
+<tt class="docutils literal">Queue</tt>. The consumer calls the <tt class="docutils literal">task_done</tt> method to inform the <tt class="docutils literal">Queue</tt>
+that it is done processing an item, and the main thread calls the <tt class="docutils literal">join</tt>
+method, which waits until all items have been processed, ensuring that the
+program exits only after that is the case.</p>
+<p>A more complex example that makes use of a <tt class="docutils literal">Queue</tt> is a parallel web
+<a class="reference external" href="../examples/parallel/crawler.py.html">crawler</a> that searches for dead links on a website. This crawler follows all
+links that are hosted by the same site, so it must process a number of URLs,
+continually adding new ones to a <tt class="docutils literal">Queue</tt> and removing URLs for processing.
+By using a synchronized <tt class="docutils literal">Queue</tt>, multiple threads can safely add to and
+remove from the data structure concurrently.</p>
+</div>
+<div class="section" id="locks">
+<h3>4.7.5   Locks</h3>
+<p>When a synchronized version of a particular data structure is not available, we
+have to provide our own synchronization. A <em>lock</em> is a basic mechanism to do so.
+It can be <em>acquired</em> by at most one thread, after which no other thread may
+acquire it until it is <em>released</em> by the thread that previously acquired it.</p>
+<p>In Python, the <tt class="docutils literal">threading</tt> module contains a <tt class="docutils literal">Lock</tt> class to provide
+locking. A <tt class="docutils literal">Lock</tt> has <tt class="docutils literal">acquire</tt> and <tt class="docutils literal">release</tt> methods to acquire and
+release the lock, and the class guarantees that only one thread at a time can
+acquire it. All other threads that attempt to acquire a lock while it is already
+being held are forced to wait until it is released.</p>
+<p>For a lock to protect a particular set of data, all the threads need to be
+programmed to follow a rule: no thread will access any of the shared data unless
+it owns that particular lock. In effect, all the threads need to "wrap" their
+manipulation of the shared data in <tt class="docutils literal">acquire</tt> and <tt class="docutils literal">release</tt> calls for that
+lock.</p>
+<p>In the parallel web <a class="reference external" href="../examples/parallel/crawler.py.html">crawler</a>, a set is used to keep track of all URLs that
+have been encountered by any thread, so as to avoid processing a particular URL
+more than once (and potentially getting stuck in a cycle). However, Python does
+not provide a synchronized set, so we must use a lock to protect access to a
+normal set:</p>
+<pre class="literal-block">
+seen = set()
+seen_lock = threading.Lock()
+
+def already_seen(item):
+    seen_lock.acquire()
+    result = True
+    if item not in seen:
+        seen.add(item)
+        result = False
+    seen_lock.release()
+    return result
+</pre>
+<p>A lock is necessary here, in order to prevent another thread from adding the URL
+to the set between this thread checking if it is in the set and adding it to the
+set. Furthermore, adding to a set is not atomic, so concurrent attempts to add
+to a set may corrupt its internal data.</p>
+<p>In this code, we had to be careful not to return until after we released the
+lock. In general, we have to ensure that we release a lock when we no longer
+need it. This can be very error-prone, particularly in the presence of
+exceptions, so Python provides a <tt class="docutils literal">with</tt> compound statement that handles
+acquiring and releasing a lock for us:</p>
+<pre class="literal-block">
+def already_seen(item):
+    with seen_lock:
+        if item not in seen:
+            seen.add(item)
+            return False
+        return True
+</pre>
+<p>The <tt class="docutils literal">with</tt> statement ensures that <tt class="docutils literal">seen_lock</tt> is acquired before its suite
+is executed and that it is released when the suite is exited for any reason.
+(The <tt class="docutils literal">with</tt> statement can actually be used for operations other than locking,
+though we won't cover alternative uses here.)</p>
+<p>Operations that must be synchronized with each other must use the same lock.
+However, two disjoint sets of operations that must be synchronized only with
+operations in the same set should use two different lock objects to avoid
+over-synchronization.</p>
+</div>
+<div class="section" id="barriers">
+<h3>4.7.6   Barriers</h3>
+<p>Another way to avoid conflicting access to shared data is to divide a program
+into phases, ensuring that shared data is mutated in a phase in which no other
+thread accesses it. A <em>barrier</em> divides a program into phases by requiring
+all threads to reach it before any of them can proceed. Code that is executed
+after a barrier cannot be concurrent with code executed before the barrier.</p>
+<p>In Python, the <tt class="docutils literal">threading</tt> module provides a barrier in the form of the
+the <tt class="docutils literal">wait</tt> method of a <tt class="docutils literal">Barrier</tt> instance:</p>
+<pre class="literal-block">
+counters = [0, 0]
+barrier = threading.Barrier(2)
+
+def count(thread_num, steps):
+    for i in range(steps):
+        other = counters[1 - thread_num]
+        barrier.wait() # wait for reads to complete
+        counters[thread_num] = other + 1
+        barrier.wait() # wait for writes to complete
+
+def threaded_count(steps):
+    other = threading.Thread(target=count, args=(1, steps))
+    other.start()
+    count(0, steps)
+    print('counters:', counters)
+
+threaded_count(10)
+</pre>
+<p>In this example, reading and writing to shared data take place in different
+phases, separated by barriers. The writes occur in the same phase, but they are
+disjoint; this disjointness is necessary to avoid concurrent writes to the same
+data in the same phase. Since this code is properly synchronized, both counters
+will always be 10 at the end.</p>
+<p>The multithreaded particle <a class="reference external" href="../examples/parallel/particle.py.html">simulator</a> uses a barrier in a similar fashion to
+synchronize access to shared data. In the simulation, each thread owns a number
+of particles, all of which interact with each other over the course of many
+discrete timesteps. A particle has a position, velocity, and acceleration, and a
+new acceleration is computed in each timestep based on the positions of the
+other particles. The velocity of the particle must be updated accordingly, and
+its position according to its velocity.</p>
+<p>As with the simple example above, there is a read phase, in which all particles'
+positions are read by all threads. Each thread updates its own particles'
+acceleration in this phase, but since these are disjoint writes, they need not
+be synchronized. In the write phase, each thread updates its own particles'
+velocities and positions. Again, these are disjoint writes, and they are
+protected from the read phase by barriers.</p>
+</div>
+<div class="section" id="message-passing">
+<h3>4.7.7   Message Passing</h3>
+<p>A final mechanism to avoid improper mutation of shared data is to entirely avoid
+concurrent access to the same data. In Python, using multiprocessing rather than
+threading naturally results in this, since processes run in separate
+interpreters with their own data. Any state required by multiple processes can
+be communicated by passing messages between processes.</p>
+<p>The <tt class="docutils literal">Pipe</tt> class in the <tt class="docutils literal">multiprocessing</tt> module provides a communication
+channel between processes. By default, it is duplex, meaning a two-way channel,
+though passing in the argument <tt class="docutils literal">False</tt> results in a one-way channel. The
+<tt class="docutils literal">send</tt> method sends an object over the channel, while the <tt class="docutils literal">recv</tt> method
+receives an object. The latter is <em>blocking</em>, meaning that a process that calls
+<tt class="docutils literal">recv</tt> will wait until an object is received.</p>
+<p>The following is a producer/consumer example using processes and pipes:</p>
+<pre class="literal-block">
+def process_consume(in_pipe):
+    while True:
+        item = in_pipe.recv()
+        if item is None:
+            return
+        print('got an item:', item)
+
+def process_produce():
+    pipe = multiprocessing.Pipe(False)
+    consumer = multiprocessing.Process(target=process_consume, args=(pipe[0],))
+    consumer.start()
+    for i in range(10):
+        pipe[1].send(i)
+    pipe[1].send(None) # done signal
+
+process_produce()
+</pre>
+<p>In this example, we use a <tt class="docutils literal">None</tt> message to signal the end of communication.
+We also passed in one end of the pipe as an argument to the target function when
+creating the consumer process. This is necessary, since state must be explicitly
+shared between processes.</p>
+<p>The multiprocess version of the particle <a class="reference external" href="../examples/parallel/particle.py.html">simulator</a> uses pipes to communicate
+particle positions between processes in each timestep. In fact, it uses pipes to
+set up an entire circular pipeline between processes, in order to minimize
+communication. Each process injects its own particles' positions into its
+pipeline stage, which eventually go through a full rotation of the pipeline. At
+each step of the rotation, a process applies forces from the positions that are
+currently in its own pipeline stage on to its own particles, so that after a
+full rotation, all forces have been applied to its particles.</p>
+<p>The <tt class="docutils literal">multiprocessing</tt> module provides other synchronization mechanisms for
+processes, including synchronized queues, locks, and as of Python 3.3, barriers.
+For example, a lock or a barrier can be used to synchronize printing to the
+screen, avoiding the improper display output we saw previously.</p>
+</div>
+<div class="section" id="synchronization-pitfalls">
+<h3>4.7.8   Synchronization Pitfalls</h3>
+<p>While synchronization methods are effective for protecting shared state, they
+can also be used incorrectly, failing to accomplish the proper synchronization,
+over-synchronizing, or causing the program to hang as a result of deadlock.</p>
+<p><strong>Under-synchronization</strong>. A common pitfall in parallel computing is to neglect
+to properly synchronize shared accesses. In the set example, we need to
+synchronize the membership check and insertion together, so that another thread
+cannot perform an insertion in between these two operations. Failing to
+synchronize the two operations together is erroneous, even if they are
+separately synchronized.</p>
+<p><strong>Over-synchronization</strong>. Another common error is to over-synchronize a program,
+so that non-conflicting operations cannot occur concurrently. As a trivial
+example, we can avoid all conflicting access to shared data by acquiring a
+master lock when a thread starts and only releasing it when a thread completes.
+This serializes our entire code, so that nothing runs in parallel. In some
+cases, this can even cause our program to hang indefinitely. For example,
+consider a consumer/producer program in which the consumer obtains the lock and
+never releases it. This prevents the producer from producing any items, which in
+turn prevents the consumer from doing anything since it has nothing to consume.</p>
+<p>While this example is trivial, in practice, programmers often over-synchronize
+their code to some degree, preventing their code from taking complete advantage
+of the available parallelism.</p>
+<p><strong>Deadlock</strong>. Because they cause threads or processes to wait on each other,
+synchronization mechanisms are vulnerable to <em>deadlock</em>, a situation in which
+two or more threads or processes are stuck, waiting for each other to finish. We
+have just seen how neglecting to release a lock can cause a thread to get stuck
+indefinitely. But even if threads or processes do properly release locks,
+programs can still reach deadlock.</p>
+<p>The source of deadlock is a <em>circular wait</em>, illustrated below with processes.
+No process can continue because it is waiting for other processes that are
+waiting for it to complete.</p>
+<div class="figure">
+<img alt="" src="../img/deadlock.png"/>
+</div>
+<p>As an example, we will set up a deadlock with two processes. Suppose they share
+a duplex pipe and attempt to communicate with each other as follows:</p>
+<pre class="literal-block">
+def deadlock(in_pipe, out_pipe):
+    item = in_pipe.recv()
+    print('got an item:', item)
+    out_pipe.send(item + 1)
+
+def create_deadlock():
+    pipe = multiprocessing.Pipe()
+    other = multiprocessing.Process(target=deadlock, args=(pipe[0], pipe[1]))
+    other.start()
+    deadlock(pipe[1], pipe[0])
+
+create_deadlock()
+</pre>
+<p>Both processes attempt to receive data first. Recall that the <tt class="docutils literal">recv</tt> method
+blocks until an item is available. Since neither process has sent anything, both
+will wait indefinitely for the other to send it data, resulting in deadlock.</p>
+<p>Synchronization operations must be properly aligned to avoid deadlock. This may
+require sending over a pipe before receiving, acquiring multiple locks in the
+same order, and ensuring that all threads reach the right barrier at the right
+time.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>4.7.9   Conclusion</h3>
+<p>As we have seen, parallelism presents new challenges in writing correct and
+efficient code. As the trend of increasing parallelism at the hardware level
+will continue for the foreseeable future, parallel computation will become more
+and more important in application programming. There is a very active body of
+research on making parallelism easier and less error-prone for programmers. Our
+discussion here serves only as a basic introduction to this crucial area of
+computer science.</p>
+</div>
+</div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

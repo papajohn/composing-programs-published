@@ -1,0 +1,448 @@
+<html>
+<head>
+<title>trends_grader.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>trends_grader.py (<a href="trends_grader.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Automatic grading script for the Trends project.
+
+Expects the following files in the current directory:
+
+trends.py
+data.py
+geo.py
+maps.py
+ucb.py
+autograder.py
+
+This file uses features of Python not yet covered in the course.
+"""
+
+</span>__version__ <span style="font-weight: bold">= </span><span style="color: red">'1.2'
+
+</span><span style="color: blue; font-weight: bold">from </span>autograder <span style="color: blue; font-weight: bold">import </span>test<span style="font-weight: bold">, </span>run_tests<span style="font-weight: bold">, </span>check_func<span style="font-weight: bold">, </span>check_doctest<span style="font-weight: bold">, </span>test_eval
+
+<span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>trends      <span style="color: green; font-style: italic"># Student submission
+</span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>SyntaxError<span style="font-weight: bold">, </span>IndentationError<span style="font-weight: bold">) </span>as e<span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>traceback
+    <span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Unfortunately, the autograder cannot run because ' </span><span style="font-weight: bold">+
+          </span><span style="color: red">'your program contains a syntax error:'</span><span style="font-weight: bold">)
+    </span>traceback<span style="font-weight: bold">.</span>print_exc<span style="font-weight: bold">(</span>limit<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span>exit<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main
+<span style="color: blue; font-weight: bold">from </span>maps <span style="color: blue; font-weight: bold">import </span>us_states
+
+datetime <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>datetime
+
+<span style="color: green; font-style: italic">#########
+# TESTS #
+#########
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem1<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'make_tweet'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'make_tweet_fn'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    </span>expected_texts <span style="font-weight: bold">= [
+        </span><span style="color: red">'hello, world! !dlrow ,olleh'</span><span style="font-weight: bold">,
+        </span><span style="color: red">'i mean what person wouldn\'t? it\'s john stamos!'</span><span style="font-weight: bold">,
+        </span><span style="color: red">"ph'nglui mglw'nafh cthulhu r'lyeh wgah'nagl fhtagn"</span><span style="font-weight: bold">,
+        </span><span style="color: red">'kfdafj. afjdsal.jfdlsafj. fjd jksa'</span><span style="font-weight: bold">,
+        </span><span style="color: red">'/never/look up.when dragons!fly overhead.'</span><span style="font-weight: bold">,
+        </span><span style="color: red">'jeepers, what fools these mortals be!'</span><span style="font-weight: bold">,
+    ]
+
+    </span>expected_dates <span style="font-weight: bold">= [</span>datetime<span style="font-weight: bold">(</span><span style="color: red">2010</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">, </span>k<span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">5</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>k <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">7</span><span style="font-weight: bold">)]
+
+    </span>expected_locations <span style="font-weight: bold">= [(</span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">120 </span><span style="font-weight: bold">+ </span>k<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>k <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">)]
+
+    </span><span style="color: blue; font-weight: bold">import </span>geo
+    <span style="color: blue; font-weight: bold">def </span>location_tuple<span style="font-weight: bold">(</span>tweet_location<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">def </span>location_tuple<span style="font-weight: bold">(</span>tweet<span style="font-weight: bold">):
+            </span>location <span style="font-weight: bold">= </span>tweet_location<span style="font-weight: bold">(</span>tweet<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>geo<span style="font-weight: bold">.</span>latitude<span style="font-weight: bold">(</span>location<span style="font-weight: bold">), </span>geo<span style="font-weight: bold">.</span>longitude<span style="font-weight: bold">(</span>location<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">return </span>location_tuple
+
+    tweets_as_dicts <span style="font-weight: bold">= </span>tricky_tweets<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_text<span style="font-weight: bold">, </span>zip<span style="font-weight: bold">(</span>tweets_as_dicts<span style="font-weight: bold">, </span>expected_texts<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_time<span style="font-weight: bold">, </span>zip<span style="font-weight: bold">(</span>tweets_as_dicts<span style="font-weight: bold">, </span>expected_dates<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>check_func<span style="font-weight: bold">(</span>location_tuple<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_location<span style="font-weight: bold">),
+                    </span>zip<span style="font-weight: bold">(</span>tweets_as_dicts<span style="font-weight: bold">, </span>expected_locations<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    </span>tweets_as_fns <span style="font-weight: bold">= </span>tricky_tweets<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>make_tweet_fn<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_text_fn<span style="font-weight: bold">, </span>zip<span style="font-weight: bold">(</span>tweets_as_fns<span style="font-weight: bold">, </span>expected_texts<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_time_fn<span style="font-weight: bold">, </span>zip<span style="font-weight: bold">(</span>tweets_as_fns<span style="font-weight: bold">, </span>expected_dates<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>check_func<span style="font-weight: bold">(</span>location_tuple<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>tweet_location_fn<span style="font-weight: bold">),
+                    </span>zip<span style="font-weight: bold">(</span>tweets_as_fns<span style="font-weight: bold">, </span>expected_locations<span style="font-weight: bold">)):
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem2<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'extract_words'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    import </span>string
+    tests <span style="font-weight: bold">= [
+        (</span><span style="color: red">'You! Shall! Not!...Pass!'</span><span style="font-weight: bold">, [</span><span style="color: red">'You'</span><span style="font-weight: bold">, </span><span style="color: red">'Shall'</span><span style="font-weight: bold">, </span><span style="color: red">'Not'</span><span style="font-weight: bold">, </span><span style="color: red">'Pass'</span><span style="font-weight: bold">],),
+        (</span><span style="color: red">'This.is`separated!by@only#non$letter%characters^so&amp;you*need(to)use-white+listing{instead}of\\black/listing:or"else&lt;you\'ll&gt;get~the  wrong answer'</span><span style="font-weight: bold">,
+        [</span><span style="color: red">'This'</span><span style="font-weight: bold">, </span><span style="color: red">'is'</span><span style="font-weight: bold">, </span><span style="color: red">'separated'</span><span style="font-weight: bold">, </span><span style="color: red">'by'</span><span style="font-weight: bold">, </span><span style="color: red">'only'</span><span style="font-weight: bold">, </span><span style="color: red">'non'</span><span style="font-weight: bold">, </span><span style="color: red">'letter'</span><span style="font-weight: bold">, </span><span style="color: red">'characters'</span><span style="font-weight: bold">, </span><span style="color: red">'so'</span><span style="font-weight: bold">, </span><span style="color: red">'you'</span><span style="font-weight: bold">, </span><span style="color: red">'need'</span><span style="font-weight: bold">, </span><span style="color: red">'to'</span><span style="font-weight: bold">, </span><span style="color: red">'use'</span><span style="font-weight: bold">, </span><span style="color: red">'white'</span><span style="font-weight: bold">, </span><span style="color: red">'listing'</span><span style="font-weight: bold">, </span><span style="color: red">'instead'</span><span style="font-weight: bold">, </span><span style="color: red">'of'</span><span style="font-weight: bold">, </span><span style="color: red">'black'</span><span style="font-weight: bold">, </span><span style="color: red">'listing'</span><span style="font-weight: bold">, </span><span style="color: red">'or'</span><span style="font-weight: bold">, </span><span style="color: red">'else'</span><span style="font-weight: bold">, </span><span style="color: red">'you'</span><span style="font-weight: bold">, </span><span style="color: red">'ll'</span><span style="font-weight: bold">, </span><span style="color: red">'get'</span><span style="font-weight: bold">, </span><span style="color: red">'the'</span><span style="font-weight: bold">, </span><span style="color: red">'wrong'</span><span style="font-weight: bold">, </span><span style="color: red">'answer'</span><span style="font-weight: bold">]),
+        [</span><span style="color: red">''</span><span style="font-weight: bold">, []],  </span><span style="color: green; font-style: italic"># This test is constructed below.
+    </span><span style="font-weight: bold">]
+
+    </span>pathological_test <span style="font-weight: bold">= </span>tests<span style="font-weight: bold">[-</span><span style="color: red">1</span><span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">32</span><span style="font-weight: bold">,</span><span style="color: red">128</span><span style="font-weight: bold">):
+        </span>c <span style="font-weight: bold">= </span>chr<span style="font-weight: bold">(</span>i<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span><span style="font-weight: bold">(</span>c <span style="color: blue; font-weight: bold">in </span>string<span style="font-weight: bold">.</span>ascii_letters <span style="color: blue; font-weight: bold">or not </span>c <span style="color: blue; font-weight: bold">in </span>string<span style="font-weight: bold">.</span>printable<span style="font-weight: bold">): </span><span style="color: blue; font-weight: bold">continue
+        </span>pathological_test<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] += </span>chr<span style="font-weight: bold">(</span>i<span style="font-weight: bold">) + </span><span style="color: red">'a'
+        </span>pathological_test<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">].</span>append<span style="font-weight: bold">(</span><span style="color: red">'a'</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>extract_words<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Failed test(s) in extract_words.'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem3<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'get_word_sentiment'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    </span>has_sentiment_tests <span style="font-weight: bold">= (
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(</span><span style="color: red">0.3</span><span style="font-weight: bold">),), </span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">),
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(</span><span style="color: blue">None</span><span style="font-weight: bold">),), </span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">),
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(-</span><span style="color: red">1</span><span style="font-weight: bold">),), </span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">),
+    )
+    </span>sentiment_value_tests <span style="font-weight: bold">= (
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(-</span><span style="color: red">0.3</span><span style="font-weight: bold">),), -</span><span style="color: red">0.3</span><span style="font-weight: bold">),
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">),), </span><span style="color: red">1</span><span style="font-weight: bold">),
+        ((</span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">(-</span><span style="color: red">1</span><span style="font-weight: bold">),), -</span><span style="color: red">1</span><span style="font-weight: bold">),
+    )
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>has_sentiment<span style="font-weight: bold">, </span>has_sentiment_tests<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>sentiment_value<span style="font-weight: bold">, </span>sentiment_value_tests<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem4<span style="font-weight: bold">():
+    </span><span style="color: green; font-style: italic"># Change the representation of sentiments to validate abstraction barrier.
+    </span>original_make_sentiment <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_sentiment
+    original_sentiment_value <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>sentiment_value
+    original_has_sentiment <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>has_sentiment
+    trends<span style="font-weight: bold">.</span>make_sentiment <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">lambda </span><span style="font-weight: bold">: </span>s
+    trends<span style="font-weight: bold">.</span>sentiment_value <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span>s<span style="font-weight: bold">()
+    </span>trends<span style="font-weight: bold">.</span>has_sentiment <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span>s<span style="font-weight: bold">() != </span><span style="color: blue">None
+
+    </span>sentiment_tests <span style="font-weight: bold">= (
+        ((</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'Help, I\'m trapped in an autograder factory and I can\'t get out!'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">),), -</span><span style="color: red">0.416666667</span><span style="font-weight: bold">),
+        ((</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'The thing that I love about hating things that I love is that I hate loving that I hate doing it.'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">),), </span><span style="color: red">0.075</span><span style="font-weight: bold">),
+    )
+    </span>no_sentiment_tests <span style="font-weight: bold">= (
+        ((</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'Peter Piper picked a peck of pickled peppers'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">),), </span><span style="color: blue">None</span><span style="font-weight: bold">),
+    )
+
+    </span><span style="color: blue; font-weight: bold">def </span>analyze<span style="font-weight: bold">(</span>tweet<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>trends<span style="font-weight: bold">.</span>sentiment_value<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>analyze_tweet_sentiment<span style="font-weight: bold">(</span>tweet<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>analyze<span style="font-weight: bold">, </span>sentiment_tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_float<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    if </span>check_func<span style="font-weight: bold">(</span>analyze<span style="font-weight: bold">, </span>no_sentiment_tests<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    </span>trends<span style="font-weight: bold">.</span>make_sentiment <span style="font-weight: bold">= </span>original_make_sentiment
+    trends<span style="font-weight: bold">.</span>sentiment_value <span style="font-weight: bold">= </span>original_sentiment_value
+    trends<span style="font-weight: bold">.</span>has_sentiment <span style="font-weight: bold">= </span>original_has_sentiment
+
+@test
+<span style="color: blue; font-weight: bold">def </span>problem5<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'find_centroid'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    from </span>geo <span style="color: blue; font-weight: bold">import </span>make_position as mp
+    <span style="color: blue; font-weight: bold">import </span>geo
+
+    <span style="color: blue; font-weight: bold">def </span>make_tests<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(
+            ([</span>mp<span style="font-weight: bold">(</span><span style="color: red">49</span><span style="font-weight: bold">, -</span><span style="color: red">17</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">83</span><span style="font-weight: bold">, -</span><span style="color: red">18</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">33</span><span style="font-weight: bold">, -</span><span style="color: red">54</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">27</span><span style="font-weight: bold">, </span><span style="color: red">82</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">15</span><span style="font-weight: bold">, -</span><span style="color: red">97</span><span style="font-weight: bold">),
+              </span>mp<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">97</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">37</span><span style="font-weight: bold">, -</span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">26</span><span style="font-weight: bold">, </span><span style="color: red">66</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">49</span><span style="font-weight: bold">, -</span><span style="color: red">17</span><span style="font-weight: bold">)], (</span><span style="color: red">24.031793687451884</span><span style="font-weight: bold">, -</span><span style="color: red">10.597882986913008</span><span style="font-weight: bold">, </span><span style="color: red">4330.0</span><span style="font-weight: bold">)),
+            ([</span>mp<span style="font-weight: bold">(-</span><span style="color: red">98</span><span style="font-weight: bold">, </span><span style="color: red">55</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">84</span><span style="font-weight: bold">, </span><span style="color: red">27</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">81</span><span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">94</span><span style="font-weight: bold">, -</span><span style="color: red">25</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">26</span><span style="font-weight: bold">, </span><span style="color: red">42</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">98</span><span style="font-weight: bold">, </span><span style="color: red">55</span><span style="font-weight: bold">)],
+              (</span><span style="color: red">2.5294117647058822</span><span style="font-weight: bold">, -</span><span style="color: red">27.17647058823529</span><span style="font-weight: bold">, </span><span style="color: red">1445.0</span><span style="font-weight: bold">)),
+            ([</span>mp<span style="font-weight: bold">(-</span><span style="color: red">53</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">52</span><span style="font-weight: bold">, -</span><span style="color: red">23</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">74</span><span style="font-weight: bold">, -</span><span style="color: red">65</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">44</span><span style="font-weight: bold">, </span><span style="color: red">46</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">61</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">14</span><span style="font-weight: bold">, </span><span style="color: red">12</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">33</span><span style="font-weight: bold">, </span><span style="color: red">58</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">53</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">)],
+              (-</span><span style="color: red">7.561094365870623</span><span style="font-weight: bold">, </span><span style="color: red">59.29600432800061</span><span style="font-weight: bold">, </span><span style="color: red">2156.5</span><span style="font-weight: bold">)),
+            ([</span>mp<span style="font-weight: bold">(</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">90</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">59.5117046837911</span><span style="font-weight: bold">, -</span><span style="color: red">96.9829483518188</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">59.3721917363029</span><span style="font-weight: bold">, -</span><span style="color: red">98.9780764523384</span><span style="font-weight: bold">),
+              </span>mp<span style="font-weight: bold">(</span><span style="color: red">60.2790258949765</span><span style="font-weight: bold">, -</span><span style="color: red">86.0097437989607</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">60.4185388424647</span><span style="font-weight: bold">, -</span><span style="color: red">84.014615698441</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">90</span><span style="font-weight: bold">)], (</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)),
+            ([</span>mp<span style="font-weight: bold">(</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">88</span><span style="font-weight: bold">, </span><span style="color: red">46.5358983848623</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">83.5</span><span style="font-weight: bold">, </span><span style="color: red">38.7416697508023</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">86</span><span style="font-weight: bold">, </span><span style="color: red">43.0717967697245</span><span style="font-weight: bold">),
+              </span>mp<span style="font-weight: bold">(</span><span style="color: red">87</span><span style="font-weight: bold">, </span><span style="color: red">44.8038475772934</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">84.5</span><span style="font-weight: bold">, </span><span style="color: red">40.4737205583712</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">)], (</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)),
+        )
+    </span>tests <span style="font-weight: bold">= </span>make_tests<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>find_centroid<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_tuple<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    print</span><span style="font-weight: bold">(</span><span style="color: red">"Testing abstraction barriers."</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span>original_geo <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_position<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>latitude<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>longitude
+        trends<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>lat<span style="font-weight: bold">,</span>long<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">lambda </span>z<span style="font-weight: bold">: </span>z<span style="font-weight: bold">*</span>lat<span style="font-weight: bold">+(</span><span style="color: red">1</span><span style="font-weight: bold">-</span>z<span style="font-weight: bold">)*</span>long
+        trends<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>p<span style="font-weight: bold">: </span>p<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+        </span>trends<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>p<span style="font-weight: bold">: </span>p<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span>mp <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>make_position
+        tests <span style="font-weight: bold">= </span>make_tests<span style="font-weight: bold">()
+
+        </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>find_centroid<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_tuple<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return True
+    finally</span><span style="font-weight: bold">:
+        </span>geo<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span>geo<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+        </span>geo<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">2</span><span style="font-weight: bold">]
+
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem6<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'find_state_center'</span><span style="font-weight: bold">, </span>trends<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    from </span>geo <span style="color: blue; font-weight: bold">import </span>make_position as mp
+    <span style="color: blue; font-weight: bold">import </span>geo
+
+    <span style="color: blue; font-weight: bold">def </span>center_as_tuple<span style="font-weight: bold">(</span>state<span style="font-weight: bold">):
+        </span>center <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>find_state_center<span style="font-weight: bold">(</span>state<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>geo<span style="font-weight: bold">.</span>latitude<span style="font-weight: bold">(</span>center<span style="font-weight: bold">), </span>geo<span style="font-weight: bold">.</span>longitude<span style="font-weight: bold">(</span>center<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>make_tests<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(
+            (([[</span>mp<span style="font-weight: bold">(</span><span style="color: red">49</span><span style="font-weight: bold">, -</span><span style="color: red">17</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">83</span><span style="font-weight: bold">, -</span><span style="color: red">18</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">33</span><span style="font-weight: bold">, -</span><span style="color: red">54</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">27</span><span style="font-weight: bold">, </span><span style="color: red">82</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">15</span><span style="font-weight: bold">, -</span><span style="color: red">97</span><span style="font-weight: bold">),
+                </span>mp<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">97</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">37</span><span style="font-weight: bold">, -</span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">26</span><span style="font-weight: bold">, </span><span style="color: red">66</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">49</span><span style="font-weight: bold">, -</span><span style="color: red">17</span><span style="font-weight: bold">)],
+               [</span>mp<span style="font-weight: bold">(-</span><span style="color: red">98</span><span style="font-weight: bold">, </span><span style="color: red">55</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">84</span><span style="font-weight: bold">, </span><span style="color: red">27</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">81</span><span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">94</span><span style="font-weight: bold">, -</span><span style="color: red">25</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">26</span><span style="font-weight: bold">, </span><span style="color: red">42</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">98</span><span style="font-weight: bold">, </span><span style="color: red">55</span><span style="font-weight: bold">)],
+               [</span>mp<span style="font-weight: bold">(</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">90</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">59.5117046837911</span><span style="font-weight: bold">, -</span><span style="color: red">96.9829483518188</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">59.3721917363029</span><span style="font-weight: bold">, -</span><span style="color: red">98.9780764523384</span><span style="font-weight: bold">),
+                </span>mp<span style="font-weight: bold">(</span><span style="color: red">60.2790258949765</span><span style="font-weight: bold">, -</span><span style="color: red">86.0097437989607</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">60.4185388424647</span><span style="font-weight: bold">, -</span><span style="color: red">84.014615698441</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">60</span><span style="font-weight: bold">, -</span><span style="color: red">90</span><span style="font-weight: bold">)],
+              ],), (</span><span style="color: red">18.65154401154401</span><span style="font-weight: bold">, -</span><span style="color: red">14.746118326118323</span><span style="font-weight: bold">)),
+            (([[</span>mp<span style="font-weight: bold">(-</span><span style="color: red">53</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">52</span><span style="font-weight: bold">, -</span><span style="color: red">23</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">74</span><span style="font-weight: bold">, -</span><span style="color: red">65</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">44</span><span style="font-weight: bold">, </span><span style="color: red">46</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">61</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">14</span><span style="font-weight: bold">, </span><span style="color: red">12</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">33</span><span style="font-weight: bold">, </span><span style="color: red">58</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">53</span><span style="font-weight: bold">, </span><span style="color: red">68</span><span style="font-weight: bold">)],
+               [</span>mp<span style="font-weight: bold">(-</span><span style="color: red">30</span><span style="font-weight: bold">, -</span><span style="color: red">70</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">91</span><span style="font-weight: bold">, </span><span style="color: red">40</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">46</span><span style="font-weight: bold">, -</span><span style="color: red">93</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">4</span><span style="font-weight: bold">, -</span><span style="color: red">35</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">29</span><span style="font-weight: bold">, </span><span style="color: red">28</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(-</span><span style="color: red">30</span><span style="font-weight: bold">,-</span><span style="color: red">70</span><span style="font-weight: bold">)],
+               [</span>mp<span style="font-weight: bold">(</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">88</span><span style="font-weight: bold">, </span><span style="color: red">46.5358983848623</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">83.5</span><span style="font-weight: bold">, </span><span style="color: red">38.7416697508023</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">86</span><span style="font-weight: bold">, </span><span style="color: red">43.0717967697245</span><span style="font-weight: bold">),
+                </span>mp<span style="font-weight: bold">(</span><span style="color: red">87</span><span style="font-weight: bold">, </span><span style="color: red">44.8038475772934</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">84.5</span><span style="font-weight: bold">, </span><span style="color: red">40.4737205583712</span><span style="font-weight: bold">), </span>mp<span style="font-weight: bold">(</span><span style="color: red">90</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">)],
+              ],), (-</span><span style="color: red">29.056049940231105</span><span style="font-weight: bold">, </span><span style="color: red">26.2892371718245</span><span style="font-weight: bold">)),
+        )
+    </span>tests <span style="font-weight: bold">= </span>make_tests<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>center_as_tuple<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_tuple<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+    print</span><span style="font-weight: bold">(</span><span style="color: red">"Testing abstraction barriers."</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span>original_geo <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_position<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>latitude<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>longitude
+        trends<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>lat<span style="font-weight: bold">,</span>long<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">lambda </span>z<span style="font-weight: bold">: </span>z<span style="font-weight: bold">*</span>lat<span style="font-weight: bold">+(</span><span style="color: red">1</span><span style="font-weight: bold">-</span>z<span style="font-weight: bold">)*</span>long
+        trends<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>p<span style="font-weight: bold">: </span>p<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+        </span>trends<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>p<span style="font-weight: bold">: </span>p<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">)
+        </span>mp <span style="font-weight: bold">= </span>geo<span style="font-weight: bold">.</span>make_position
+        tests <span style="font-weight: bold">= </span>make_tests<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>center_as_tuple<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_tuple<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return True
+    finally</span><span style="font-weight: bold">:
+        </span>geo<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_position <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span>geo<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>latitude      <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+        </span>geo<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>longitude     <span style="font-weight: bold">= </span>original_geo<span style="font-weight: bold">[</span><span style="color: red">2</span><span style="font-weight: bold">]
+
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem7<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">def </span>test_groups<span style="font-weight: bold">():
+        </span>tweets <span style="font-weight: bold">= </span>pirate_tweets<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">)
+        </span>expected <span style="font-weight: bold">= {
+          </span><span style="color: red">'MI'</span><span style="font-weight: bold">: [</span>tweets<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">4</span><span style="font-weight: bold">]],
+          </span><span style="color: red">'MT'</span><span style="font-weight: bold">: [</span>tweets<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">5</span><span style="font-weight: bold">]],
+          </span><span style="color: red">'ND'</span><span style="font-weight: bold">: [</span>tweets<span style="font-weight: bold">[</span><span style="color: red">2</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">6</span><span style="font-weight: bold">]],
+          </span><span style="color: red">'FL'</span><span style="font-weight: bold">: [</span>tweets<span style="font-weight: bold">[</span><span style="color: red">3</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">7</span><span style="font-weight: bold">]],
+        }
+        </span>tests <span style="font-weight: bold">= ( ((</span>tweets<span style="font-weight: bold">,), </span>expected<span style="font-weight: bold">), )
+        </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>group_tweets_by_state<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_group<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return True
+
+    if </span>test_groups<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">return True
+    print</span><span style="font-weight: bold">(</span><span style="color: red">"Testing abstraction barriers."</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span>trends<span style="font-weight: bold">.</span>swap_tweet_representation<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">if </span>test_groups<span style="font-weight: bold">():
+            </span><span style="color: blue; font-weight: bold">return True
+    finally</span><span style="font-weight: bold">:
+        </span>trends<span style="font-weight: bold">.</span>swap_tweet_representation<span style="font-weight: bold">()
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem8<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">def </span>test_average<span style="font-weight: bold">():
+        </span>tweets <span style="font-weight: bold">= </span>pirate_tweets<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">) + (
+          </span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'This tweet is without a sentiment'</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">),
+          </span>trends<span style="font-weight: bold">.</span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'This tweet is also without a sentiment'</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">),
+        )
+        </span>tweets_by_state <span style="font-weight: bold">= {
+            </span><span style="color: red">'MT'</span><span style="font-weight: bold">: [ </span>tweets<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">5</span><span style="font-weight: bold">] ],
+            </span><span style="color: red">'MI'</span><span style="font-weight: bold">: [ </span>tweets<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">4</span><span style="font-weight: bold">] ],
+            </span><span style="color: red">'FL'</span><span style="font-weight: bold">: [ </span>tweets<span style="font-weight: bold">[</span><span style="color: red">3</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">7</span><span style="font-weight: bold">] ],
+            </span><span style="color: red">'ND'</span><span style="font-weight: bold">: [ </span>tweets<span style="font-weight: bold">[</span><span style="color: red">2</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">6</span><span style="font-weight: bold">] ],
+            </span><span style="color: red">'AA'</span><span style="font-weight: bold">: [ </span>tweets<span style="font-weight: bold">[</span><span style="color: red">8</span><span style="font-weight: bold">], </span>tweets<span style="font-weight: bold">[</span><span style="color: red">9</span><span style="font-weight: bold">] ],
+        }
+        </span>expected <span style="font-weight: bold">= {
+            </span><span style="color: red">'MT'</span><span style="font-weight: bold">: -</span><span style="color: red">0.08333333333333333</span><span style="font-weight: bold">,
+            </span><span style="color: red">'MI'</span><span style="font-weight: bold">: </span><span style="color: red">0.325</span><span style="font-weight: bold">,
+            </span><span style="color: red">'FL'</span><span style="font-weight: bold">: </span><span style="color: red">0.5</span><span style="font-weight: bold">,
+            </span><span style="color: red">'ND'</span><span style="font-weight: bold">: </span><span style="color: red">0.020833333333333332
+        </span><span style="font-weight: bold">}
+        </span>tests <span style="font-weight: bold">= ( ((</span>tweets_by_state<span style="font-weight: bold">,),</span>expected<span style="font-weight: bold">) ,)
+        </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>trends<span style="font-weight: bold">.</span>average_sentiments<span style="font-weight: bold">, </span>tests<span style="font-weight: bold">, </span>comp<span style="font-weight: bold">=</span>comp_dict<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return True
+
+    if </span>test_average<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">return True
+    print</span><span style="font-weight: bold">(</span><span style="color: red">"Testing abstraction barriers."</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span>trends<span style="font-weight: bold">.</span>swap_tweet_representation<span style="font-weight: bold">()
+        </span>old <span style="font-weight: bold">= </span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>has_sentiment<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>sentiment_value
+        trends<span style="font-weight: bold">.</span>make_sentiment <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span><span style="color: blue; font-weight: bold">lambda</span><span style="font-weight: bold">: </span>s
+        trends<span style="font-weight: bold">.</span>has_sentiment <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span>s<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None
+        </span>trends<span style="font-weight: bold">.</span>sentiment_value <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">lambda </span>s<span style="font-weight: bold">: </span>s<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">if </span>test_average<span style="font-weight: bold">():
+            </span><span style="color: blue; font-weight: bold">return True
+    finally</span><span style="font-weight: bold">:
+        </span>trends<span style="font-weight: bold">.</span>swap_tweet_representation<span style="font-weight: bold">()
+        </span>trends<span style="font-weight: bold">.</span>make_sentiment<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>has_sentiment<span style="font-weight: bold">, </span>trends<span style="font-weight: bold">.</span>sentiment_value <span style="font-weight: bold">= </span>old
+
+<span style="color: green; font-style: italic">#############
+# UTILITIES #
+#############
+
+</span><span style="color: blue; font-weight: bold">def </span>comp_float<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Approximate comparison of floats."""
+    </span><span style="color: blue; font-weight: bold">return </span>abs<span style="font-weight: bold">(</span>x <span style="font-weight: bold">- </span>y<span style="font-weight: bold">) &lt;= </span><span style="color: red">1e-5
+
+</span><span style="color: blue; font-weight: bold">def </span>comp_tuple<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Approximate comparison of tuples."""
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>type<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>x <span style="font-weight: bold">= </span>tuple<span style="font-weight: bold">(</span>x<span style="font-weight: bold">)
+            </span>y <span style="font-weight: bold">= </span>tuple<span style="font-weight: bold">(</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return False
+    if </span>len<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>len<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return False
+    for </span>a<span style="font-weight: bold">, </span>b <span style="color: blue; font-weight: bold">in </span>zip<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if not </span>comp_float<span style="font-weight: bold">(</span>a<span style="font-weight: bold">, </span>b<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return False
+    return True
+
+def </span>comp_dict<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Approximate comparison of dictionaries."""
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>type<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>x <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">(</span>x<span style="font-weight: bold">)
+            </span>y <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">(</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return False
+    if </span>len<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>len<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return False
+    for </span>k<span style="font-weight: bold">, </span>v <span style="color: blue; font-weight: bold">in </span>x<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">if </span>k <span style="color: blue; font-weight: bold">not in </span>y<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return False
+        if not </span>comp_float<span style="font-weight: bold">(</span>v<span style="font-weight: bold">, </span>y<span style="font-weight: bold">[</span>k<span style="font-weight: bold">]):
+            </span><span style="color: blue; font-weight: bold">return False
+    return True
+
+def </span>comp_fn<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Approximate comparison of functional pairs."""
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>type<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return False
+    for </span>i <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">]:
+        </span><span style="color: blue; font-weight: bold">if not </span>comp_float<span style="font-weight: bold">(</span>x<span style="font-weight: bold">(</span>i<span style="font-weight: bold">), </span>y<span style="font-weight: bold">(</span>i<span style="font-weight: bold">)):
+            </span><span style="color: blue; font-weight: bold">return False
+    return True
+
+def </span>comp_unordered<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Compare x to y in either order."""
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>type<span style="font-weight: bold">(</span>y<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">or </span>len<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>len<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return False
+    for </span>el <span style="color: blue; font-weight: bold">in </span>x<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">if </span>el <span style="color: blue; font-weight: bold">not in </span>y<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return False
+    return True
+
+def </span>comp_group<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Compare tweets grouped by key, ignoring empty lists."""
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>x<span style="font-weight: bold">) != </span>type<span style="font-weight: bold">(</span>y<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>x <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">(</span>x<span style="font-weight: bold">)
+            </span>y <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">(</span>y<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return False
+    for </span>k<span style="font-weight: bold">, </span>v <span style="color: blue; font-weight: bold">in </span>x<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">if </span>v <span style="color: blue; font-weight: bold">and not </span>comp_unordered<span style="font-weight: bold">(</span>v<span style="font-weight: bold">, </span>y<span style="font-weight: bold">.</span>get<span style="font-weight: bold">(</span>k<span style="font-weight: bold">, [])):
+            </span><span style="color: blue; font-weight: bold">return False
+    for </span>k<span style="font-weight: bold">, </span>v <span style="color: blue; font-weight: bold">in </span>y<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">if </span>v <span style="color: blue; font-weight: bold">and not </span>comp_unordered<span style="font-weight: bold">(</span>v<span style="font-weight: bold">, </span>x<span style="font-weight: bold">.</span>get<span style="font-weight: bold">(</span>k<span style="font-weight: bold">, [])):
+            </span><span style="color: blue; font-weight: bold">return False
+    return True
+
+def </span>tricky_tweets<span style="font-weight: bold">(</span>make_tweet<span style="font-weight: bold">):
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'Hello, world! !dlrow ,olleH'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 01:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">120</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">"I mean what person wouldn't? It's John Stamos!"</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 02:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">119</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">"Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn"</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 03:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">118</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'kfdafj. afjdsal.jfdlsafj. fjd jksa'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 04:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">117</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">"/Never/look up.when dragons!fly overhead."</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 05:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">116</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">"Jeepers, what fools these mortals be!"</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(),
+            </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span><span style="color: red">'2010-01-02 06:04:05'</span><span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">),
+            </span><span style="color: red">38</span><span style="font-weight: bold">, -</span><span style="color: red">115</span><span style="font-weight: bold">),
+    )
+
+</span><span style="color: blue; font-weight: bold">def </span>pirate_tweets<span style="font-weight: bold">(</span>make_tweet<span style="font-weight: bold">):
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'I am the very model of a modern Major-General'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">43</span><span style="font-weight: bold">, -</span><span style="color: red">84</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'I\'ve information vegetable, animal, and mineral'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">58</span><span style="font-weight: bold">, -</span><span style="color: red">112</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'I know the kings of England, and I quote the fights historical'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">49</span><span style="font-weight: bold">, -</span><span style="color: red">104</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'From Marathon to Waterloo, in order categorical'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">19</span><span style="font-weight: bold">, -</span><span style="color: red">87</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'I\'m very well acquainted, too, with matters mathematical'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">44</span><span style="font-weight: bold">, -</span><span style="color: red">85</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'I understand equations, both the simple and quadratical'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">59</span><span style="font-weight: bold">, -</span><span style="color: red">110</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'About binomial theorem I\'m teeming with a lot o\' news'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">, -</span><span style="color: red">100</span><span style="font-weight: bold">),
+        </span>make_tweet<span style="font-weight: bold">(</span><span style="color: red">'With many cheerful facts about the square of the hypotenuse'</span><span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span><span style="color: blue">None</span><span style="font-weight: bold">, </span><span style="color: red">15</span><span style="font-weight: bold">, -</span><span style="color: red">87</span><span style="font-weight: bold">),
+    )
+
+</span><span style="color: green; font-style: italic">##########################
+# COMMAND LINE INTERFACE #
+##########################
+
+</span>project_info <span style="font-weight: bold">= {
+    </span><span style="color: red">'name'</span><span style="font-weight: bold">: </span><span style="color: red">'Project 2: Trends'</span><span style="font-weight: bold">,
+    </span><span style="color: red">'remote_index'</span><span style="font-weight: bold">: </span><span style="color: red">'http://inst.eecs.berkeley.edu/~cs61a/fa13/proj/trends/'</span><span style="font-weight: bold">,
+    </span><span style="color: red">'autograder_files'</span><span style="font-weight: bold">: [
+        </span><span style="color: red">'trends_grader.py'</span><span style="font-weight: bold">,
+        </span><span style="color: red">'autograder.py'</span><span style="font-weight: bold">,
+    ],
+    </span><span style="color: red">'version'</span><span style="font-weight: bold">: </span>__version__<span style="font-weight: bold">,
+}
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>run_tests<span style="font-weight: bold">(**</span>project_info<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

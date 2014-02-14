@@ -1,0 +1,3 @@
+Google MapReduce
+Is a Big Data framework
+For batch processing

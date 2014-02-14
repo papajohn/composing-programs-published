@@ -1,0 +1,312 @@
+<html>
+<head>
+<title>crawler.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>crawler.py (<a href="crawler.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""A simple web crawler that checks for dead links on a given website.
+Recursively checks all links to pages hosted by the same site. Supports
+multithreaded execution.
+
+Usage: python3 crawler.py [-p &lt;num_threads&gt;] [-t &lt;timeout&gt;] &lt;site&gt;
+
+The -p flag enables multithreading, with the given number of threads.
+The -t flag specifies the request timeout in seconds; default is 5.
+
+The crawler prints out URLs as they are being handled and reports bad links.
+This printing is intentionally unsynchronized to demonstrate when URLs are
+handled.
+
+The crawler does not spoof its user agent, so links from sites such as Google
+and Wikipedia, which reject crawlers, are reported as bad.
+"""
+
+</span><span style="color: blue; font-weight: bold">from </span>urllib<span style="font-weight: bold">.</span>request <span style="color: blue; font-weight: bold">import </span>urlopen
+<span style="color: blue; font-weight: bold">from </span>urllib<span style="font-weight: bold">.</span>parse <span style="color: blue; font-weight: bold">import </span>urlparse
+<span style="color: blue; font-weight: bold">from </span>urllib<span style="font-weight: bold">.</span>error <span style="color: blue; font-weight: bold">import </span>HTTPError<span style="font-weight: bold">, </span>URLError
+<span style="color: blue; font-weight: bold">from </span>html<span style="font-weight: bold">.</span>parser <span style="color: blue; font-weight: bold">import </span>HTMLParser
+<span style="color: blue; font-weight: bold">from </span>threading <span style="color: blue; font-weight: bold">import </span>Thread<span style="font-weight: bold">, </span>Lock
+<span style="color: blue; font-weight: bold">from </span>queue <span style="color: blue; font-weight: bold">import </span>Queue
+<span style="color: blue; font-weight: bold">from </span>time <span style="color: blue; font-weight: bold">import </span>time
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main
+<span style="color: blue; font-weight: bold">import </span>socket
+<span style="color: blue; font-weight: bold">import </span>sys
+
+default_timeout <span style="font-weight: bold">= </span><span style="color: red">5
+
+</span><span style="color: green; font-style: italic">#################
+# URL Functions #
+#################
+
+</span><span style="color: blue; font-weight: bold">def </span>make_url<span style="font-weight: bold">(</span>url<span style="font-weight: bold">, </span>base<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Construct a full URL from the given URL fragment and base URL. Filters
+    out non-http links.
+
+    &gt;&gt;&gt; make_url('../sp13', 'http://inst.eecs.berkeley.edu/~cs61a/fa12/')
+    'http://inst.eecs.berkeley.edu/~cs61a/sp13'
+    &gt;&gt;&gt; make_url('http://espn.com', 'http://mlb.com/')
+    'http://espn.com'
+    &gt;&gt;&gt; make_url('ftp://some-site.com', 'http://mlb.com/')
+    """
+    </span>parsed <span style="font-weight: bold">= </span>urlparse<span style="font-weight: bold">(</span>url<span style="font-weight: bold">)
+    </span>scheme <span style="font-weight: bold">= </span>parsed<span style="font-weight: bold">.</span>scheme <span style="color: blue; font-weight: bold">if </span>parsed<span style="font-weight: bold">.</span>scheme <span style="color: blue; font-weight: bold">else </span><span style="color: red">'http'
+    </span>netloc <span style="font-weight: bold">= </span>parsed<span style="font-weight: bold">.</span>netloc
+    <span style="color: blue; font-weight: bold">if </span>scheme <span style="font-weight: bold">!= </span><span style="color: red">'http'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">None
+    </span><span style="color: blue; font-weight: bold">elif not </span>netloc<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">if not </span>parsed<span style="font-weight: bold">.</span>path<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">None
+        </span><span style="color: blue; font-weight: bold">elif </span>parsed<span style="font-weight: bold">.</span>path<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] != </span><span style="color: red">'/'</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>simplify_url<span style="font-weight: bold">(</span>base <span style="font-weight: bold">+ </span>parsed<span style="font-weight: bold">.</span>path<span style="font-weight: bold">)
+        </span>netloc <span style="font-weight: bold">= </span>urlparse<span style="font-weight: bold">(</span>base<span style="font-weight: bold">).</span>netloc
+    <span style="color: blue; font-weight: bold">return </span>simplify_url<span style="font-weight: bold">(</span>scheme <span style="font-weight: bold">+ </span><span style="color: red">'://' </span><span style="font-weight: bold">+ </span>netloc <span style="font-weight: bold">+ </span>parsed<span style="font-weight: bold">.</span>path<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>simplify_url<span style="font-weight: bold">(</span>url<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simplify a URL by processing .'s and ..'s, and replacing double slashes
+    with single slashes.
+
+    &gt;&gt;&gt; simplify_url('http://inst.eecs.berkeley.edu/~cs61a/./sp13/projects/../..')
+    'http://inst.eecs.berkeley.edu/~cs61a'
+    """
+    </span>pieces <span style="font-weight: bold">= </span>url<span style="font-weight: bold">.</span>split<span style="font-weight: bold">(</span><span style="color: red">'/'</span><span style="font-weight: bold">)
+    </span>result <span style="font-weight: bold">= [</span>pieces<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] + </span><span style="color: red">'/'</span><span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span>len<span style="font-weight: bold">(</span>pieces<span style="font-weight: bold">)):
+        </span>piece <span style="font-weight: bold">= </span>pieces<span style="font-weight: bold">[</span>i<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">if </span>piece <span style="font-weight: bold">== </span><span style="color: red">'..'</span><span style="font-weight: bold">:
+            </span>result<span style="font-weight: bold">.</span>pop<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">elif </span>piece <span style="color: blue; font-weight: bold">and </span>piece <span style="font-weight: bold">!= </span><span style="color: red">'.'</span><span style="font-weight: bold">:
+            </span>result<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>piece<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'/'</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>result<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>get_base<span style="font-weight: bold">(</span>url<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Extract the base directory of a URL.
+
+    &gt;&gt;&gt; get_base('http://inst.eecs.berkeley.edu/~cs61a/sp13/index.html')
+    'http://inst.eecs.berkeley.edu/~cs61a/sp13/'
+    """
+    </span><span style="color: blue; font-weight: bold">return </span>url<span style="font-weight: bold">[:</span>url<span style="font-weight: bold">.</span>rindex<span style="font-weight: bold">(</span><span style="color: red">'/'</span><span style="font-weight: bold">)+</span><span style="color: red">1</span><span style="font-weight: bold">]
+
+</span><span style="color: green; font-style: italic">######################
+# Parser and Crawler #
+######################
+
+</span><span style="color: blue; font-weight: bold">class </span>LinkParser<span style="font-weight: bold">(</span>HTMLParser<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A parser that parses an HTML page for links, adding them to the Crawler
+    associated with this parser."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>crawler<span style="font-weight: bold">):
+        </span>HTMLParser<span style="font-weight: bold">.</span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>crawler <span style="font-weight: bold">= </span>crawler
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>base <span style="font-weight: bold">= </span><span style="color: blue">None
+        self</span><span style="font-weight: bold">.</span>page <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>reset_with_page<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>page<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Reset this parser for the given page."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>reset<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>base <span style="font-weight: bold">= </span>get_base<span style="font-weight: bold">(</span>page<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>page <span style="font-weight: bold">= </span>page
+
+    <span style="color: blue; font-weight: bold">def </span>handle_starttag<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>tag<span style="font-weight: bold">, </span>attrs<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Queue &lt;a href=...&gt; links found in the page in this parser's
+        Crawler."""
+        </span><span style="color: blue; font-weight: bold">if </span>tag <span style="font-weight: bold">== </span><span style="color: red">'a'</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">for </span>attr <span style="color: blue; font-weight: bold">in </span>attrs<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">if </span>attr<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] == </span><span style="color: red">'href'</span><span style="font-weight: bold">:
+                    </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>crawler<span style="font-weight: bold">.</span>queue_url<span style="font-weight: bold">(</span>attr<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">], </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>base<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>page<span style="font-weight: bold">)
+
+
+</span><span style="color: blue; font-weight: bold">class </span>Crawler<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A web crawler that processes links in a given website, recursively
+    following all links on that site. This crawler supports parallel execution.
+    Crawling is done by calling crawl with a page parser that queues new tasks
+    in this Crawler."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>site<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">, </span>parallel<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>site <span style="font-weight: bold">= </span>site
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>timeout <span style="font-weight: bold">= </span>timeout
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel <span style="font-weight: bold">= </span>parallel
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>queued <span style="font-weight: bold">= </span>set<span style="font-weight: bold">() </span><span style="color: green; font-style: italic"># set of URLs that have already been seen
+        </span><span style="color: blue; font-weight: bold">if </span>parallel<span style="font-weight: bold">:
+            </span><span style="color: green; font-style: italic"># Synchronize access both to the set of seen URLs and the task queue
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queued_lock <span style="font-weight: bold">= </span>Lock<span style="font-weight: bold">()
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue <span style="font-weight: bold">= </span>Queue<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue <span style="font-weight: bold">= []
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>url_count <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue_url<span style="font-weight: bold">(</span>site<span style="font-weight: bold">, </span>site<span style="font-weight: bold">, </span><span style="color: blue">None</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>put_task<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>task<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Queue the given task in this Crawler."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>put<span style="font-weight: bold">(</span>task<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>task<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>get_task<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Retrieve a task from this Crawler. The caller should first check that
+        tasks remain."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>get<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>pop<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>task_done<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Inform the Crawler that a task has completed. This should be done
+        every time a task is finished."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>task_done<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>all_done<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Check whether or not all tasks have completed."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel<span style="font-weight: bold">:
+            </span><span style="color: green; font-style: italic"># No synchronization needed; unfinished_tasks will never hit 0
+            # unless everything is done
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>unfinished_tasks <span style="font-weight: bold">== </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queue<span style="font-weight: bold">) == </span><span style="color: red">0
+
+    </span><span style="color: blue; font-weight: bold">def </span>unsynchronized_already_seen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>url<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Check if a URL has already been seen, adding it to the set of seen
+        URLs if not already there. Access to the set should be synchronized by
+        the caller if necessary."""
+        </span><span style="color: blue; font-weight: bold">if not </span>url <span style="color: blue; font-weight: bold">or </span>url <span style="color: blue; font-weight: bold">in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queued<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return True
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>queued<span style="font-weight: bold">.</span>add<span style="font-weight: bold">(</span>url<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>url_count <span style="font-weight: bold">+= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">return False
+
+    def </span>already_seen<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>url<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Check if the given URL has already been seen. Locks access to the set
+        of seen URLs if crawling is being done in parallel."""
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>parallel<span style="font-weight: bold">:
+            </span>with <span style="color: blue">self</span><span style="font-weight: bold">.</span>queued_lock<span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># lock access to set
+                </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>unsynchronized_already_seen<span style="font-weight: bold">(</span>url<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>unsynchronized_already_seen<span style="font-weight: bold">(</span>url<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>queue_url<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>url<span style="font-weight: bold">, </span>base<span style="font-weight: bold">, </span>parent<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Queue the givn URL for reading, if it hasn't been seen before."""
+        </span>url <span style="font-weight: bold">= </span>make_url<span style="font-weight: bold">(</span>url<span style="font-weight: bold">, </span>base<span style="font-weight: bold">) </span><span style="color: green; font-style: italic"># construct and/or simplify the URL
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>already_seen<span style="font-weight: bold">(</span>url<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return
+
+        </span><span style="color: green; font-style: italic"># Only read the page if it is on this site and is HTML
+        </span>read <span style="font-weight: bold">= </span>url<span style="font-weight: bold">.</span>startswith<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>site<span style="font-weight: bold">)
+        </span>index <span style="font-weight: bold">= </span>url<span style="font-weight: bold">.</span>rindex<span style="font-weight: bold">(</span><span style="color: red">'/'</span><span style="font-weight: bold">)
+        </span>page <span style="font-weight: bold">= </span>url<span style="font-weight: bold">[</span>index<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">:]
+        </span>index <span style="font-weight: bold">= </span>page<span style="font-weight: bold">.</span>rfind<span style="font-weight: bold">(</span><span style="color: red">'.'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>index <span style="font-weight: bold">&gt;= </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span>ext <span style="font-weight: bold">= </span>page<span style="font-weight: bold">[</span>index<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">:]
+            </span><span style="color: blue; font-weight: bold">if </span>ext <span style="font-weight: bold">!= </span><span style="color: red">'html' </span><span style="color: blue; font-weight: bold">and </span>ext <span style="font-weight: bold">!= </span><span style="color: red">'htm'</span><span style="font-weight: bold">:
+                </span>read <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+
+        </span><span style="color: green; font-style: italic"># Safely queue a new task to process the URL
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>put_task<span style="font-weight: bold">((</span>url<span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, </span>read<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>handle_url<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>url_info<span style="font-weight: bold">, </span>parser<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Process the URL specified by url_info with the given parser. Messages
+        produced by this method are intentionally unsynchronized."""
+        </span>url<span style="font-weight: bold">, </span>parent<span style="font-weight: bold">, </span>read <span style="font-weight: bold">= </span>url_info
+        <span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'handling:'</span><span style="font-weight: bold">, </span>url<span style="font-weight: bold">)
+
+        </span><span style="color: green; font-style: italic"># Request, but don't read the page
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>opened <span style="font-weight: bold">= </span>urlopen<span style="font-weight: bold">(</span>url<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>timeout<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>HTTPError<span style="font-weight: bold">, </span>URLError<span style="font-weight: bold">, </span>socket<span style="font-weight: bold">.</span>timeout<span style="font-weight: bold">) </span>as e<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'bad link in {0}: {1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>parent<span style="font-weight: bold">, </span>url<span style="font-weight: bold">))
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'error:'</span><span style="font-weight: bold">, </span>e<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">return
+
+        if not </span>read<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return
+
+        </span><span style="color: green; font-style: italic"># Now read the page and send data to the parser
+        </span>parser<span style="font-weight: bold">.</span>reset_with_page<span style="font-weight: bold">(</span>opened<span style="font-weight: bold">.</span>geturl<span style="font-weight: bold">())
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>data <span style="font-weight: bold">= </span>opened<span style="font-weight: bold">.</span>read<span style="font-weight: bold">().</span>decode<span style="font-weight: bold">()
+            </span>parser<span style="font-weight: bold">.</span>feed<span style="font-weight: bold">(</span>data<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span>Exception as e<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'error while reading {0}: {1}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>url<span style="font-weight: bold">, </span>e<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>crawl<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>parser<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Crawl the site with the given parser."""
+        </span><span style="color: blue; font-weight: bold">while not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>all_done<span style="font-weight: bold">():
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>handle_url<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>get_task<span style="font-weight: bold">(), </span>parser<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>task_done<span style="font-weight: bold">()
+        
+</span><span style="color: green; font-style: italic">#################
+# Crawl Masters #
+#################
+
+</span><span style="color: blue; font-weight: bold">def </span>serial_crawl<span style="font-weight: bold">(</span>site<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Crawl the given site sequentially for dead links. timeout is the request
+    timeout in seconds. num_threads should always be 1."""
+    </span><span style="color: blue; font-weight: bold">assert </span>num_threads <span style="font-weight: bold">== </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'serial_crawl cannot use multiple threads'
+
+    </span>crawler <span style="font-weight: bold">= </span>Crawler<span style="font-weight: bold">(</span>site<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">)
+    </span>parser <span style="font-weight: bold">= </span>LinkParser<span style="font-weight: bold">(</span>crawler<span style="font-weight: bold">)
+
+    </span>start <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+    </span>crawler<span style="font-weight: bold">.</span>crawl<span style="font-weight: bold">(</span>parser<span style="font-weight: bold">)
+    </span>total <span style="font-weight: bold">= </span>round<span style="font-weight: bold">(</span>time<span style="font-weight: bold">() - </span>start<span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">)
+
+    </span>msg <span style="font-weight: bold">= </span><span style="color: red">'serial crawl took {0} seconds, examined {1} urls'
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>msg<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>total<span style="font-weight: bold">, </span>crawler<span style="font-weight: bold">.</span>url_count<span style="font-weight: bold">))
+
+
+</span><span style="color: blue; font-weight: bold">def </span>parallel_crawl<span style="font-weight: bold">(</span>site<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">=</span><span style="color: red">4</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Crawl the given site in parallel for dead links. timeout is the request
+    timeout in seconds. num_threads is the number of threads to use for
+    crawling."""
+    </span>crawler <span style="font-weight: bold">= </span>Crawler<span style="font-weight: bold">(</span>site<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">, </span>parallel<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">)
+    </span>parsers <span style="font-weight: bold">= [</span>LinkParser<span style="font-weight: bold">(</span>crawler<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+    </span>threads <span style="font-weight: bold">= [</span>Thread<span style="font-weight: bold">(</span>target<span style="font-weight: bold">=</span>crawler<span style="font-weight: bold">.</span>crawl<span style="font-weight: bold">, </span>args<span style="font-weight: bold">=(</span>parsers<span style="font-weight: bold">[</span>i<span style="font-weight: bold">],))
+               </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>num_threads<span style="font-weight: bold">)]
+
+    </span>start <span style="font-weight: bold">= </span>time<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">for </span>t <span style="color: blue; font-weight: bold">in </span>threads<span style="font-weight: bold">:
+        </span>t<span style="font-weight: bold">.</span>daemon <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True </span><span style="color: green; font-style: italic"># don't wait for spawned threads to exit
+        </span>t<span style="font-weight: bold">.</span>start<span style="font-weight: bold">()
+    </span>crawler<span style="font-weight: bold">.</span>queue<span style="font-weight: bold">.</span>join<span style="font-weight: bold">() </span><span style="color: green; font-style: italic"># wait for all tasks to be finished
+    </span>total <span style="font-weight: bold">= </span>round<span style="font-weight: bold">(</span>time<span style="font-weight: bold">() - </span>start<span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">)
+
+    </span>msg <span style="font-weight: bold">= </span><span style="color: red">'parallel crawl took {0} seconds, examined {1} urls'
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>msg<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>total<span style="font-weight: bold">, </span>crawler<span style="font-weight: bold">.</span>url_count<span style="font-weight: bold">))
+
+</span><span style="color: green; font-style: italic">##########################
+# Command Line Interface #
+##########################
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>crawl<span style="font-weight: bold">, </span>num_threads <span style="font-weight: bold">= </span>serial_crawl<span style="font-weight: bold">, </span><span style="color: red">1
+    </span>url<span style="font-weight: bold">, </span>timeout <span style="font-weight: bold">= </span><span style="color: blue">None</span><span style="font-weight: bold">, </span>default_timeout
+    i <span style="font-weight: bold">= </span><span style="color: red">0
+    </span><span style="color: blue; font-weight: bold">while </span>i <span style="font-weight: bold">&lt; </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-p'</span><span style="font-weight: bold">:
+            </span>crawl <span style="font-weight: bold">= </span>parallel_crawl
+            num_threads <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] == </span><span style="color: red">'-t'</span><span style="font-weight: bold">:
+            </span>timeout <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">])
+        </span><span style="color: blue; font-weight: bold">elif </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">].</span>startswith<span style="font-weight: bold">(</span><span style="color: red">'http://'</span><span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">if </span>url<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'only one URL may be provided'</span><span style="font-weight: bold">, </span>file<span style="font-weight: bold">=</span>sys<span style="font-weight: bold">.</span>stderr<span style="font-weight: bold">)
+                </span><span style="color: blue; font-weight: bold">return
+            </span>url <span style="font-weight: bold">= </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">]
+            </span>i <span style="font-weight: bold">-= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">if </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] != </span><span style="color: red">'-h' </span><span style="color: blue; font-weight: bold">and </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">] != </span><span style="color: red">'-help'</span><span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'unknown argument:'</span><span style="font-weight: bold">, </span>args<span style="font-weight: bold">[</span>i<span style="font-weight: bold">], </span>file<span style="font-weight: bold">=</span>sys<span style="font-weight: bold">.</span>stderr<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Options:\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -p &lt;num&gt;     run with &lt;num&gt; threads\n' </span><span style="font-weight: bold">+
+                  </span><span style="color: red">'  -t &lt;num&gt;     use &lt;num&gt; as the request timeout'</span><span style="font-weight: bold">,
+                  </span>file<span style="font-weight: bold">=</span>sys<span style="font-weight: bold">.</span>stderr<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">return
+        </span>i <span style="font-weight: bold">+= </span><span style="color: red">2
+    </span>crawl<span style="font-weight: bold">(</span>url<span style="font-weight: bold">, </span>timeout<span style="font-weight: bold">, </span>num_threads<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

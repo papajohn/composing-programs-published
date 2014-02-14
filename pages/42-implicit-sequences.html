@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>4.2 Implicit Sequences</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 4<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/41-introduction.html">4.1 Introduction</a></h3>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/42-implicit-sequences.html">4.2 Implicit Sequences</a></h3>
+				<li><a href="../pages/42-implicit-sequences.html#python-iterators">4.2.1 Python Iterators</a>
+				<li><a href="../pages/42-implicit-sequences.html#iterables">4.2.2 Iterables</a>
+				<li><a href="../pages/42-implicit-sequences.html#for-statements">4.2.3 For Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#generators-and-yield-statements">4.2.4 Generators and Yield Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#creating-iterables-with-yield">4.2.5 Creating Iterables with Yield</a>
+				<li><a href="../pages/42-implicit-sequences.html#streams">4.2.6 Streams</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/43-declarative-programming.html">4.3 Declarative Programming</a></h3>
+				<li><a href="../pages/43-declarative-programming.html#facts-and-queries">4.3.1 Facts and Queries</a>
+				<li><a href="../pages/43-declarative-programming.html#recursive-facts">4.3.2 Recursive Facts</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/44-unification.html">4.4 Unification</a></h3>
+				<li><a href="../pages/44-unification.html#pattern-matching">4.4.1 Pattern Matching</a>
+				<li><a href="../pages/44-unification.html#representing-facts-and-queries">4.4.2 Representing Facts and Queries</a>
+				<li><a href="../pages/44-unification.html#the-unification-algorithm">4.4.3 The Unification Algorithm</a>
+				<li><a href="../pages/44-unification.html#proofs">4.4.4 Proofs</a>
+				<li><a href="../pages/44-unification.html#search">4.4.5 Search</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/45-distributed-computing.html">4.5 Distributed Computing</a></h3>
+				<li><a href="../pages/45-distributed-computing.html#messages">4.5.1 Messages</a>
+				<li><a href="../pages/45-distributed-computing.html#client-server-architecture">4.5.2 Client/Server Architecture</a>
+				<li><a href="../pages/45-distributed-computing.html#peer-to-peer-systems">4.5.3 Peer-to-Peer Systems</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/46-distributed-data-processing.html">4.6 Distributed Data Processing</a></h3>
+				<li><a href="../pages/46-distributed-data-processing.html#id1">4.6.1 MapReduce</a>
+				<li><a href="../pages/46-distributed-data-processing.html#local-implementation">4.6.2 Local Implementation</a>
+				<li><a href="../pages/46-distributed-data-processing.html#distributed-implementation">4.6.3 Distributed Implementation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/47-parallel-computing.html">4.7 Parallel Computing</a></h3>
+				<li><a href="../pages/47-parallel-computing.html#parallelism-in-python">4.7.1 Parallelism in Python</a>
+				<li><a href="../pages/47-parallel-computing.html#the-problem-with-shared-state">4.7.2 The Problem with Shared State</a>
+				<li><a href="../pages/47-parallel-computing.html#when-no-synchronization-is-necessary">4.7.3 When No Synchronization is Necessary</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronized-data-structures">4.7.4 Synchronized Data Structures</a>
+				<li><a href="../pages/47-parallel-computing.html#locks">4.7.5 Locks</a>
+				<li><a href="../pages/47-parallel-computing.html#barriers">4.7.6 Barriers</a>
+				<li><a href="../pages/47-parallel-computing.html#message-passing">4.7.7 Message Passing</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronization-pitfalls">4.7.8 Synchronization Pitfalls</a>
+				<li><a href="../pages/47-parallel-computing.html#conclusion">4.7.9 Conclusion</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="implicit-sequences">
+<h2>4.2   Implicit Sequences</h2>
+<p>A sequence can be <em>represented</em> without each element being <em>stored</em> explicitly
+in the memory of the computer. That is, we can construct an object that provides
+access to all of the elements of some sequential dataset without computing all
+of those elements in advance and storing them. Instead, we compute elements on
+demand.</p>
+<p>A simple example of this idea arises in the <tt class="docutils literal">range</tt> sequence type introduced
+in Chapter 2. A <tt class="docutils literal">range</tt> represents a consecutive, bounded sequence of
+integers. However, it is not the case that each element of that sequence is
+represented explicitly in memory.  Instead, when an element is requested from a
+<tt class="docutils literal">range</tt>, it is computed. Hence, we can represent very large ranges of integers
+without using large blocks of memory. Only the end points of the range are
+stored as part of the <tt class="docutils literal">range</tt> object.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">1000000000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="p">[</span><span class="mi">45006230</span><span class="p">]</span>
+<span class="go">45016230</span>
+</pre></div>
+
+<p>In this example, not all 999,990,000 integers in this range are stored when the
+range instance is constructed.  Instead, the range object adds the first element
+10,000 to the index 45,006,230 to produce the element 45,016,230. Computing
+values on demand, rather than retrieving them from an existing representation,
+is an example of <em>lazy</em> computation. In computer science, <em>lazy computation</em>
+describes any program that delays the computation of a value until that value is
+needed.</p>
+<p>An <em>iterator</em> is an object that provides sequential access to an underlying
+sequential dataset. Iterators are built-in objects in many programming
+languages, including Python.  The iterator abstraction has two components: a
+mechanism for retrieving the <em>next</em> element in some underlying series of
+elements and a mechanism for signaling that the end of the series has been
+reached and no further elements remain. In programming languages with built-in
+object systems, this abstraction typically corresponds to a particular
+interface that can be implemented by classes. The Python interface for
+iterators is described in the next section.</p>
+<p>The usefulness of iterators is derived from the fact that the underlying
+series of data for an iterator may not be represented explicitly in memory.
+An iterator provides a mechanism for considering each of a series of values in
+turn, but all of those elements do not need to be stored simultaneously.
+Instead, when the next element is requested from an iterator, that element may
+be computed on demand instead of being retrieved from an existing memory
+source.</p>
+<p>Ranges are able to compute the elements of a sequence lazily because the
+sequence represented is uniform, and any element is easy to compute from the
+starting and ending bounds of the range. Iterators allow for lazy generation
+of a much broader class of underlying sequential datasets, because they do
+not need to provide access to arbitrary elements of the underlying series.
+Instead, they must only compute the next element of the series, in order, each
+time another element is requested. While not as flexible as accessing arbitrary
+elements of a sequence (called <em>random access</em>), <em>sequential access</em> to
+sequential data series is often sufficient for data processing applications.</p>
+<div class="section" id="python-iterators">
+<h3>4.2.1   Python Iterators</h3>
+<p>The Python iterator interface includes two messages. The <tt class="docutils literal">__next__</tt> message
+queries the iterator for the next element of the underlying series that it
+represents. In response to invoking <tt class="docutils literal">__next__</tt> as a method, an iterator can
+perform arbitrary computation in order to either retrieve or compute the next
+element in an underlying series. Calls to <tt class="docutils literal">__next__</tt> make a mutating change
+to the iterator: they advance the position of the iterator. Hence, multiple
+calls to <tt class="docutils literal">__next__</tt> will return sequential elements of an underlying series.
+Python signals that the end of an underlying series has been reached by
+raising a <tt class="docutils literal">StopIteration</tt> exception during a call to <tt class="docutils literal">__next__</tt>.</p>
+<p>The <tt class="docutils literal">LetterIter</tt> class below iterates over an underlying series of letters
+from some <tt class="docutils literal">start</tt> letter up to but not including some <tt class="docutils literal">end</tt> letter.  The
+instance attribute <tt class="docutils literal">next_letter</tt> stores the next letter to be returned. The
+<tt class="docutils literal">__next__</tt> method returns this letter and uses it to compute a new
+<tt class="docutils literal">next_letter</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">LetterIter</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="sd">"""An iterator over letters of the alphabet in ASCII order."""</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s">'a'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">'e'</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">next_letter</span> <span class="o">=</span> <span class="n">start</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_letter</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">raise</span> <span class="ne">StopIteration</span>
+<span class="gp">    </span>        <span class="n">letter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_letter</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">next_letter</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">letter</span>
+</pre></div>
+
+<p>Using this class, we can access letters in sequence using either the
+<tt class="docutils literal">__next__</tt> method or the built-in <tt class="docutils literal">next</tt> function, which invokes
+<tt class="docutils literal">__next__</tt> on its argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">letter_iter</span> <span class="o">=</span> <span class="n">LetterIter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letter_iter</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'a'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letter_iter</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'b'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">letter_iter</span><span class="p">)</span>
+<span class="go">'c'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letter_iter</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'d'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letter_iter</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">12</span>, in <span class="n">next</span>
+<span class="gr">StopIteration</span>
+</pre></div>
+
+<p>Iterators are mutable: they track the position in some underlying sequence of
+values as they progress. When the end is reached, the iterator is used up. A
+<tt class="docutils literal">LetterIter</tt> instance can only be iterated through once. After its
+<tt class="docutils literal">__next__()</tt> method raises a <tt class="docutils literal">StopIteration</tt> exception, it continues to do
+so from then on. Typically, an iterator is not reset; instead a new instance is
+created to start a new iteration.</p>
+<p>Iterators also allow us to represent infinite series by implementing a
+<tt class="docutils literal">__next__</tt> method that never raises a <tt class="docutils literal">StopIteration</tt> exception. For
+example, the <tt class="docutils literal">Positives</tt> class below iterates over the infinite series of
+positive integers. The built-in <tt class="docutils literal">next</tt> function in Python invokes the
+<tt class="docutils literal">__next__</tt> method on its argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Positives</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">next_positive</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_positive</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">next_positive</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">result</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Positives</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+
+</div>
+<div class="section" id="iterables">
+<h3>4.2.2   Iterables</h3>
+<p>An object is iterable if it returns an iterator when its <tt class="docutils literal">__iter__</tt> method is
+invoked. Iterable values represent data collections, and they provide a fixed
+representation that may produce more than one iterator.</p>
+<p>For example, an instance of the <tt class="docutils literal">Letters</tt> class below represents a sequence of
+consecutive letters.  Each time its <tt class="docutils literal">__iter__</tt> method is invoked, a new
+<tt class="docutils literal">LetterIter</tt> instance is constructed, which allows for sequential access to
+the contents of the sequence.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Letters</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s">'a'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">'e'</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">LetterIter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+</pre></div>
+
+<p>The built-in <tt class="docutils literal">iter</tt> function invokes the <tt class="docutils literal">__iter__</tt> method on its argument.
+In the sequence of expressions below, two iterators derived from the same
+iterable sequence independently yield letters in sequence.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b_to_k</span> <span class="o">=</span> <span class="n">Letters</span><span class="p">(</span><span class="s">'b'</span><span class="p">,</span> <span class="s">'k'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_iterator</span> <span class="o">=</span> <span class="n">b_to_k</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">first_iterator</span><span class="p">)</span>
+<span class="go">'b'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">first_iterator</span><span class="p">)</span>
+<span class="go">'c'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second_iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">b_to_k</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second_iterator</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'b'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_iterator</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'d'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_iterator</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'e'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second_iterator</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'c'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second_iterator</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'d'</span>
+</pre></div>
+
+<p>The iterable <tt class="docutils literal">Letters</tt> instance <tt class="docutils literal">b_to_k</tt> and the <tt class="docutils literal">LetterIter</tt> iterator
+instances <tt class="docutils literal">first_iterator</tt> and <tt class="docutils literal">second_iterator</tt> are different in that the
+<tt class="docutils literal">Letters</tt> instance does not change, while the iterator instances do change
+with each call to <tt class="docutils literal">next</tt> (or equivalently, each invocation of <tt class="docutils literal">__next__</tt>).
+The iterator tracks progress through sequential data, while an iterable
+represents the data itself.</p>
+</div>
+<div class="section" id="for-statements">
+<h3>4.2.3   For Statements</h3>
+<p>The <tt class="docutils literal">for</tt> statement in Python operates on iterators. Objects are <em>iterable</em>
+(an interface) if they have an <tt class="docutils literal">__iter__</tt> method that returns an <em>iterator</em>.
+Iterable objects can be the value of the <tt class="docutils literal">&lt;expression&gt;</tt> in the header of a
+<tt class="docutils literal">for</tt> statement:</p>
+<pre class="literal-block">
+for &lt;name&gt; in &lt;expression&gt;:
+    &lt;suite&gt;
+</pre>
+<p>To execute a <tt class="docutils literal">for</tt> statement, Python evaluates the header <tt class="docutils literal">&lt;expression&gt;</tt>,
+which must yield an iterable value.  Then, the <tt class="docutils literal">__iter__</tt> method is invoked
+on that value. Until a <tt class="docutils literal">StopIteration</tt> exception is raised, Python repeatedly
+invokes the <tt class="docutils literal">__next__</tt> method on that iterator and binds the result to the
+<tt class="docutils literal">&lt;name&gt;</tt> in the <tt class="docutils literal">for</tt> statement. Then, it executes the <tt class="docutils literal">&lt;suite&gt;</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">3</span>
+</pre></div>
+
+<p>In the above example, the <tt class="docutils literal">counts</tt> list returns an iterator from its
+<tt class="docutils literal">__iter__()</tt> method. The <tt class="docutils literal">for</tt> statement then calls that iterator's
+<tt class="docutils literal">__next__()</tt> method repeatedly, and assigns the returned value to <tt class="docutils literal">item</tt>
+each time. This process continues until the iterator raises a <tt class="docutils literal">StopIteration</tt>
+exception, at which point execution of the <tt class="docutils literal">for</tt> statement concludes.</p>
+<p>With our knowledge of iterators, we can implement the execution rule of a
+<tt class="docutils literal">for</tt> statement in terms of <tt class="docutils literal">while</tt>, assignment, and <tt class="docutils literal">try</tt> statements.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">items</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">item</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="gp">    </span>        <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="gp">    </span><span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">pass</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">3</span>
+</pre></div>
+
+<p>Above, the iterator returned by invoking the <tt class="docutils literal">__iter__</tt> method of <tt class="docutils literal">counts</tt>
+is bound to a name <tt class="docutils literal">items</tt> so that it can be queried for each element in
+turn.  The handling clause for the <tt class="docutils literal">StopIteration</tt> exception does nothing,
+but handling the exception provides a control mechanism for exiting the
+<tt class="docutils literal">while</tt> loop.</p>
+<p>To use an iterator in a for loop, the iterator must also have an <tt class="docutils literal">__iter__</tt>
+method.  The
+<cite>Iterator types &lt;http://docs.python.org/3/library/stdtypes.html#iterator-types&gt;
+`_ section of the Python docs suggest that an iterator have an ``__iter__`</cite>
+method that returns the iterator itself, so that all iterators are iterable.</p>
+</div>
+<div class="section" id="generators-and-yield-statements">
+<h3>4.2.4   Generators and Yield Statements</h3>
+<p>The <tt class="docutils literal">Letters</tt> and <tt class="docutils literal">Positives</tt> objects above require us to introduce a new
+field <tt class="docutils literal">self.current</tt> into our object to keep track of progress through the
+sequence. With simple sequences like those shown above, this can be done
+easily. With complex sequences, however, it can be quite difficult for the
+<tt class="docutils literal">__next__</tt> method to save its place in the calculation. Generators allow
+us to define more complicated iterations by leveraging the features of the
+Python interpreter.</p>
+<p>A <em>generator</em> is an iterator returned by a special class of function called a
+<em>generator function</em>. Generator functions are distinguished from regular
+functions in that rather than containing <tt class="docutils literal">return</tt> statements in their body,
+they use <tt class="docutils literal">yield</tt> statement to return elements of a series.</p>
+<p>Generators do not use attributes of an object to track their progress through
+a series. Instead, they control the execution of the generator function, which
+runs until the next <tt class="docutils literal">yield</tt> statement is executed each time the generator's
+<tt class="docutils literal">__next__</tt> method is invoked. The <tt class="docutils literal">Letters</tt> iterator can be implemented
+much more compactly using a generator function.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">letters_generator</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="n">current</span> <span class="o">=</span> <span class="s">'a'</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">current</span> <span class="o">&lt;=</span> <span class="s">'d'</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">yield</span> <span class="n">current</span>
+<span class="gp">    </span>        <span class="n">current</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">letters_generator</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span>
+<span class="go">a</span>
+<span class="go">b</span>
+<span class="go">c</span>
+<span class="go">d</span>
+</pre></div>
+
+<p>Even though we never explicitly defined <tt class="docutils literal">__iter__</tt> or <tt class="docutils literal">__next__</tt>
+methods, the <tt class="docutils literal">yield</tt> statement indicates that we are defining a generator
+function.  When called, a generator function doesn't return a particular
+yielded value, but instead a <tt class="docutils literal">generator</tt> (which is a type of iterator) that
+itself can return the yielded values. A generator object has <tt class="docutils literal">__iter__</tt> and
+<tt class="docutils literal">__next__</tt> methods, and each call to <tt class="docutils literal">__next__</tt> continues execution of the
+generator function from wherever it left off previously until another <tt class="docutils literal">yield</tt>
+statement is executed.</p>
+<p>The first time <tt class="docutils literal">__next__</tt> is called, the program executes statements from
+the body of the <tt class="docutils literal">letters_generator</tt> function until it encounters the
+<tt class="docutils literal">yield</tt> statement. Then, it pauses and returns the value of <tt class="docutils literal">current</tt>.
+<tt class="docutils literal">yield</tt> statements do not destroy the newly created environment, they
+preserve it for later. When <tt class="docutils literal">__next__</tt> is called again, execution resumes
+where it left off. The values of <tt class="docutils literal">current</tt> and of any other bound names in
+the scope of <tt class="docutils literal">letters_generator</tt> are preserved across subsequent calls to
+<tt class="docutils literal">__next__</tt>.</p>
+<p>We can walk through the generator by manually calling <tt class="docutils literal">____next__()</tt>:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span> <span class="o">=</span> <span class="n">letters_generator</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">letters</span><span class="p">)</span>
+<span class="go">&lt;class 'generator'&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'a'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'b'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'c'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="go">'d'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span><span class="o">.</span><span class="n">__next__</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">StopIteration</span>
+</pre></div>
+
+<p>The generator does not start executing any of the body statements of its
+generator function until the first time <tt class="docutils literal">__next__</tt> is invoked. The generator
+raises a <tt class="docutils literal">StopIteration</tt> exception whenever its generator function returns.</p>
+</div>
+<div class="section" id="creating-iterables-with-yield">
+<h3>4.2.5   Creating Iterables with Yield</h3>
+<p>In Python, iterators only make a single pass over the elements of an underlying
+series. After that pass, the iterator will continue to raise a
+<tt class="docutils literal">StopIteration</tt> exception when <tt class="docutils literal">__next__</tt> is invoked. Many applications
+require iteration over elements multiple times. For example, we have to iterate
+over a list many times in order to enumerate all pairs of elements.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">all_pairs</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">for</span> <span class="n">item1</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">for</span> <span class="n">item2</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">yield</span> <span class="p">(</span><span class="n">item1</span><span class="p">,</span> <span class="n">item2</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">all_pairs</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="go">[(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]</span>
+</pre></div>
+
+<p>Sequences are not themselves iterators, but instead <em>iterable</em> objects. The
+iterable interface in Python consists of a single message, <tt class="docutils literal">__iter__</tt>, that
+returns an iterator. The built-in sequence types in Python return new instances
+of iterators when their <tt class="docutils literal">__iter__</tt> methods are invoked.  If an iterable
+object returns a fresh instance of an iterator each time <tt class="docutils literal">__iter__</tt> is
+called, then it can be iterated over multiple times.</p>
+<p>New iterable classes can be defined by implementing the iterable interface. For
+example, the <em>iterable</em> <tt class="docutils literal">LettersWithYield</tt> class below returns a new iterator
+over letters each time <tt class="docutils literal">__iter__</tt> is invoked.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">LettersWithYield</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s">'a'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">'e'</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">next_letter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+<span class="gp">    </span>        <span class="k">while</span> <span class="n">next_letter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">yield</span> <span class="n">next_letter</span>
+<span class="gp">    </span>            <span class="n">next_letter</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">next_letter</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">__iter__</tt> method is a generator function; it returns a generator object
+that yields the letters <tt class="docutils literal">'a'</tt> through <tt class="docutils literal">'d'</tt> and then stops.  Each time we
+invoke this method, a new generator starts a fresh pass through the sequential
+data.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">letters</span> <span class="o">=</span> <span class="n">LettersWithYield</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">all_pairs</span><span class="p">(</span><span class="n">letters</span><span class="p">))[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">[('a', 'a'), ('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a')]</span>
+</pre></div>
+
+</div>
+<div class="section" id="streams">
+<h3>4.2.6   Streams</h3>
+<p><em>Streams</em> offer another way to represent sequential data implicitly.  A stream
+is a lazily computed recursive list.  Like the <tt class="docutils literal">Rlist</tt> class from Chapter 2,
+a <tt class="docutils literal">Stream</tt> instance responds to requests for its <tt class="docutils literal">first</tt> element and the
+<tt class="docutils literal">rest</tt> of the stream. Like an <tt class="docutils literal">Rlist</tt>, the <tt class="docutils literal">rest</tt> of a <tt class="docutils literal">Stream</tt> is
+itself a <tt class="docutils literal">Stream</tt>.  Unlike an <tt class="docutils literal">Rlist</tt>, the <tt class="docutils literal">rest</tt> of a stream is only
+computed when it is looked up, rather than being stored in advance. That is,
+the <tt class="docutils literal">rest</tt> of a stream is computed lazily.</p>
+<p>To achieve this lazy evaluation, a stream stores a function that computes the
+rest of the stream.  Whenever this function is called, its returned value is
+cached as part of the stream in an attribute called <tt class="docutils literal">_rest</tt>, named with an
+underscore to indicate that it should not be accessed directly.</p>
+<p>The accessible attribute <tt class="docutils literal">rest</tt> is a property method that returns the rest of
+the stream, computing it if necessary.  With this design, a stream stores <em>how
+to compute</em> the rest of the stream, rather than always storing the rest
+explicitly.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Stream</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="sd">"""A lazily computed recursive list."""</span>
+<span class="gp">    </span>    <span class="k">class</span> <span class="nc">empty</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="s">'Stream.empty'</span>
+<span class="gp">    </span>    <span class="n">empty</span> <span class="o">=</span> <span class="n">empty</span><span class="p">()</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">compute_rest</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">empty</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">compute_rest</span><span class="p">),</span> <span class="s">'compute_rest must be callable.'</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">first</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rest</span> <span class="o">=</span> <span class="n">compute_rest</span>
+<span class="gp">    </span>    <span class="nd">@property</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">rest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="sd">"""Return the rest of the stream, computing it if necessary."""</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="k">None</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rest</span><span class="p">()</span>
+<span class="gp">    </span>            <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rest</span> <span class="o">=</span> <span class="k">None</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="s">'Stream({0}, &lt;...&gt;)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">))</span>
+</pre></div>
+
+<p>A recursive list is defined using a nested expression.  For example,
+we can create an <tt class="docutils literal">Rlist</tt> that represents the elements 1 then 5 as
+follows:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">9</span><span class="p">)))</span>
+</pre></div>
+
+<p>Likewise, we can create a <tt class="docutils literal">Stream</tt> representing the same series.  The
+<tt class="docutils literal">Stream</tt> does not actually compute the second element 5 until the rest of the
+stream is requested. We achieve this effect by creating anonymous functions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Stream</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Stream</span><span class="p">(</span><span class="mi">9</span><span class="p">)))</span>
+</pre></div>
+
+<p>Here, 1 is the first element of the stream, and the <tt class="docutils literal">lambda</tt> expression
+that follows returns a function for computing the rest of the stream.</p>
+<p>Accessing the elements of recursive list <tt class="docutils literal">r</tt> and stream <tt class="docutils literal">s</tt> proceed
+similarly.  However, while 5 is stored within <tt class="docutils literal">r</tt>, it is computed on
+demand for <tt class="docutils literal">s</tt> via addition, the first time that it is requested.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">first</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">first</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">first</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">first</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">rest</span>
+<span class="go">Rlist(5, Rlist(9))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">rest</span>
+<span class="go">Stream(5, &lt;...&gt;)</span>
+</pre></div>
+
+<p>While the <tt class="docutils literal">rest</tt> of <tt class="docutils literal">r</tt> is a two-element recursive list, the <tt class="docutils literal">rest</tt> of
+<tt class="docutils literal">s</tt> includes a function to compute the rest; the fact that it will return the
+empty stream may not yet have been discovered.</p>
+<p>When a <tt class="docutils literal">Stream</tt> instance is constructed, the field <tt class="docutils literal">self._rest</tt> is <tt class="docutils literal">None</tt>,
+signifying that the rest of the <tt class="docutils literal">Stream</tt> has not yet been computed. When the
+<tt class="docutils literal">rest</tt> attribute is requested via a dot expression, the <tt class="docutils literal">rest</tt> property
+method is invoked, which triggers computation with <tt class="docutils literal">self._rest =
+self._compute_rest()</tt>.  Because of the caching mechanism within a <tt class="docutils literal">Stream</tt>,
+the <tt class="docutils literal">compute_rest</tt> function is only ever called once, then discarded.</p>
+<p>The essential properties of a <tt class="docutils literal">compute_rest</tt> function are that it takes no
+arguments, and it returns a <tt class="docutils literal">Stream</tt> or <tt class="docutils literal">Stream.empty</tt>.</p>
+<p>Lazy evaluation gives us the ability to represent infinite sequential datasets
+using streams. For example, we can represent increasing integers, starting at
+any <tt class="docutils literal">first</tt> value.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">integer_stream</span><span class="p">(</span><span class="n">first</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">compute_rest</span><span class="p">():</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">integer_stream</span><span class="p">(</span><span class="n">first</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">Stream</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">compute_rest</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span> <span class="o">=</span> <span class="n">integer_stream</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span>
+<span class="go">Stream(1, &lt;...&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span><span class="o">.</span><span class="n">first</span>
+<span class="go">1</span>
+</pre></div>
+
+<p>When <tt class="docutils literal">integer_stream</tt> is called for the first time, it returns a stream whose
+<tt class="docutils literal">first</tt> is the first integer in the sequence. However, <tt class="docutils literal">integer_stream</tt> is
+actually recursive because this stream's <tt class="docutils literal">compute_rest</tt> calls
+<tt class="docutils literal">integer_stream</tt> again, with an incremented argument. We say that
+<tt class="docutils literal">integer_stream</tt>  is lazy because the recursive call to <tt class="docutils literal">integer_stream</tt> is
+only made whenever the <tt class="docutils literal">rest</tt> of an integer stream is requested.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span><span class="o">.</span><span class="n">first</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">first</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">positives</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">rest</span>
+<span class="go">Stream(3, &lt;...&gt;)</span>
+</pre></div>
+
+<p>The same higher-order functions that manipulate sequences -- <tt class="docutils literal">map</tt> and
+<tt class="docutils literal">filter</tt> -- also apply to streams, although their implementations must change
+to apply their argument functions lazily.  The function <tt class="docutils literal">map_stream</tt> maps a
+function over a stream, which produces a new stream.  The locally defined
+<tt class="docutils literal">compute_rest</tt> function ensures that the function will be mapped onto the
+rest of the stream whenever the rest is computed.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">map_stream</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Stream</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">compute_rest</span><span class="p">():</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">map_stream</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">Stream</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">),</span> <span class="n">compute_rest</span><span class="p">)</span>
+</pre></div>
+
+<p>A stream can be filtered by defining a <tt class="docutils literal">compute_rest</tt> function that applies
+the filter function to the rest of the stream.  If the filter function rejects
+the first element of the stream, the rest is computed immediately.  Because
+<tt class="docutils literal">filter_stream</tt> is recursive, the rest may be computed multiple times until a
+valid <tt class="docutils literal">first</tt> element is found.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">filter_stream</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Stream</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">compute_rest</span><span class="p">():</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">filter_stream</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">fn</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Stream</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">compute_rest</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">compute_rest</span><span class="p">()</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">map_stream</tt> and <tt class="docutils literal">filter_stream</tt> functions exhibit a common pattern in
+stream processing: a locally defined <tt class="docutils literal">compute_rest</tt> function recursively
+applies a processing function to the rest of the stream whenever the rest is
+computed.</p>
+<p>To inspect the contents of a stream, we can coerce up to the first <tt class="docutils literal">k</tt>
+elements to a Python <tt class="docutils literal">list</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">first_k_as_list</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">first_k</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Stream</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">first_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="n">s</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">first_k</span>
+</pre></div>
+
+<p>These convenience functions allow us to verify our <tt class="docutils literal">map_stream</tt>
+implementation with a simple example that squares the integers from 3 to
+7.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">integer_stream</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">Stream(3, &lt;...&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">map_stream</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span>
+<span class="go">Stream(9, &lt;...&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_k_as_list</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">[9, 16, 25, 36, 49]</span>
+</pre></div>
+
+<p>We can use our <tt class="docutils literal">filter_stream</tt> function to define a stream of prime numbers
+using the sieve of Eratosthenes, which filters a stream of integers to remove
+all numbers that are multiples of its first element.  By successively filtering
+with each prime, all composite numbers are removed from the stream.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">primes</span><span class="p">(</span><span class="n">pos_stream</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">not_divible</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">pos_stream</span><span class="o">.</span><span class="n">first</span> <span class="o">!=</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">compute_rest</span><span class="p">():</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">primes</span><span class="p">(</span><span class="n">filter_stream</span><span class="p">(</span><span class="n">not_divible</span><span class="p">,</span> <span class="n">pos_stream</span><span class="o">.</span><span class="n">rest</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">Stream</span><span class="p">(</span><span class="n">pos_stream</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">compute_rest</span><span class="p">)</span>
+</pre></div>
+
+<p>By truncating the <tt class="docutils literal">primes</tt> stream, we can enumerate any prefix of the prime
+numbers.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prime_numbers</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="n">integer_stream</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_k_as_list</span><span class="p">(</span><span class="n">prime_numbers</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="go">[2, 3, 5, 7, 11, 13, 17]</span>
+</pre></div>
+
+<p>Streams contrast with iterators in that they can be passed to pure functions
+multiple times and yield the same result each time.  The primes stream is not
+"used up" by converting it to a list.  That is, the <tt class="docutils literal">first</tt> element of
+<tt class="docutils literal">prime_numbers</tt> is still 2 after converting the prefix of the stream to a
+list.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prime_numbers</span><span class="o">.</span><span class="n">first</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>Just as recursive lists provide a simple implementation of the sequence
+abstraction, streams provide a simple, functional, recursive data structure
+that implements lazy evaluation through the use of higher-order functions.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/43-declarative-programming.html">
+  		4.3 Declarative Programming
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

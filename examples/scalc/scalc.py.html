@@ -1,0 +1,158 @@
+<html>
+<head>
+<title>scalc.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>scalc.py (<a href="scalc.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""An interpreter for the Scheme-Syntax Calculator Language
+
+An interpreter for a calculator language that uses prefix-order call syntax.
+Operator expressions must be operator symbols.  Operand expressions are
+separated by spaces.
+
+Examples:
+    &gt; (* 1 2 3)
+    6
+    &gt; (+)
+    0
+    &gt; (+ 2 (/ 4 8))
+    2.5
+    &gt; (+ 2 2) (* 3 3)
+    4
+    9
+    &gt; (+ 1
+         (- 23)
+         (* 4 2.5))
+    -12
+    &gt; )
+    SyntaxError: unexpected token: )
+    &gt; 2.3.4
+    ValueError: invalid numeral: 2.3.4
+    &gt; +
+    TypeError: + is not a number or call expression
+    &gt; (/ 5)
+    TypeError: / requires exactly 2 arguments
+    &gt; (/ 1 0)
+    ZeroDivisionError: division by zero
+"""
+
+</span><span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>trace<span style="font-weight: bold">, </span>main<span style="font-weight: bold">, </span>interact
+<span style="color: blue; font-weight: bold">from </span>operator <span style="color: blue; font-weight: bold">import </span>add<span style="font-weight: bold">, </span>sub<span style="font-weight: bold">, </span>mul<span style="font-weight: bold">, </span>truediv
+<span style="color: blue; font-weight: bold">from </span>scheme_reader <span style="color: blue; font-weight: bold">import </span>Pair<span style="font-weight: bold">, </span>nil<span style="font-weight: bold">, </span>scheme_read<span style="font-weight: bold">, </span>buffer_input
+
+
+<span style="color: green; font-style: italic"># Eval &amp; Apply
+
+</span><span style="color: blue; font-weight: bold">def </span>calc_eval<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Evaluate a Calculator expression.
+
+    &gt;&gt;&gt; calc_eval(as_scheme_list('+', 2, as_scheme_list('*', 4, 6)))
+    26
+    &gt;&gt;&gt; calc_eval(as_scheme_list('+', 2, as_scheme_list('/', 40, 5)))
+    10
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>type<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span>int<span style="font-weight: bold">, </span>float<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>simplify<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>isinstance<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">, </span>Pair<span style="font-weight: bold">):
+        </span>arguments <span style="font-weight: bold">= </span>exp<span style="font-weight: bold">.</span>second<span style="font-weight: bold">.</span>map<span style="font-weight: bold">(</span>calc_eval<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>simplify<span style="font-weight: bold">(</span>calc_apply<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>arguments<span style="font-weight: bold">))
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span>str<span style="font-weight: bold">(</span>exp<span style="font-weight: bold">) + </span><span style="color: red">' is not a number or call expression'</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>calc_apply<span style="font-weight: bold">(</span>operator<span style="font-weight: bold">, </span>args<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Apply the named operator to a list of args.
+
+    &gt;&gt;&gt; calc_apply('+', as_scheme_list(1, 2, 3))
+    6
+    &gt;&gt;&gt; calc_apply('-', as_scheme_list(10, 1, 2, 3))
+    4
+    &gt;&gt;&gt; calc_apply('-', as_scheme_list(10))
+    -10
+    &gt;&gt;&gt; calc_apply('*', nil)
+    1
+    &gt;&gt;&gt; calc_apply('*', as_scheme_list(1, 2, 3, 4, 5))
+    120
+    &gt;&gt;&gt; calc_apply('/', as_scheme_list(40, 5))
+    8.0
+    &gt;&gt;&gt; calc_apply('/', as_scheme_list(10))
+    0.1
+    """
+    </span><span style="color: blue; font-weight: bold">if not </span>isinstance<span style="font-weight: bold">(</span>operator<span style="font-weight: bold">, </span>str<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span>str<span style="font-weight: bold">(</span>operator<span style="font-weight: bold">) + </span><span style="color: red">' is not a symbol'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>operator <span style="font-weight: bold">== </span><span style="color: red">'+'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>reduce<span style="font-weight: bold">(</span>add<span style="font-weight: bold">, </span>args<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>operator <span style="font-weight: bold">== </span><span style="color: red">'-'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">) == </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span>operator <span style="font-weight: bold">+ </span><span style="color: red">' requires at least 1 argument'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">elif </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">-</span>args<span style="font-weight: bold">.</span>first
+        <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>reduce<span style="font-weight: bold">(</span>sub<span style="font-weight: bold">, </span>args<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>args<span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>operator <span style="font-weight: bold">== </span><span style="color: red">'*'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>reduce<span style="font-weight: bold">(</span>mul<span style="font-weight: bold">, </span>args<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>operator <span style="font-weight: bold">== </span><span style="color: red">'/'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">) == </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span>operator <span style="font-weight: bold">+ </span><span style="color: red">' requires at least 1 argument'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">elif </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">1</span><span style="font-weight: bold">/</span>args<span style="font-weight: bold">.</span>first
+        <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>reduce<span style="font-weight: bold">(</span>truediv<span style="font-weight: bold">, </span>args<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>args<span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span>operator <span style="font-weight: bold">+ </span><span style="color: red">' is an unknown operator'</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>simplify<span style="font-weight: bold">(</span>value<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return an int if value is an integer, or value otherwise.
+
+    &gt;&gt;&gt; simplify(8.0)
+    8
+    &gt;&gt;&gt; simplify(2.3)
+    2.3
+    &gt;&gt;&gt; simplify('+')
+    '+'
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>isinstance<span style="font-weight: bold">(</span>value<span style="font-weight: bold">, </span>float<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>int<span style="font-weight: bold">(</span>value<span style="font-weight: bold">) == </span>value<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>int<span style="font-weight: bold">(</span>value<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>value
+
+<span style="color: blue; font-weight: bold">def </span>reduce<span style="font-weight: bold">(</span>fn<span style="font-weight: bold">, </span>scheme_list<span style="font-weight: bold">, </span>start<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Reduce a recursive list of Pairs using fn and a start value.
+
+    &gt;&gt;&gt; reduce(add, as_scheme_list(1, 2, 3), 0)
+    6
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>scheme_list <span style="color: blue; font-weight: bold">is </span>nil<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>start
+    <span style="color: blue; font-weight: bold">return </span>reduce<span style="font-weight: bold">(</span>fn<span style="font-weight: bold">, </span>scheme_list<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>fn<span style="font-weight: bold">(</span>start<span style="font-weight: bold">, </span>scheme_list<span style="font-weight: bold">.</span>first<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">def </span>as_scheme_list<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a recursive list of Pairs that contains the elements of args.
+
+    &gt;&gt;&gt; as_scheme_list(1, 2, 3)
+    Pair(1, Pair(2, Pair(3, nil)))
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>args<span style="font-weight: bold">) == </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>nil
+    <span style="color: blue; font-weight: bold">return </span>Pair<span style="font-weight: bold">(</span>args<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">], </span>as_scheme_list<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">:]))
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>read_eval_print_loop<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Run a read-eval-print loop for Calculator."""
+    </span><span style="color: blue; font-weight: bold">while True</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>src <span style="font-weight: bold">= </span>buffer_input<span style="font-weight: bold">()
+            </span><span style="color: blue; font-weight: bold">while </span>src<span style="font-weight: bold">.</span>more_on_line<span style="font-weight: bold">:
+                </span>expression <span style="font-weight: bold">= </span>scheme_read<span style="font-weight: bold">(</span>src<span style="font-weight: bold">)
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>calc_eval<span style="font-weight: bold">(</span>expression<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>SyntaxError<span style="font-weight: bold">, </span>TypeError<span style="font-weight: bold">, </span>ValueError<span style="font-weight: bold">, </span>ZeroDivisionError<span style="font-weight: bold">) </span>as err<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>type<span style="font-weight: bold">(</span>err<span style="font-weight: bold">).</span>__name__ <span style="font-weight: bold">+ </span><span style="color: red">':'</span><span style="font-weight: bold">, </span>err<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>KeyboardInterrupt<span style="font-weight: bold">, </span>EOFError<span style="font-weight: bold">):  </span><span style="color: green; font-style: italic"># &lt;Control&gt;-D, etc.
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Calculation completed.'</span><span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">return
+</span>
+</pre>
+</body>
+</html>

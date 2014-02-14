@@ -1,0 +1,88 @@
+<html>
+<head>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+<title>Scalc</title>
+</head>
+
+<body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Example: Scheme-Syntax Calculator</title>
+</head>
+
+<body>
+  <h2>Example: A Scheme-Syntax Calculator</h2>
+
+  <h3>Introduction</h3>
+
+  <p>This extended example implements a reader for Scheme lists and an
+  evaluator for the Calculator language, an expression language of numbers and
+  arithmetic call expressions.
+
+  <p>This example includes several files. They can be downloaded together as a
+  <a href="scalc.zip">zip archive</a>.
+
+  <table cellpadding="10">
+    <tr>
+      <td><code><a href="scheme_reader.py.html">scheme_reader.py</a></code></td>
+
+      <td>A parser for Scheme lists.</td>
+    </tr>
+
+    <tr>
+      <td><code><a href="scheme_tokens.py.html">scheme_tokens.py</a></code></td>
+
+      <td>A tokenizer for Scheme expressions.</td>
+    </tr>
+
+    <tr>
+      <td><code><a href="scalc.py.html">scalc.py</a></code></td>
+
+      <td>An evaluator for numbers and arithmetic call expressions.</td>
+    </tr>
+
+    <tr>
+      <td><code><a href="buffer.py.html">buffer.py</a></code></td>
+
+      <td>Utility classes for reading multi-line input.</td>
+    </tr>
+
+    <tr>
+      <td><code><a href="ucb.py.html">ucb.py</a></code></td>
+
+      <td>Utility functions for CS 61A.</td>
+    </tr>
+  </table>
+
+  <h3>The Scheme-Syntax Calculator Language</h3>
+
+  <p><b>Syntax.</b> Legal Calculator expressions are either numbers
+  or well-formed Scheme lists that have an operator symbol as their first
+  element. The latter are interpretered as call expressions. Legal operator
+  symbols include <code>+</code>, <code>-</code>, <code>*</code>, and
+  <code>/</code>.
+
+  <p><b>Evaluation.</b> The evaluation procedure for each operator is described
+  in the lecture notes section about the
+  <a href="../../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">
+    Scheme-Syntax Calculator</a>.
+
+  <p><b>Read-Eval-Print.</b> When run interactively, the interpreter reads
+  Scheme expressions (without quotation or dotted lists), evaluates them, and
+  prints the results.
+
+  <pre>
+    &gt; 2
+    2
+    &gt; (+ 1 2 (* 3 4))
+    15
+  </pre>
+
+</body>
+</html>
+
+</body>
+</html>

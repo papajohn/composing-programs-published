@@ -1,0 +1,37 @@
+/*
+:Author: John DeNero
+:Contact: denero@google.com
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for use with the 61A website.
+*/
+
+@import url(61a_style.css);
+
+/* layout */
+
+.header {
+  border-bottom: 1px solid steelblue;
+  margin-bottom: 20px;
+}
+
+h3.section {
+  margin-top: 40px;
+  border-bottom: 1px dotted steelblue;
+}
+
+/* schedule */
+
+.schedule table {
+  border: 0px;
+  border-collapse: collapse;
+}
+
+.schedule tr td {
+  padding: 5px 20px;
+}
+
+.week td {
+  border-top: 1px solid steelblue;
+}
+

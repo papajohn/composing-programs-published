@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>buffer.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>buffer.py (<a href="buffer.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""The buffer module assists in iterating through lines and tokens."""
+
+</span><span style="color: blue; font-weight: bold">import </span>math
+
+<span style="color: blue; font-weight: bold">class </span>Buffer<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Buffer provides a way of accessing a sequence of tokens across lines.
+
+    Its constructor takes an iterator, called "the source", that returns the
+    next line of tokens as a list each time it is queried, or None to indicate
+    the end of data.
+
+    The Buffer in effect concatenates the sequences returned from its source
+    and then supplies the items from them one at a time through its pop()
+    method, calling the source for more sequences of items only when needed.
+
+    In addition, Buffer provides a current method to look at the
+    next item to be supplied, without sequencing past it.
+
+    The __str__ method prints all tokens read so far, up to the end of the
+    current line, and marks the current token with &gt;&gt;.
+
+    &gt;&gt;&gt; buf = Buffer(iter([['(', '+'], [15], [12, ')']]))
+    &gt;&gt;&gt; buf.pop()
+    '('
+    &gt;&gt;&gt; buf.pop()
+    '+'
+    &gt;&gt;&gt; buf.current()
+    15
+    &gt;&gt;&gt; print(buf)
+    1: ( +
+    2:  &gt;&gt; 15
+    &gt;&gt;&gt; buf.pop()
+    15
+    &gt;&gt;&gt; buf.current()
+    12
+    &gt;&gt;&gt; buf.pop()
+    12
+    &gt;&gt;&gt; print(buf)
+    1: ( +
+    2: 15
+    3: 12 &gt;&gt; )
+    &gt;&gt;&gt; buf.pop()
+    ')'
+    &gt;&gt;&gt; print(buf)
+    1: ( +
+    2: 15
+    3: 12 ) &gt;&gt;
+    &gt;&gt;&gt; buf.pop()  # returns None
+    """
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>source<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>lines <span style="font-weight: bold">= []
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>source <span style="font-weight: bold">= </span>source
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line <span style="font-weight: bold">= ()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>pop<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Remove the next item from self and return it. If self has
+        exhausted its source, returns None."""
+        </span>current <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index <span style="font-weight: bold">+= </span><span style="color: red">1
+        </span><span style="color: blue; font-weight: bold">return </span>current
+
+    @property
+    <span style="color: blue; font-weight: bold">def </span>more_on_line<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index <span style="font-weight: bold">&lt; </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>current<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return the current element, or None if none exists."""
+        </span><span style="color: blue; font-weight: bold">while not </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>more_on_line<span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index <span style="font-weight: bold">= </span><span style="color: red">0
+            </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line <span style="font-weight: bold">= </span>next<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>source<span style="font-weight: bold">)
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>lines<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">except </span>StopIteration<span style="font-weight: bold">:
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line <span style="font-weight: bold">= ()
+                </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">None
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index<span style="font-weight: bold">]
+
+    </span><span style="color: blue; font-weight: bold">def </span>__str__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return recently read contents; current element marked with &gt;&gt;."""
+        </span><span style="color: green; font-style: italic"># Format string for right-justified line numbers
+        </span>n <span style="font-weight: bold">= </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>lines<span style="font-weight: bold">)
+        </span>msg <span style="font-weight: bold">= </span><span style="color: red">'{0:&gt;' </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>math<span style="font-weight: bold">.</span>floor<span style="font-weight: bold">(</span>math<span style="font-weight: bold">.</span>log10<span style="font-weight: bold">(</span>n<span style="font-weight: bold">))+</span><span style="color: red">1</span><span style="font-weight: bold">) + </span><span style="color: red">"}: "
+
+        </span><span style="color: green; font-style: italic"># Up to three previous lines and current line are included in output
+        </span>s <span style="font-weight: bold">= </span><span style="color: red">''
+        </span><span style="color: blue; font-weight: bold">for </span>i <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>max<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span>n<span style="font-weight: bold">-</span><span style="color: red">4</span><span style="font-weight: bold">), </span>n<span style="font-weight: bold">-</span><span style="color: red">1</span><span style="font-weight: bold">):
+            </span>s <span style="font-weight: bold">+= </span>msg<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>i<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">) + </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>str<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>lines<span style="font-weight: bold">[</span>i<span style="font-weight: bold">])) + </span><span style="color: red">'\n'
+        </span>s <span style="font-weight: bold">+= </span>msg<span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)
+        </span>s <span style="font-weight: bold">+= </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>str<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line<span style="font-weight: bold">[:</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index<span style="font-weight: bold">]))
+        </span>s <span style="font-weight: bold">+= </span><span style="color: red">' &gt;&gt; '
+        </span>s <span style="font-weight: bold">+= </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>map<span style="font-weight: bold">(</span>str<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>current_line<span style="font-weight: bold">[</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>index<span style="font-weight: bold">:]))
+        </span><span style="color: blue; font-weight: bold">return </span>s<span style="font-weight: bold">.</span>strip<span style="font-weight: bold">()
+
+</span><span style="color: green; font-style: italic"># Try to import readline for interactive history
+</span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>readline
+<span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">pass
+
+class </span>InputReader<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""An InputReader is an iterable that prompts the user for input."""
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>prompt<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>prompt <span style="font-weight: bold">= </span>prompt
+
+    <span style="color: blue; font-weight: bold">def </span>__iter__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">while True</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">yield </span>input<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>prompt<span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>prompt <span style="font-weight: bold">= </span><span style="color: red">' ' </span><span style="font-weight: bold">* </span>len<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>prompt<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

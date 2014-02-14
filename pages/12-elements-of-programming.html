@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>1.2 Elements of Programming</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 1<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/11-getting-started.html">1.1 Getting Started</a></h3>
+				<li><a href="../pages/11-getting-started.html#programming-in-python">1.1.1 Programming in Python</a>
+				<li><a href="../pages/11-getting-started.html#installing-python-3">1.1.2 Installing Python 3</a>
+				<li><a href="../pages/11-getting-started.html#interactive-sessions">1.1.3 Interactive Sessions</a>
+				<li><a href="../pages/11-getting-started.html#first-example">1.1.4 First Example</a>
+				<li><a href="../pages/11-getting-started.html#errors">1.1.5 Errors</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/12-elements-of-programming.html">1.2 Elements of Programming</a></h3>
+				<li><a href="../pages/12-elements-of-programming.html#expressions">1.2.1 Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#call-expressions">1.2.2 Call Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#importing-library-functions">1.2.3 Importing Library Functions</a>
+				<li><a href="../pages/12-elements-of-programming.html#names-and-the-environment">1.2.4 Names and the Environment</a>
+				<li><a href="../pages/12-elements-of-programming.html#evaluating-nested-expressions">1.2.5 Evaluating Nested Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#the-non-pure-print-function">1.2.6 The Non-Pure Print Function</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/13-defining-new-functions.html">1.3 Defining New Functions</a></h3>
+				<li><a href="../pages/13-defining-new-functions.html#environments">1.3.1 Environments</a>
+				<li><a href="../pages/13-defining-new-functions.html#calling-user-defined-functions">1.3.2 Calling User-Defined Functions</a>
+				<li><a href="../pages/13-defining-new-functions.html#example-calling-a-user-defined-function">1.3.3 Example: Calling a User-Defined Function</a>
+				<li><a href="../pages/13-defining-new-functions.html#local-names">1.3.4 Local Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#choosing-names">1.3.5 Choosing Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#functions-as-abstractions">1.3.6 Functions as Abstractions</a>
+				<li><a href="../pages/13-defining-new-functions.html#operators">1.3.7 Operators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/14-designing-functions.html">1.4 Designing Functions</a></h3>
+				<li><a href="../pages/14-designing-functions.html#documentation">1.4.1 Documentation</a>
+				<li><a href="../pages/14-designing-functions.html#default-argument-values">1.4.2 Default Argument Values</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/15-control.html">1.5 Control</a></h3>
+				<li><a href="../pages/15-control.html#statements">1.5.1 Statements</a>
+				<li><a href="../pages/15-control.html#compound-statements">1.5.2 Compound Statements</a>
+				<li><a href="../pages/15-control.html#defining-functions-ii-local-assignment">1.5.3 Defining Functions II: Local Assignment</a>
+				<li><a href="../pages/15-control.html#conditional-statements">1.5.4 Conditional Statements</a>
+				<li><a href="../pages/15-control.html#iteration">1.5.5 Iteration</a>
+				<li><a href="../pages/15-control.html#testing">1.5.6 Testing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/16-higher-order-functions.html">1.6 Higher-Order Functions</a></h3>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-arguments">1.6.1 Functions as Arguments</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-general-methods">1.6.2 Functions as General Methods</a>
+				<li><a href="../pages/16-higher-order-functions.html#defining-functions-iii-nested-definitions">1.6.3 Defining Functions III: Nested Definitions</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-returned-values">1.6.4 Functions as Returned Values</a>
+				<li><a href="../pages/16-higher-order-functions.html#example-newton-s-method">1.6.5 Example: Newton's Method</a>
+				<li><a href="../pages/16-higher-order-functions.html#currying">1.6.6 Currying</a>
+				<li><a href="../pages/16-higher-order-functions.html#lambda-expressions">1.6.7 Lambda Expressions</a>
+				<li><a href="../pages/16-higher-order-functions.html#abstractions-and-first-class-functions">1.6.8 Abstractions and First-Class Functions</a>
+				<li><a href="../pages/16-higher-order-functions.html#function-decorators">1.6.9 Function Decorators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/17-recursive-functions.html">1.7 Recursive Functions</a></h3>
+				<li><a href="../pages/17-recursive-functions.html#the-anatomy-of-recursive-functions">1.7.1 The Anatomy of Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#mutual-recursion">1.7.2 Mutual Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#printing-in-recursive-functions">1.7.3 Printing in Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#tree-recursion">1.7.4 Tree Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#example-partitions">1.7.5 Example: Partitions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="elements-of-programming">
+<h2>1.2   Elements of Programming</h2>
+<p>A programming language is more than just a means for instructing a computer to
+perform tasks. The language also serves as a framework within which we organize
+our ideas about computational processes. Programs serve to communicate those
+ideas among the members of a programming community. Thus, programs must be
+written for people to read, and only incidentally for machines to execute.</p>
+<p>When we describe a language, we should pay particular attention to the means
+that the language provides for combining simple ideas to form more complex
+ideas. Every powerful language has three such mechanisms:</p>
+<ul class="simple">
+<li><strong>primitive expressions and statements</strong>, which represent the simplest
+building blocks that the language provides,</li>
+<li><strong>means of combination</strong>, by which compound elements are built from simpler
+ones, and</li>
+<li><strong>means of abstraction</strong>, by which compound elements can be named and
+manipulated as units.</li>
+</ul>
+<p>In programming, we deal with two kinds of elements: functions and data. (Soon
+we will discover that they are really not so distinct.) Informally, data is
+stuff that we want to manipulate, and functions describe the rules for
+manipulating the data. Thus, any powerful programming language should
+be able to describe primitive data and primitive functions, as well as have some
+methods for combining and abstracting both functions and data.</p>
+<div class="section" id="expressions">
+<h3>1.2.1   Expressions</h3>
+<p>Having experimented with the full Python interpreter in the previous section,
+we now start anew, methodically developing the Python language element by
+element.  Be patient if the examples seem simplistic — more exciting material
+is soon to come.</p>
+<p>We begin with primitive expressions. One kind of primitive expression is a
+number. More precisely, the expression that you type consists of the numerals
+that represent the number in base 10.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">42</span>
+<span class="go">42</span>
+</pre></div>
+
+<p>Expressions representing numbers may be combined with mathematical operators
+to form a compound expression, which the interpreter will evaluate:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="o">-</span><span class="mi">1</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">8</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">16</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">32</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">64</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">128</span>
+<span class="go">0.9921875</span>
+</pre></div>
+
+<p>These mathematical expressions use <em>infix</em> notation, where the <em>operator</em>
+(e.g., <tt class="docutils literal">+</tt>, <tt class="docutils literal">-</tt>, <tt class="docutils literal">*</tt>, or <tt class="docutils literal">/</tt>) appears in between the <em>operands</em>
+(numbers). Python includes many ways to form compound expressions. Rather than
+attempt to enumerate them all immediately, we will introduce new expression
+forms as we go, along with the language features that they support.</p>
+</div>
+<div class="section" id="call-expressions">
+<h3>1.2.2   Call Expressions</h3>
+<p>The most important kind of compound expression is a <em>call expression</em>, which
+applies a function to some arguments. Recall from algebra that the mathematical
+notion of a function is a mapping from some input arguments to an output value.
+For instance, the <tt class="docutils literal">max</tt> function maps its inputs to a single output, which is
+the largest of the inputs.  The way in which Python expresses function
+application is the same as in conventional mathematics.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span><span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">)</span>
+<span class="go">9.5</span>
+</pre></div>
+
+<p>This call expression has subexpressions: the <em>operator</em> is an expression that
+precedes parentheses, which enclose a comma-delimited list of <em>operand</em>
+expressions.</p>
+<div class="figure">
+<img alt="" src="../img/call_expression.png"/>
+</div>
+<p>The operator specifies a <em>function</em>.  When this call expression is evaluated,
+we say that the function <tt class="docutils literal">max</tt> is <em>called</em> with <em>arguments</em> 7.5 and 9.5, and
+<em>returns</em> a <em>value</em> of 9.5.</p>
+<p>The order of the arguments in a call expression matters. For instance, the
+function <tt class="docutils literal">pow</tt> raises its first argument to the power of its second argument.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">pow</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">10000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">1267650600228229401496703205376</span>
+</pre></div>
+
+<p>Function notation has three principal advantages over the mathematical
+convention of infix notation. First, functions may take an arbitrary number of
+arguments:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+
+<p>No ambiguity can arise, because the function name always precedes its
+arguments.</p>
+<p>Second, function notation extends in a straightforward way to <em>nested</em>
+expressions, where the elements are themselves compound expressions. In nested
+call expressions, unlike compound infix expressions, the structure of the
+nesting is entirely explicit in the parentheses.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="o">-</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">-2</span>
+</pre></div>
+
+<p>There is no limit (in principle) to the depth of such nesting and to the overall
+complexity of the expressions that the Python interpreter can evaluate.
+However, humans quickly get confused by multi-level nesting. An important role
+for you as a programmer is to structure expressions so that they remain
+interpretable by yourself, your programming partners, and other people who may
+read your expressions in the future.</p>
+<p>Third, mathematical notation has a great variety of forms:  multiplication
+appears between terms, exponents appear as superscripts, division as a
+horizontal bar, and a square root as a roof with slanted siding. Some of this
+notation is very hard to type! However, all of this complexity can be unified
+via the notation of call expressions. While Python supports common mathematical
+operators using infix notation (like <tt class="docutils literal">+</tt> and <tt class="docutils literal">-</tt>), any operator can be
+expressed as a function with a name.</p>
+</div>
+<div class="section" id="importing-library-functions">
+<h3>1.2.3   Importing Library Functions</h3>
+<p>Python defines a very large number of functions, including the operator
+functions mentioned in the preceding section, but does not make all of their
+names available by default. Instead, it organizes the functions and other
+quantities that it knows about into modules, which together comprise the Python
+Library.  To use these elements, one imports them. For example, the <tt class="docutils literal">math</tt>
+module provides a variety of familiar mathematical functions:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sqrt</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+<span class="go">16.0</span>
+</pre></div>
+
+<p>and the <tt class="docutils literal">operator</tt> module provides access to functions corresponding to infix
+operators:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">mul</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+<span class="go">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">mul</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">add</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+<span class="go">16</span>
+</pre></div>
+
+<p>An <tt class="docutils literal">import</tt> statement designates a module name (e.g., <tt class="docutils literal">operator</tt> or
+<tt class="docutils literal">math</tt>), and then lists the named attributes of that module to import (e.g.,
+<tt class="docutils literal">sqrt</tt>). Once a function is imported, it can be called multiple times.</p>
+<p>There is no difference between using these operator functions (e.g., <tt class="docutils literal">add</tt>)
+and the operator symbols themselves (e.g., <tt class="docutils literal">+</tt>). Conventionally, most
+programmers use symbols and infix notation to express simple arithmetic.</p>
+<p>The <a class="reference external" href="http://docs.python.org/py3k/library/index.html">Python 3 Library Docs</a> list the functions defined by each module, such as
+the <a class="reference external" href="http://docs.python.org/py3k/library/math.html">math module</a>. However, this documentation is written for developers who
+know the whole language well. For now, you may find that experimenting with a
+function tells you more about its behavior than reading the documentation.  As
+you become familiar with the Python language and vocabulary, this documentation
+will become a valuable reference source.</p>
+</div>
+<div class="section" id="names-and-the-environment">
+<h3>1.2.4   Names and the Environment</h3>
+<p>A critical aspect of a programming language is the means it provides for using
+names to refer to computational objects. If a value has been given a name, we
+say that the name <em>binds</em> to the value.</p>
+<p>In Python, we can establish new bindings using the assignment statement, which
+contains a name to the left of <tt class="docutils literal">=</tt> and a value to the right:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span>
+<span class="go">20</span>
+</pre></div>
+
+<p>Names are also bound via <tt class="docutils literal">import</tt> statements.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pi</span> <span class="o">*</span> <span class="mi">71</span> <span class="o">/</span> <span class="mi">223</span>
+<span class="go">1.0002380197528042</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">=</tt> symbol is called the <em>assignment</em> operator in Python (and many other
+languages). Assignment is our simplest means of <em>abstraction</em>, for it allows us
+to use simple names to refer to the results of compound operations, such as the
+<tt class="docutils literal">area</tt> computed above. In this way, complex programs are constructed by
+building, step by step, computational objects of increasing complexity.</p>
+<p>The possibility of binding names to values and later retrieving those values by
+name means that the interpreter must maintain some sort of memory that keeps
+track of the names, values, and bindings. This memory is called an
+<em>environment</em>.</p>
+<p>Names can also be bound to functions.  For instance, the name <tt class="docutils literal">max</tt> is bound
+to the max function we have been using. Functions, unlike numbers, are tricky to
+render as text, so Python prints an identifying description instead, when asked
+to describe a function:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span>
+<span class="go">&lt;built-in function max&gt;</span>
+</pre></div>
+
+<p>We can use assignment statements to give new names to existing functions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="nb">max</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">&lt;built-in function max&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">4</span>
+</pre></div>
+
+<p>And successive assignment statements can rebind a name to a new value.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>In Python, names are often called <em>variable names</em> or <em>variables</em> because they
+can be bound to different values in the course of executing a program. When a
+name is bound to a new value through assignment, it is no longer bound to any
+previous value.  One can even bind built-in names to new values.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">max</span>
+<span class="go">5</span>
+</pre></div>
+
+<p>After assigning <tt class="docutils literal">max</tt> to 5, the name <tt class="docutils literal">max</tt> is no longer bound to a
+function, and so attempting to call <tt class="docutils literal">max(2, 3, 4)</tt> will cause an error.</p>
+<p>When executing an assignment statement, Python evaluates the expression to the
+right of <tt class="docutils literal">=</tt> before changing the binding to the name on the left.  Therefore,
+one can refer to a name in right-side expression, even if it is the name to be
+bound by the assignment statement.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">3</span>
+</pre></div>
+
+<p>We can also assign multiple values to multiple names in a single statement,
+where names on the left of <tt class="docutils literal">=</tt> and expressions on the right of <tt class="docutils literal">=</tt> are
+separated by commas.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">area</span><span class="p">,</span> <span class="n">circumference</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span>
+<span class="go">314.1592653589793</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">circumference</span>
+<span class="go">62.83185307179586</span>
+</pre></div>
+
+<p>Changing the value of one name does not affect other names. Below, even though
+the name <tt class="docutils literal">area</tt> was bound to a value defined originally in terms of
+<tt class="docutils literal">radius</tt>, the value of <tt class="docutils literal">area</tt> has not changed.  Updating the value of
+<tt class="docutils literal">area</tt> requires another assignment statement.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span>
+<span class="go">314.1592653589793</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span>
+<span class="go">380.132711084365</span>
+</pre></div>
+
+<p>With multiple assignment, <em>all</em> expressions to the right of <tt class="docutils literal">=</tt> are evaluated
+before <em>any</em> names to the left are bound to those values. As a result of this
+rule, swapping the values bound to two names can be performed in a single
+statement.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">4.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">4.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">3</span>
+</pre></div>
+
+</div>
+<div class="section" id="evaluating-nested-expressions">
+<h3>1.2.5   Evaluating Nested Expressions</h3>
+<p>One of our goals in this chapter is to isolate issues about thinking
+procedurally. As a case in point, let us consider that, in evaluating nested
+call expressions, the interpreter is itself following a procedure.</p>
+<p>To evaluate a call expression, Python will do the following:</p>
+<ol class="arabic simple">
+<li>Evaluate the operator and operand subexpressions, then</li>
+<li>Apply the function that is the value of the operator subexpression to the
+arguments that are the values of the operand subexpressions.</li>
+</ol>
+<p>Even this simple procedure illustrates some important points about processes in
+general. The first step dictates that in order to accomplish the evaluation
+process for a call expression we must first evaluate other expressions. Thus,
+the evaluation procedure is <em>recursive</em> in nature; that is, it includes, as one
+of its steps, the need to invoke the rule itself.</p>
+<p>For example, evaluating</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mul</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">mul</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)),</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">208</span>
+</pre></div>
+
+<p>requires that this evaluation procedure be applied four times. If we draw each
+expression that we evaluate, we can visualize the hierarchical structure of this
+process.</p>
+<div class="figure">
+<img alt="" src="../img/expression_tree.png"/>
+</div>
+<p>This illustration is called an <em>expression tree</em>.  In computer science, trees
+conventionally grow from the top down.  The objects at each point in a tree are
+called nodes; in this case, they are expressions paired with their values.</p>
+<p>Evaluating its root, the full expression at the top, requires first evaluating
+the branches that are its subexpressions.  The leaf expressions (that is, nodes
+with no branches stemming from them) represent either functions or numbers. The
+interior nodes have two parts: the call expression to which our evaluation rule
+is applied, and the result of that expression.  Viewing evaluation in terms of
+this tree, we can imagine that the values of the operands percolate upward,
+starting from the terminal nodes and then combining at higher and higher
+levels.</p>
+<p>Next, observe that the repeated application of the first step brings us to the
+point where we need to evaluate, not call expressions, but primitive expressions
+such as numerals (e.g., 2) and names (e.g., <tt class="docutils literal">add</tt>). We take care of the
+primitive cases by stipulating that</p>
+<ul class="simple">
+<li>A numeral evaluates to the number it names,</li>
+<li>A name evaluates to the value associated with that name in the current
+environment.</li>
+</ul>
+<p>Notice the important role of an environment in determining the meaning of the
+symbols in expressions. In Python, it is meaningless to speak of the value of an
+expression such as</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<p>without specifying any information about the environment that would provide a
+meaning for the name <tt class="docutils literal">x</tt> (or even for the name <tt class="docutils literal">add</tt>). Environments provide
+the context in which evaluation takes place, which plays an important role in
+our understanding of program execution.</p>
+<p>This evaluation procedure does not suffice to evaluate all Python code, only
+call expressions, numerals, and names. For instance, it does not handle
+assignment statements.  Executing</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+
+<p>does not return a value nor evaluate a function on some arguments, since the
+purpose of assignment is instead to bind a name to a value.  In general,
+statements are not evaluated but <em>executed</em>; they do not produce a value but
+instead make some change. Each type of expression or statement has its own
+evaluation or execution procedure.</p>
+<p>A pedantic note: when we say that "a numeral evaluates to a number," we actually
+mean that the Python interpreter evaluates a numeral to a number.  It is the
+interpreter which endows meaning to the programming language.  Given that the
+interpreter is a fixed program that always behaves consistently, we can say that
+numerals (and expressions) themselves evaluate to values in the context of
+Python programs.</p>
+</div>
+<div class="section" id="the-non-pure-print-function">
+<h3>1.2.6   The Non-Pure Print Function</h3>
+<p>Throughout this text, we will distinguish between two types of functions.</p>
+<p><strong>Pure functions.</strong> Functions have some input (their arguments) and return some
+output (the result of applying them).  The built-in function</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+
+<p>can be depicted as a small machine that takes input and produces output.</p>
+<div class="figure">
+<img alt="" src="../img/function_abs.png"/>
+</div>
+<p>The function <tt class="docutils literal">abs</tt> is <em>pure</em>. Pure functions have the property that applying
+them has no effects beyond returning a value. Moreover, a pure function must
+always return the same value when called twice with the same arguments.</p>
+<p><strong>Non-pure functions.</strong> In addition to returning a value, applying a non-pure
+function can generate <em>side effects</em>, which make some change to the state of the
+interpreter or computer. A common side effect is to generate additional output
+beyond the return value, using the <tt class="docutils literal">print</tt> function.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">1 2 3</span>
+</pre></div>
+
+<p>While <tt class="docutils literal">print</tt> and <tt class="docutils literal">abs</tt> may appear to be similar in these examples, they
+work in fundamentally different ways. The value that <tt class="docutils literal">print</tt> returns is
+always <tt class="docutils literal">None</tt>, a special Python value that represents nothing. The
+interactive Python interpreter does not automatically print the value <tt class="docutils literal">None</tt>.
+In the case of <tt class="docutils literal">print</tt>, the function itself is printing output as a side
+effect of being called.</p>
+<div class="figure">
+<img alt="" src="../img/function_print.png"/>
+</div>
+<p>A nested expression of calls to <tt class="docutils literal">print</tt> highlights the non-pure character of
+the function.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nb">print</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">None None</span>
+</pre></div>
+
+<p>If you find this output to be unexpected, draw an expression tree to clarify why
+evaluating this expression produces this peculiar output.</p>
+<p>Be careful with <tt class="docutils literal">print</tt>!  The fact that it returns <tt class="docutils literal">None</tt> means that it
+<em>should not</em> be the expression in an assignment statement.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">two</span> <span class="o">=</span> <span class="nb">print</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">two</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+
+<p>Pure functions are restricted in that they cannot have side effects or change
+behavior over time. Imposing these restrictions yields substantial benefits.
+First, pure functions can be composed more reliably into compound call
+expressions.  We can see in the non-pure function example above that <tt class="docutils literal">print</tt>
+does not return a useful result when used in an operand expression.  On the
+other hand, we have seen that functions such as <tt class="docutils literal">max</tt>, <tt class="docutils literal">pow</tt> and <tt class="docutils literal">sqrt</tt>
+can be used effectively in nested expressions.</p>
+<p>Second, pure functions tend to be simpler to test. A list of arguments will
+always lead to the same return value, which can be compared to the expected
+return value. Testing is discussed in more detail later in this chapter.</p>
+<p>Third, Chapter 4 will illustrate that pure functions are essential for writing
+<em>concurrent</em> programs, in which multiple call expressions may be evaluated
+simultaneously.</p>
+<p>By contrast, Chapter 2 investigates a range of non-pure functions and describes
+their uses.</p>
+<p>For these reasons, we concentrate heavily on creating and using pure functions
+in the remainder of this chapter.  The <tt class="docutils literal">print</tt> function is only used so that
+we can see the intermediate results of computations.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/13-defining-new-functions.html">
+  		1.3 Defining New Functions
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

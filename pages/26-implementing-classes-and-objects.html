@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.6 Implementing Classes and Objects</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="implementing-classes-and-objects">
+<h2>2.6   Implementing Classes and Objects</h2>
+<p>When working in the object-oriented programming paradigm, we use the object
+metaphor to guide the organization of our programs.  Most logic about how to
+represent and manipulate data is expressed within class declarations.  In this
+section, we see that classes and objects can themselves be represented using
+just functions and dictionaries.  The purpose of implementing an object system
+in this way is to illustrate that using the object metaphor does not require a
+special programming language.  Programs can be object-oriented, even in
+programming languages that do not have a built-in object system.</p>
+<p>In order to implement objects, we will abandon dot notation (which does require
+built-in language support), but create dispatch dictionaries that behave
+in much the same way as the elements of the built-in object system. We have
+already seen how to implement message-passing behavior through dispatch
+dictionaries.  To implement an object system in full, we send messages between
+instances, classes, and base classes, all of which are dictionaries that contain
+attributes.</p>
+<p>We will not implement the entire Python object system, which includes features
+that we have not covered in this text (e.g., meta-classes and static methods).
+We will focus instead on user-defined classes without multiple inheritance and
+without introspective behavior (such as returning the class of an instance).
+Our implementation is not meant to follow the precise specification of the
+Python type system.  Instead, it is designed to implement the core functionality
+that enables the object metaphor.</p>
+<div class="section" id="instances">
+<h3>2.6.1   Instances</h3>
+<p>We begin with instances.  An instance has named attributes, such as the balance
+of an account, which can be set and retrieved. We implement an instance using a
+dispatch dictionary that responds to messages that "get" and "set" attribute
+values.  Attributes themselves are stored in a local dictionary called
+<tt class="docutils literal">attributes</tt>.</p>
+<p>As we have seen previously in this chapter, dictionaries themselves are abstract
+data types.  We implemented dictionaries with lists, we implemented lists with
+pairs, and we implemented pairs with functions. As we implement an object system
+in terms of dictionaries, keep in mind that we could just as well be
+implementing objects using functions alone.</p>
+<p>To begin our implementation, we assume that we have a class implementation
+that can look up any names that are not part of the instance.  We pass in a
+class to <tt class="docutils literal">make_instance</tt> as the parameter <tt class="docutils literal">cls</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a new object instance, which is a dispatch dictionary."""</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">value</span> <span class="o">=</span> <span class="n">cls</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">bind_method</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<span class="gp">    </span>    <span class="n">attributes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">    </span>    <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span><span class="s">'get'</span><span class="p">:</span> <span class="n">get_value</span><span class="p">,</span> <span class="s">'set'</span><span class="p">:</span> <span class="n">set_value</span><span class="p">}</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">instance</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">instance</tt> is a dispatch dictionary that responds to the messages <tt class="docutils literal">get</tt>
+and <tt class="docutils literal">set</tt>.  The <tt class="docutils literal">set</tt> message corresponds to attribute assignment in
+Python's object system: all assigned attributes are stored directly within the
+object's local attribute dictionary.  In <tt class="docutils literal">get</tt>, if <tt class="docutils literal">name</tt> does not appear in
+the local <tt class="docutils literal">attributes</tt> dictionary, then it is looked up in the class. If the
+<tt class="docutils literal">value</tt> returned by <tt class="docutils literal">cls</tt> is a function, it must be bound to the instance.</p>
+<p><strong>Bound method values.</strong>  The <tt class="docutils literal">get_value</tt> function in <tt class="docutils literal">make_instance</tt> finds
+a named attribute in its class with <tt class="docutils literal">get</tt>, then calls <tt class="docutils literal">bind_method</tt>.
+Binding a method only applies to function values, and it creates a bound method
+value from a function value by inserting the instance as the first argument:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">bind_method</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a bound method if value is callable, or value otherwise."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">method</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">value</span>
+</pre></div>
+
+<p>When a method is called, the first parameter <tt class="docutils literal">self</tt> will be bound to the value
+of <tt class="docutils literal">instance</tt> by this definition.</p>
+</div>
+<div class="section" id="classes">
+<h3>2.6.2   Classes</h3>
+<p>A class is also an object, both in Python's object system and the system we are
+implementing here.  For simplicity, we say that classes do not themselves have a
+class.  (In Python, classes do have classes; almost all classes share the same
+class, called <tt class="docutils literal">type</tt>.) A class can respond to <tt class="docutils literal">get</tt> and <tt class="docutils literal">set</tt> messages, as
+well as the <tt class="docutils literal">new</tt> message:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_class</span><span class="p">(</span><span class="n">attributes</span><span class="p">,</span> <span class="n">base_class</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a new class, which is a dispatch dictionary."""</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="n">base_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="k">None</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">base_class</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">attributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">init_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="n">cls</span> <span class="o">=</span> <span class="p">{</span><span class="s">'get'</span><span class="p">:</span> <span class="n">get_value</span><span class="p">,</span> <span class="s">'set'</span><span class="p">:</span> <span class="n">set_value</span><span class="p">,</span> <span class="s">'new'</span><span class="p">:</span> <span class="n">new</span><span class="p">}</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">cls</span>
+</pre></div>
+
+<p>Unlike an instance, the <tt class="docutils literal">get</tt> function for classes does not query its class
+when an attribute is not found, but instead queries its <tt class="docutils literal">base_class</tt>.  No
+method binding is required for classes.</p>
+<p><strong>Initialization.</strong> The <tt class="docutils literal">new</tt> function in <tt class="docutils literal">make_class</tt> calls
+<tt class="docutils literal">init_instance</tt>, which first makes a new instance, then invokes a method
+called <tt class="docutils literal">__init__</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">init_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a new object with type cls, initialized with args."""</span>
+<span class="gp">    </span>    <span class="n">instance</span> <span class="o">=</span> <span class="n">make_instance</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="n">init</span> <span class="o">=</span> <span class="n">cls</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'__init__'</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">init</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">init</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">instance</span>
+</pre></div>
+
+<p>This final function completes our object system.  We now have instances, which
+<tt class="docutils literal">set</tt> locally but fall back to their classes on <tt class="docutils literal">get</tt>.  After an instance
+looks up a name in its class, it binds itself to function values to create
+methods.  Finally, classes can create <tt class="docutils literal">new</tt> instances, and they apply their
+<tt class="docutils literal">__init__</tt> constructor function immediately after instance creation.</p>
+<p>In this object system, the only function that should be called by the user is
+<tt class="docutils literal">make_class</tt>.  All other functionality is enabled through message passing.
+Similarly, Python's object system is invoked via the <tt class="docutils literal">class</tt> statement, and
+all of its other functionality is enabled through dot expressions and calls to
+classes.</p>
+</div>
+<div class="section" id="using-implemented-objects">
+<h3>2.6.3   Using Implemented Objects</h3>
+<p>We now return to use the bank account example from the previous section.  Using
+our implemented object system, we will create an <tt class="docutils literal">Account</tt> class, a
+<tt class="docutils literal">CheckingAccount</tt> subclass, and an instance of each.</p>
+<p>The <tt class="docutils literal">Account</tt> class is created through a <tt class="docutils literal">make_account_class</tt> function,
+which has structure similar to a <tt class="docutils literal">class</tt> statement in Python, but concludes
+with a call to <tt class="docutils literal">make_class</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_account_class</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="sd">"""Return the Account class, which has deposit and withdraw methods."""</span>
+<span class="gp">    </span>    <span class="n">interest</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_holder</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="p">[</span><span class="s">'set'</span><span class="p">](</span><span class="s">'holder'</span><span class="p">,</span> <span class="n">account_holder</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="p">[</span><span class="s">'set'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">deposit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="sd">"""Increase the account balance by amount and return the new balance."""</span>
+<span class="gp">    </span>        <span class="n">new_balance</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">)</span> <span class="o">+</span> <span class="n">amount</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="p">[</span><span class="s">'set'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">,</span> <span class="n">new_balance</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="sd">"""Decrease the account balance by amount and return the new balance."""</span>
+<span class="gp">    </span>        <span class="n">balance</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;</span> <span class="n">balance</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="s">'Insufficient funds'</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="p">[</span><span class="s">'set'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">,</span> <span class="n">balance</span> <span class="o">-</span> <span class="n">amount</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'balance'</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">make_class</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+</pre></div>
+
+<p>The final call to <tt class="docutils literal">locals</tt> returns a dictionary with string keys that
+contains the name-value bindings in the current local frame.</p>
+<p>The <tt class="docutils literal">Account</tt> class is finally instantiated via assignment.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Account</span> <span class="o">=</span> <span class="n">make_account_class</span><span class="p">()</span>
+</pre></div>
+
+<p>Then, an account instance is created via the <tt class="docutils literal">new</tt> message, which requires a
+name to go with the newly created account.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span> <span class="o">=</span> <span class="n">Account</span><span class="p">[</span><span class="s">'new'</span><span class="p">](</span><span class="s">'Jim'</span><span class="p">)</span>
+</pre></div>
+
+<p>Then, <tt class="docutils literal">get</tt> messages passed to <tt class="docutils literal">jim_acct</tt> retrieve properties and methods.
+Methods can be called to update the balance of the account.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'holder'</span><span class="p">)</span>
+<span class="go">'Jim'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'interest'</span><span class="p">)</span>
+<span class="go">0.02</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'deposit'</span><span class="p">)(</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'withdraw'</span><span class="p">)(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">15</span>
+</pre></div>
+
+<p>As with the Python object system, setting an attribute of an instance does not
+change the corresponding attribute of its class.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">jim_acct</span><span class="p">[</span><span class="s">'set'</span><span class="p">](</span><span class="s">'interest'</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Account</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'interest'</span><span class="p">)</span>
+<span class="go">0.02</span>
+</pre></div>
+
+<p><strong>Inheritance.</strong> We can create a subclass <tt class="docutils literal">CheckingAccount</tt> by overloading a
+subset of the class attributes.  In this case, we change the <tt class="docutils literal">withdraw</tt> method
+to impose a fee, and we reduce the interest rate.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_checking_account_class</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="sd">"""Return the CheckingAccount class, which imposes a $1 withdrawal fee."""</span>
+<span class="gp">    </span>    <span class="n">interest</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="gp">    </span>    <span class="n">withdraw_fee</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">fee</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'withdraw_fee'</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Account</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'withdraw'</span><span class="p">)(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span> <span class="o">+</span> <span class="n">fee</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">make_class</span><span class="p">(</span><span class="nb">locals</span><span class="p">(),</span> <span class="n">Account</span><span class="p">)</span>
+</pre></div>
+
+<p>In this implementation, we call the <tt class="docutils literal">withdraw</tt> function of the base class
+<tt class="docutils literal">Account</tt> from the <tt class="docutils literal">withdraw</tt> function of the subclass, as we would in
+Python's built-in object system.  We can create the subclass itself and an
+instance, as before.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CheckingAccount</span> <span class="o">=</span> <span class="n">make_checking_account_class</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jack_acct</span> <span class="o">=</span> <span class="n">CheckingAccount</span><span class="p">[</span><span class="s">'new'</span><span class="p">](</span><span class="s">'Jack'</span><span class="p">)</span>
+</pre></div>
+
+<p>Deposits behave identically, as does the constructor function.  withdrawals
+impose the $1 fee from the specialized <tt class="docutils literal">withdraw</tt> method, and <tt class="docutils literal">interest</tt> has
+the new lower value from <tt class="docutils literal">CheckingAccount</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">jack_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'interest'</span><span class="p">)</span>
+<span class="go">0.01</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jack_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'deposit'</span><span class="p">)(</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">jack_acct</span><span class="p">[</span><span class="s">'get'</span><span class="p">](</span><span class="s">'withdraw'</span><span class="p">)(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">14</span>
+</pre></div>
+
+<p>Our object system built upon dictionaries is quite similar in implementation
+to the built-in object system in Python.  In Python, an instance of any
+user-defined class has a special attribute <tt class="docutils literal">__dict__</tt> that stores the local
+instance attributes for that object in a dictionary, much like our
+<tt class="docutils literal">attributes</tt> dictionary.  Python differs because it distinguishes certain
+special methods that interact with built-in functions to ensure that those
+functions behave correctly for arguments of many different types.  Functions
+that operate on different types are the subject of the next section.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/27-recursive-data-structures.html">
+  		2.7 Recursive Data Structures
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>2.7 Recursive Data Structures</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 2<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/21-introduction.html">2.1 Introduction</a></h3>
+				<li><a href="../pages/21-introduction.html#the-object-metaphor">2.1.1 The Object Metaphor</a>
+				<li><a href="../pages/21-introduction.html#native-data-types">2.1.2 Native Data Types</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/22-data-abstraction.html">2.2 Data Abstraction</a></h3>
+				<li><a href="../pages/22-data-abstraction.html#example-arithmetic-on-rational-numbers">2.2.1 Example: Arithmetic on Rational Numbers</a>
+				<li><a href="../pages/22-data-abstraction.html#pairs">2.2.2 Pairs</a>
+				<li><a href="../pages/22-data-abstraction.html#abstraction-barriers">2.2.3 Abstraction Barriers</a>
+				<li><a href="../pages/22-data-abstraction.html#the-properties-of-data">2.2.4 The Properties of Data</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/23-sequences.html">2.3 Sequences</a></h3>
+				<li><a href="../pages/23-sequences.html#tuples">2.3.1 Tuples</a>
+				<li><a href="../pages/23-sequences.html#sequence-iteration">2.3.2 Sequence Iteration</a>
+				<li><a href="../pages/23-sequences.html#sequence-abstraction">2.3.3 Sequence Abstraction</a>
+				<li><a href="../pages/23-sequences.html#nested-pairs">2.3.4 Nested Pairs</a>
+				<li><a href="../pages/23-sequences.html#recursive-lists">2.3.5 Recursive Lists</a>
+				<li><a href="../pages/23-sequences.html#strings">2.3.6 Strings</a>
+				<li><a href="../pages/23-sequences.html#sequence-processing">2.3.7 Sequence Processing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/24-mutable-data.html">2.4 Mutable Data</a></h3>
+				<li><a href="../pages/24-mutable-data.html#lists">2.4.1 Lists</a>
+				<li><a href="../pages/24-mutable-data.html#dictionaries">2.4.2 Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#local-state">2.4.3 Local State</a>
+				<li><a href="../pages/24-mutable-data.html#the-benefits-of-non-local-assignment">2.4.4 The Benefits of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#the-cost-of-non-local-assignment">2.4.5 The Cost of Non-Local Assignment</a>
+				<li><a href="../pages/24-mutable-data.html#implementing-lists-and-dictionaries">2.4.6 Implementing Lists and Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#dispatch-dictionaries">2.4.7 Dispatch Dictionaries</a>
+				<li><a href="../pages/24-mutable-data.html#propagating-constraints">2.4.8 Propagating Constraints</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/25-object-oriented-programming.html">2.5 Object-Oriented Programming</a></h3>
+				<li><a href="../pages/25-object-oriented-programming.html#objects-and-classes">2.5.1 Objects and Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#defining-classes">2.5.2 Defining Classes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#message-passing-and-dot-expressions">2.5.3 Message Passing and Dot Expressions</a>
+				<li><a href="../pages/25-object-oriented-programming.html#class-attributes">2.5.4 Class Attributes</a>
+				<li><a href="../pages/25-object-oriented-programming.html#inheritance">2.5.5 Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#using-inheritance">2.5.6 Using Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#multiple-inheritance">2.5.7 Multiple Inheritance</a>
+				<li><a href="../pages/25-object-oriented-programming.html#functions-as-objects">2.5.8 Functions as Objects</a>
+				<li><a href="../pages/25-object-oriented-programming.html#the-role-of-objects">2.5.9 The Role of Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/26-implementing-classes-and-objects.html">2.6 Implementing Classes and Objects</a></h3>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#instances">2.6.1 Instances</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#classes">2.6.2 Classes</a>
+				<li><a href="../pages/26-implementing-classes-and-objects.html#using-implemented-objects">2.6.3 Using Implemented Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/27-recursive-data-structures.html">2.7 Recursive Data Structures</a></h3>
+				<li><a href="../pages/27-recursive-data-structures.html#a-recursive-list-class">2.7.1 A Recursive List Class</a>
+				<li><a href="../pages/27-recursive-data-structures.html#hierarchical-structures">2.7.2 Hierarchical Structures</a>
+				<li><a href="../pages/27-recursive-data-structures.html#memoization">2.7.3 Memoization</a>
+				<li><a href="../pages/27-recursive-data-structures.html#orders-of-growth">2.7.4 Orders of Growth</a>
+				<li><a href="../pages/27-recursive-data-structures.html#example-exponentiation">2.7.5 Example: Exponentiation</a>
+				<li><a href="../pages/27-recursive-data-structures.html#sets">2.7.6 Sets</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/28-generic-operations.html">2.8 Generic Operations</a></h3>
+				<li><a href="../pages/28-generic-operations.html#string-conversion">2.8.1 String Conversion</a>
+				<li><a href="../pages/28-generic-operations.html#multiple-representations">2.8.2 Multiple Representations</a>
+				<li><a href="../pages/28-generic-operations.html#special-methods">2.8.3 Special Methods</a>
+				<li><a href="../pages/28-generic-operations.html#generic-functions">2.8.4 Generic Functions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="recursive-data-structures">
+<h2>2.7   Recursive Data Structures</h2>
+<p>Objects can have other objects as attribute values. When an object of some class
+has an attribute value of that same class, the result is a recursive data
+structure.</p>
+<div class="section" id="a-recursive-list-class">
+<h3>2.7.1   A Recursive List Class</h3>
+<p>A recursive list, introduced earlier in this chapter, is an abstract data type
+composed of a first element and the rest of the list.  The rest of a recursive
+list is itself a recursive list.  The empty list is treated as a special case
+that has no first element or rest.  A recursive list is a sequence: it has a
+finite length and supports element selection by index.</p>
+<p>We can now implement a class with the same behavior. In this version, we will
+define its behavior using special method names that allow our class to work with
+the built-in <tt class="docutils literal">len</tt> function and element selection operator (square brackets or
+<tt class="docutils literal">operator.getitem</tt>) in Python. These built-in functions invoke special method
+names of a class: length is computed by <tt class="docutils literal">__len__</tt> and element selection is
+computed by <tt class="docutils literal">__getitem__</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Rlist</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="sd">"""A recursive list consisting of a first element and the rest."""</span>
+<span class="gp">    </span>    <span class="k">class</span> <span class="nc">EmptyList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="n">empty</span> <span class="o">=</span> <span class="n">EmptyList</span><span class="p">()</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="o">=</span><span class="n">empty</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">first</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">rest</span> <span class="o">=</span> <span class="n">rest</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rest</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">4</span>
+</pre></div>
+
+<p>The definitions of <tt class="docutils literal">__len__</tt> and <tt class="docutils literal">__getitem__</tt> are in fact recursive.  The
+built-in Python function <tt class="docutils literal">len</tt> invokes a method called <tt class="docutils literal">__len__</tt> when
+applied to a user-defined object argument. Likewise, the element selection
+operator invokes a method called <tt class="docutils literal">__getitem__</tt>. Thus, bodies of these two
+methods will call themselves indirectly.</p>
+<p>Our implementation is complete, but an instance of the <tt class="docutils literal">Rlist</tt> class is
+currently difficult to inspect. To help with debugging, we can also define a
+function to convert an <tt class="docutils literal">Rlist</tt> to a string expression.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rlist_expression</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a string that would evaluate to s."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">rest</span> <span class="ow">is</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">rest</span> <span class="o">=</span> <span class="s">''</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">rest</span> <span class="o">=</span> <span class="s">', '</span> <span class="o">+</span> <span class="n">rlist_expression</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="s">'Rlist({0}{1})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">rlist_expression</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">'Rlist(3, Rlist(4, Rlist(5)))'</span>
+</pre></div>
+
+<p>This way of displaying an <tt class="docutils literal">Rlist</tt> is so convenient that we would like to use
+it whenever an <tt class="docutils literal">Rlist</tt> instance is displayed.  We can ensure this behavior by
+setting the <tt class="docutils literal">rlist_expression</tt> function as the value of a special class
+attribute <tt class="docutils literal">__repr__</tt>.  Python displays instances of user-defined classes by
+invoking their <tt class="docutils literal">__repr__</tt> method.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Rlist</span><span class="o">.</span><span class="n">__repr__</span> <span class="o">=</span> <span class="n">rlist_expression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">Rlist(3, Rlist(4, Rlist(5)))</span>
+</pre></div>
+
+<p>Using the <tt class="docutils literal">Rlist</tt> class, we can define some common operations on recursive
+lists.  For example, we can create a new <tt class="docutils literal">Rlist</tt> that contains all elements of
+two input <tt class="docutils literal">Rlists</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">extend_rlist</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return an Rlist with the elements of s1 followed by those of s2."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s1</span> <span class="ow">is</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s2</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Rlist</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">extend_rlist</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">s2</span><span class="p">))</span>
+</pre></div>
+
+<p>Then, for example, we can extend the rest of <tt class="docutils literal">s</tt> with <tt class="docutils literal">s</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">extend_rlist</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+<span class="go">Rlist(4, Rlist(5, Rlist(3, Rlist(4, Rlist(5)))))</span>
+</pre></div>
+
+<p>The implementation for mapping a function over a recursive list has a similar
+structure.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">map_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Rlist</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">),</span> <span class="n">map_rlist</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">fn</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">map_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">square</span><span class="p">)</span>
+<span class="go">Rlist(9, Rlist(16, Rlist(25)))</span>
+</pre></div>
+
+<p>Filtering includes an additional conditional statement, but also has a similar
+recursive structure.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">filter_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">rest</span> <span class="o">=</span> <span class="n">filter_rlist</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">fn</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">):</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">Rlist</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">rest</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">Rlist(3, Rlist(5))</span>
+</pre></div>
+
+<p>Recursive implementations of list operations do not, in general, require local
+assignment or <tt class="docutils literal">while</tt> statements.  Instead, recursive lists can be taken apart
+and constructed incrementally as a consequence of function application.</p>
+</div>
+<div class="section" id="hierarchical-structures">
+<h3>2.7.2   Hierarchical Structures</h3>
+<p>Hierarchical structures result from the closure property of data, which asserts
+for example that tuples can contain other tuples.  For instance, consider this
+nested representation of the numbers 1 through 5.  This tuple is a length-three
+sequence, of which the first two elements are themselves tuples. A tuple that
+contains tuples or other values is a tree.</p>
+<div class="example" data-output="False" data-step="-1" id="example_43" style="">
+t = ((1, 2), (3, 4), 5)
+</div>
+<script type="text/javascript">
+var example_43_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["t"], "heap": {"1": ["TUPLE", ["REF", 2], ["REF", 3], 5], "2": ["TUPLE", 1, 2], "3": ["TUPLE", 3, 4]}, "globals": {"t": ["REF", 1]}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}], "code": "t = ((1, 2), (3, 4), 5)"}</script><p>In a tree, each subtree is itself a tree.  As a base condition, any bare element
+that is not a tuple is itself a simple tree, one with no branches. That is, the
+numbers are all trees, as is the pair <tt class="docutils literal">(1, 2)</tt> and the structure as a whole.</p>
+<p>Recursion is a natural tool for dealing with tree structures, since we can often
+perform operations on trees by performing the same operations on each of their
+branches, and likewise on the branches of the branches until we reach the leaves
+of the tree. As an example, we can implement a <tt class="docutils literal">count_leaves</tt> function, which
+returns the total number of leaves of a tree. Step through this function to see
+how the leaves are counted.</p>
+<div class="example" data-output="False" data-step="2" id="example_44" style="">
+def count_leaves(tree):
+    if type(tree) != tuple:
+        return 1
+    else:
+        return sum(map(count_leaves, tree))
+
+t = ((1, 2), (3, 4), 5)
+result = count_leaves(t)
+</div>
+<script type="text/javascript">
+var example_44_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null]}, "globals": {"count_leaves": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 7, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 1}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f3"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 1}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f3"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 1}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f3"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 1, "tree": 1}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f3"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 2}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f4"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 2}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f4"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 2}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f4"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f2"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 4, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 1, "tree": 2}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f4"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 2, "tree": ["REF", 3]}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f2"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 3}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f6"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 3}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f6"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 3}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f6"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 6, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 1, "tree": 3}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f6"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 4}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f7"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 4}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f7"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 4}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f7"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f5"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 7, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 1, "tree": 4}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f7"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 5, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 2, "tree": ["REF", 4]}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f5"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 8, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 5}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f8"}], "func_name": "count_leaves", "line": 1, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 8, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 5}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f8"}], "func_name": "count_leaves", "line": 2, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 8, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": 5}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f8"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree"], "unique_hash": "count_leaves_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 8, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 1, "tree": 5}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f8"}], "func_name": "count_leaves", "line": 3, "stdout": ""}, {"ordered_globals": ["count_leaves", "t"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_leaves", "is_zombie": false, "encoded_locals": {"__return__": 5, "tree": ["REF", 2]}, "is_parent": false, "ordered_varnames": ["tree", "__return__"], "unique_hash": "count_leaves_f1"}], "func_name": "count_leaves", "line": 5, "stdout": ""}, {"ordered_globals": ["count_leaves", "t", "result"], "heap": {"1": ["FUNCTION", "count_leaves(tree)", null], "2": ["TUPLE", ["REF", 3], ["REF", 4], 5], "3": ["TUPLE", 1, 2], "4": ["TUPLE", 3, 4]}, "globals": {"count_leaves": ["REF", 1], "t": ["REF", 2], "result": 5}, "event": "return", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "def count_leaves(tree):\n    if type(tree) != tuple:\n        return 1\n    else:\n        return sum(map(count_leaves, tree))\n\nt = ((1, 2), (3, 4), 5)\nresult = count_leaves(t)"}</script><p>Just as <tt class="docutils literal">map</tt> is a powerful tool for dealing with sequences, mapping and
+recursion together provide a powerful general form of computation for
+manipulating trees.  For instance, we can square all leaves of a tree using a
+higher-order recursive function <tt class="docutils literal">map_tree</tt> that is structured quite similarly
+to <tt class="docutils literal">count_leaves</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">map_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Map fn over all leaves in tree."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">map_tree</span><span class="p">(</span><span class="n">branch</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">tree</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">map_tree</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">square</span><span class="p">)</span>
+<span class="go">((1, 4), (9, 16), 25)</span>
+</pre></div>
+
+<p><strong>Internal values.</strong> The trees described above have values only at the leaves.
+Another common representation of tree-structured data has values for the
+internal nodes of the tree as well. An internal value is called an <tt class="docutils literal">entry</tt> in
+the tree. The <tt class="docutils literal">Tree</tt> class below represents such trees, in which each tree has
+at most two branches <tt class="docutils literal">left</tt> and <tt class="docutils literal">right</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Tree</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="k">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="k">None</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="s">'Tree({0}, {1}, {2})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="s">'Tree({0})'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="p">)</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">Tree</tt> class can represent, for instance, the values computed in an
+expression tree for the recursive implementation of <tt class="docutils literal">fib</tt>, the function for
+computing Fibonacci numbers. The function <tt class="docutils literal">fib_tree(n)</tt> below returns a
+<tt class="docutils literal">Tree</tt> that has the nth Fibonacci number as its <tt class="docutils literal">entry</tt> and a trace of all
+previously computed Fibonacci numbers within its branches.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fib_tree</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a Tree that represents a recursive Fibonacci calculation."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">left</span> <span class="o">=</span> <span class="n">fib_tree</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="n">right</span> <span class="o">=</span> <span class="n">fib_tree</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">entry</span> <span class="o">+</span> <span class="n">right</span><span class="o">.</span><span class="n">entry</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fib_tree</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">Tree(3, Tree(1, Tree(0), Tree(1)), Tree(2, Tree(1), Tree(1, Tree(0), Tree(1))))</span>
+</pre></div>
+
+<p>Trees represented in this way are also processed using recursive functions. For
+example, we can sum the entries of a tree.  As a base case, we return that an
+empty branch has no entries.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sum_entries</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Sum the entries of a Tree instance, which may be None."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="k">None</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">entry</span> <span class="o">+</span> <span class="n">sum_entries</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="n">sum_entries</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sum_entries</span><span class="p">(</span><span class="n">fib_tree</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="go">10</span>
+</pre></div>
+
+</div>
+<div class="section" id="memoization">
+<h3>2.7.3   Memoization</h3>
+<p>The <tt class="docutils literal">fib_tree</tt> function above can generate very large trees.  For example,
+<tt class="docutils literal">fib_tree(35)</tt> consists of 18,454,929 instances of the <tt class="docutils literal">Tree</tt> class.
+However, many of those trees are identical in structure.  For example, both the
+<tt class="docutils literal">left</tt> tree and the <tt class="docutils literal">right</tt> of the <tt class="docutils literal">right</tt> tree are the result of calling
+<tt class="docutils literal">fib_tree(33)</tt>.  It would save an enormous amount of time and memory to create
+one such subtree and use it multiple times.</p>
+<p>Tree-recursive data structures and computational processes can often be made
+more efficient through <em>memoization</em>, a powerful technique for increasing the
+efficiency of recursive functions that repeat computation. A memoized function
+will store the return value for any arguments it has previously received. A
+second call to <tt class="docutils literal">fib_tree(33)</tt> would not build an entirely new tree, but
+instead return the existing one that has already been constructed.  Within
+the enormous structure computed by <tt class="docutils literal">fib_tree(35)</tt>, there are only 35 unique
+trees (one for each Fibonacci number).</p>
+<p>Memoization can be expressed naturally as a higher-order function, which can
+also be used as a decorator. The definition below creates a <em>cache</em> of
+previously computed results, indexed by the arguments from which they were
+computed. The use of a dictionary requires that the argument to the memoized
+function be ammutable.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">memo</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a memoized version of single-argument function f."""</span>
+<span class="gp">    </span>    <span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">memoized</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">memoized</span>
+</pre></div>
+
+<p>We can apply <tt class="docutils literal">memo</tt> in a recursive computation of Fibonacci numbers.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nd">@memo</span>
+<span class="gp">    </span><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fib</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+<span class="go">5702887</span>
+</pre></div>
+
+<p>We can also apply <tt class="docutils literal">memo</tt> to construct a Fibonacci tree, where repeated
+subtrees are only created once by the memoized version of <tt class="docutils literal">fib_tree</tt>, but are
+used multiple times as branches of different larger trees.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fib_tree</span> <span class="o">=</span> <span class="n">memo</span><span class="p">(</span><span class="n">fib_tree</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">big_fib_tree</span> <span class="o">=</span> <span class="n">fib_tree</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">big_fib_tree</span><span class="o">.</span><span class="n">entry</span>
+<span class="go">5702887</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">big_fib_tree</span><span class="o">.</span><span class="n">left</span> <span class="ow">is</span> <span class="n">big_fib_tree</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">right</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sum_entries</span> <span class="o">=</span> <span class="n">memo</span><span class="p">(</span><span class="n">sum_entries</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sum_entries</span><span class="p">(</span><span class="n">big_fib_tree</span><span class="p">)</span>
+<span class="go">142587180</span>
+</pre></div>
+
+<p>The amount of computation time and memory saved by memoization in these cases is
+substantial. Instead of creating 18,454,929 different instances of the <tt class="docutils literal">Tree</tt>
+class, we now create only 35.</p>
+</div>
+<div class="section" id="orders-of-growth">
+<h3>2.7.4   Orders of Growth</h3>
+<p>The previous examples illustrate that processes can differ considerably in the
+rates at which they consume the computational resources of space and time. For
+some functions, we can exactly predict the number of steps in the computational
+process evolved by those functions. For example, consider the function
+<tt class="docutils literal">count_factors</tt> below that counts the number of integers that evenly divide
+an input <tt class="docutils literal">n</tt>, by attempting to divide it by every integer less than or equal
+to its square root. The implementation takes advantage of the fact that if
+<span class="rawlatex">$k$</span> divides <span class="rawlatex">$n$</span> and <span class="rawlatex">$k &lt; \sqrt{n}$</span> , then there is another
+factor <span class="rawlatex">$j = n / k$</span> such that <span class="rawlatex">$j &gt; \sqrt{n}$</span>.</p>
+<div class="example" data-output="False" data-step="-1" id="example_45" style="">
+from math import sqrt
+def count_factors(n):
+    sqrt_n = sqrt(n)
+    k, factors = 1, 0
+    while k &lt; sqrt_n:
+        if n % k == 0:
+            factors += 2
+        k += 1
+    if k * k == n:
+        factors += 1
+    return factors
+
+result = count_factors(576)
+</div>
+<script type="text/javascript">
+var example_45_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["sqrt"], "heap": {"1": ["FUNCTION", "sqrt(...)", null]}, "globals": {"sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 2, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 13, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 2, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 3, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"]}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 4, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 1, "factors": 0}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 1, "factors": 0}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 1, "factors": 0}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 1, "factors": 2}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 2, "factors": 2}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 2, "factors": 2}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 2, "factors": 2}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 2, "factors": 4}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 3, "factors": 4}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 3, "factors": 4}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 3, "factors": 4}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 3, "factors": 6}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 4, "factors": 6}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 4, "factors": 6}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 4, "factors": 6}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 4, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 5, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 5, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 5, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 6, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 6, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 6, "factors": 8}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 6, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 7, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 7, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 7, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 8, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 8, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 8, "factors": 10}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 8, "factors": 12}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 9, "factors": 12}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 9, "factors": 12}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 9, "factors": 12}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 9, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 10, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 10, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 10, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 11, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 11, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 11, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 12, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 12, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 12, "factors": 14}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 12, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 13, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 13, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 13, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 14, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 14, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 14, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 15, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 15, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 15, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 16, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 16, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 16, "factors": 16}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 16, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 17, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 17, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 17, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 18, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 18, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 18, "factors": 18}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 7, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 18, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 19, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 19, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 19, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 20, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 20, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 20, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 21, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 21, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 21, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 22, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 22, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 22, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 23, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 23, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 6, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 23, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 8, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 24, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 5, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 24, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 9, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 24, "factors": 20}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 10, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "k": 24, "factors": 21}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 11, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "sqrt": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": false, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "__return__": 21, "k": 24, "factors": 21}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors", "__return__"], "unique_hash": "count_factors_f1"}], "func_name": "count_factors", "line": 11, "stdout": ""}, {"ordered_globals": ["sqrt", "count_factors", "result"], "heap": {"1": ["FUNCTION", "sqrt(...)", null], "2": ["FUNCTION", "count_factors(n)", null]}, "globals": {"count_factors": ["REF", 2], "result": 21, "sqrt": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "count_factors", "is_zombie": true, "encoded_locals": {"n": 576, "sqrt_n": ["SPECIAL_FLOAT", "24.0"], "__return__": 21, "k": 24, "factors": 21}, "is_parent": false, "ordered_varnames": ["n", "sqrt_n", "k", "factors", "__return__"], "unique_hash": "count_factors_f1_z"}], "func_name": "<module>", "line": 13, "stdout": ""}], "code": "from math import sqrt\ndef count_factors(n):\n    sqrt_n = sqrt(n)\n    k, factors = 1, 0\n    while k < sqrt_n:\n        if n % k == 0:\n            factors += 2\n        k += 1\n    if k * k == n:\n        factors += 1\n    return factors\n\nresult = count_factors(576)"}</script><p>The total number of times this process executes the body of the <tt class="docutils literal">while</tt>
+statement is the greatest integer less than <span class="rawlatex">$\sqrt{n}$</span>. Hence, we can say
+that the amount of time used by this function, typically denoted <span class="rawlatex">$R(n)$</span>,
+scales with the square root of the input, which we write as <span class="rawlatex">$R(n) = \sqrt{n}$</span>.</p>
+<p>For most functions, we cannot exactly determine the number of steps or
+iterations they will require.  One convenient way to describe this difference
+is to use the notion of <em>order of growth</em> to obtain a coarse measure of the
+resources required by a process as the inputs become larger.</p>
+<p>Let <span class="rawlatex">$n$</span> be a parameter that measures the size of the problem to be
+solved, and let <span class="rawlatex">$R(n)$</span> be the amount of resources the process requires
+for a problem of size <span class="rawlatex">$n$</span>. In our previous examples we took <span class="rawlatex">$n$</span> to
+be the number for which a given function is to be computed, but there are other
+possibilities. For instance, if our goal is to compute an approximation to the
+square root of a number, we might take <span class="rawlatex">$n$</span> to be the number of digits of
+accuracy required.  In general there are a number of properties of the problem
+with respect to which it will be desirable to analyze a given process.
+Similarly, <span class="rawlatex">$R(n)$</span> might measure the amount of memory used, the number of
+elementary machine operations performed, and so on. In computers that do only a
+fixed number of operations at a time, the time required to evaluate an
+expression will be proportional to the number of elementary machine operations
+performed in the process of evaluation.</p>
+<p>We say that <span class="rawlatex">$R(n)$</span> has order of growth <span class="rawlatex">$\Theta(f(n))$</span>, written
+<span class="rawlatex">$R(n) = \Theta(f(n))$</span> (pronounced "theta of <span class="rawlatex">$f(n)$</span>"), if there are
+positive constants <span class="rawlatex">$k_1$</span> and <span class="rawlatex">$k_2$</span> independent of <span class="rawlatex">$n$</span> such
+that</p>
+\begin{equation*}
+k_1 \cdot f(n) \leq R(n) \leq k_2 \cdot f(n)
+\end{equation*}<p>for any sufficiently large value of <span class="rawlatex">$n$</span>. In other words, for large
+<span class="rawlatex">$n$</span>, the value <span class="rawlatex">$R(n)$</span> is sandwiched between two values that both
+scale with <span class="rawlatex">$f(n)$</span>:</p>
+<ul class="simple">
+<li>A lower bound <span class="rawlatex">$k_1 \cdot f(n)$</span> and</li>
+<li>An upper bound <span class="rawlatex">$k_2 \cdot f(n)$</span></li>
+</ul>
+<p>For instance, the number of steps to compute <span class="rawlatex">$n!$</span> grows proportionally to
+the input <span class="rawlatex">$n$</span>. Thus, the steps required for this process grows as
+<span class="rawlatex">$\Theta(n)$</span>.  We also saw that the space required for the recursive
+implementation <tt class="docutils literal">fact</tt> grows as <span class="rawlatex">$\Theta(n)$</span>. By contrast, the iterative
+implementation <tt class="docutils literal">fact_iter</tt> takes a similar number of steps, but the space it
+requires stays constant.  In this case, we say that the space grows as
+<span class="rawlatex">$\Theta(1)$</span>.</p>
+<p>The number of steps in our tree-recursive Fibonacci computation <tt class="docutils literal">fib</tt> grows
+exponentially in its input <span class="rawlatex">$n$</span>. In particular, one can show that
+the nth Fibonacci number is the closest integer to</p>
+\begin{equation*}
+\frac{\phi^{n-2}}{\sqrt{5}}
+\end{equation*}<p>where <span class="rawlatex">$\phi$</span> is the golden ratio:</p>
+\begin{equation*}
+\phi = \frac{1 + \sqrt{5}}{2} \approx 1.6180
+\end{equation*}<p>We also stated that the number of steps scales with the resulting value, and so
+the tree-recursive process requires <span class="rawlatex">$\Theta(\phi^n)$</span> steps, a function
+that grows exponentially with <span class="rawlatex">$n$</span>.</p>
+<p>Orders of growth provide only a crude description of the behavior of a process.
+For example, a process requiring <span class="rawlatex">$n^2$</span> steps and a process requiring
+<span class="rawlatex">$1000 \cdot n^2$</span> steps and a process requiring <span class="rawlatex">$3 \cdot
+n^2 + 10 \cdot n + 17$</span> steps all have <span class="rawlatex">$\Theta(n^2)$</span> order of
+growth. There are certainly cases in which an order of growth analysis is too
+coarse a method for deciding between two possible implementations of a function.</p>
+<p>However, order of growth provides a useful indication of how we may expect the
+behavior of the process to change as we change the size of the problem. For a
+<span class="rawlatex">$\Theta(n)$</span> (linear) process, doubling the size will roughly double
+the amount of resources used. For an exponential process, each increment in
+problem size will multiply the resource utilization by a constant factor.
+The next example examines an algorithm whose order of growth is logarithmic,
+so that doubling the problem size increases the resource requirement by only
+a constant amount.</p>
+<p><strong>Space.</strong> To understand the space requirements of a function, we must specify
+generally how memory is used, preserved, and reclaimed in our environment model
+of computation. In evaluating an expression, we must preserve all <em>active</em>
+environments and all values and frames referenced by those environments.  An
+environment is active if it provides the evaluation context for some expression
+being evaluated.</p>
+<p>For example, when evaluating <tt class="docutils literal">fib</tt>, the interpreter proceeds to compute each
+value in the order shown previously, traversing the structure of the tree.  To
+do so, it only needs to keep track of those nodes that are above the current node in
+the tree at any point in the computation. The memory used to evaluate the rest
+of the branches can be reclaimed because it cannot affect future computation.
+In general, the space required for tree-recursive functions will be
+proportional to the maximum depth of the tree.</p>
+<p>The diagram below depicts the environment created by evaluating <tt class="docutils literal">fib(3)</tt>.  In
+the process of evaluating the return expression for the initial application of
+<tt class="docutils literal">fib</tt>, the expression <tt class="docutils literal"><span class="pre">fib(n-2)</span></tt> is evaluated, yielding a value of 0.
+Once this value is computed, the corresponding environment frame (grayed out)
+is no longer needed: it is not part of an active environment. Thus, a
+well-designed interpreter can reclaim the memory that was used to store this
+frame. On the other hand, if the interpreter is currently
+evaluating <tt class="docutils literal"><span class="pre">fib(n-1)</span></tt>, then the environment created by this application of
+<tt class="docutils literal">fib</tt> (in which <tt class="docutils literal">n</tt> is 2) is active. In turn, the environment
+originally created to apply <tt class="docutils literal">fib</tt> to 3 is active because its return value
+has not yet been computed.</p>
+<div class="example" data-output="False" data-step="8" id="example_46" style="">
+def fib(n):
+    if n == 1:
+        return 0
+    if n == 2:
+        return 1
+    return fib(n-2) + fib(n-1)
+
+result = fib(3)
+</div>
+<script type="text/javascript">
+var example_46_trace = {"trace": [{"ordered_globals": [], "heap": {}, "globals": {}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [], "func_name": "<module>", "line": 8, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 2, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 4, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 1}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f2"}], "func_name": "fib", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 1}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f2"}], "func_name": "fib", "line": 2, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 1}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f2"}], "func_name": "fib", "line": 3, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2"}], "func_name": "fib", "line": 3, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "call", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 2}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f3"}], "func_name": "fib", "line": 1, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 2}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f3"}], "func_name": "fib", "line": 2, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 2}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f3"}], "func_name": "fib", "line": 4, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "step_line", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 2}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f3"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3}, "is_parent": false, "ordered_varnames": ["n"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 2, "__return__": 1}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f3"}], "func_name": "fib", "line": 5, "stdout": ""}, {"ordered_globals": ["fib"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"fib": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": true, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": false, "encoded_locals": {"n": 3, "__return__": 1}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f1"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 2, "__return__": 1}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f3_z"}], "func_name": "fib", "line": 6, "stdout": ""}, {"ordered_globals": ["fib", "result"], "heap": {"1": ["FUNCTION", "fib(n)", null]}, "globals": {"result": 1, "fib": ["REF", 1]}, "event": "return", "stack_to_render": [{"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 1, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 3, "__return__": 1}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f1_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 2, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 1, "__return__": 0}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f2_z"}, {"is_highlighted": false, "parent_frame_id_list": [], "frame_id": 3, "func_name": "fib", "is_zombie": true, "encoded_locals": {"n": 2, "__return__": 1}, "is_parent": false, "ordered_varnames": ["n", "__return__"], "unique_hash": "fib_f3_z"}], "func_name": "<module>", "line": 8, "stdout": ""}], "code": "def fib(n):\n    if n == 1:\n        return 0\n    if n == 2:\n        return 1\n    return fib(n-2) + fib(n-1)\n\nresult = fib(3)"}</script><p>In the case of <tt class="docutils literal">memo</tt>, the environment associated with the function it
+returns (which contains <tt class="docutils literal">cache</tt>) must be preserved as long as some name is
+bound to that function in an active environment. The number of entries in the
+<tt class="docutils literal">cache</tt> dictionary grows linearly with the number of unique arguments passed
+to <tt class="docutils literal">fib</tt>, which scales linearly with the input. On the other hand, the
+iterative implementation requires only two numbers to be tracked during
+computation: <tt class="docutils literal">prev</tt> and <tt class="docutils literal">curr</tt>, giving it a constant size.</p>
+<p>Memoization exemplifies a common pattern in programming that computation
+time can often be decreased at the expense of increased use of space, or vis
+versa.</p>
+</div>
+<div class="section" id="example-exponentiation">
+<h3>2.7.5   Example: Exponentiation</h3>
+<p>Consider the problem of computing the exponential of a given number. We would
+like a function that takes as arguments a base <tt class="docutils literal">b</tt> and a positive integer
+exponent <tt class="docutils literal">n</tt> and computes <span class="rawlatex">$b^n$</span>. One way to do this is via the
+recursive definition</p>
+\begin{align*}
+b^n &amp;= b \cdot b^{n-1} \\
+b^0 &amp;= 1
+\end{align*}<p>which translates readily into the recursive function</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">b</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<p>This is a linear recursive process that requires <span class="rawlatex">$\Theta(n)$</span> steps
+and <span class="rawlatex">$\Theta(n)$</span> space. Just as with factorial, we can
+readily formulate an equivalent linear iteration that requires a similar number
+of steps but constant space.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp_iter</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">*</span> <span class="n">b</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+<p>We can compute exponentials in fewer steps by using successive squaring. For
+instance, rather than computing <span class="rawlatex">$b^8$</span> as</p>
+\begin{equation*}
+b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot b))))))
+\end{equation*}<p>we can compute it using three multiplications:</p>
+\begin{align*}
+b^2 &amp;= b \cdot b \\
+b^4 &amp;= b^2 \cdot b^2 \\
+b^8 &amp;= b^4 \cdot b^4
+\end{align*}<p>This method works fine for exponents that are powers of 2. We can also take
+advantage of successive squaring in computing exponentials in general if we use
+the recursive rule</p>
+\begin{equation*}
+b^n = \begin{cases} (b^{\frac{1}{2} n})^2 &amp; \text{if $n$ is even} \\
+                    b \cdot b^{n-1}     &amp; \text{if $n$ is odd}
+                    \end{cases}
+\end{equation*}<p>We can express this method as a recursive function as well:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fast_exp</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="mi">1</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">square</span><span class="p">(</span><span class="n">fast_exp</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">b</span> <span class="o">*</span> <span class="n">fast_exp</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fast_exp</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">1267650600228229401496703205376</span>
+</pre></div>
+
+<p>The process evolved by <tt class="docutils literal">fast_exp</tt> grows logarithmically with <tt class="docutils literal">n</tt> in both
+space and number of steps. To see this, observe that computing
+<span class="rawlatex">$b^{2n}$</span>
+using <tt class="docutils literal">fast_exp</tt> requires only one more multiplication than computing
+<span class="rawlatex">$b^n$</span>. The size of the exponent we can compute therefore doubles
+(approximately) with every new multiplication we are allowed. Thus, the number
+of multiplications required for an exponent of <tt class="docutils literal">n</tt> grows about as fast as the
+logarithm of <tt class="docutils literal">n</tt> base 2. The process has <span class="rawlatex">$\Theta(\log n)$</span> growth.
+The difference between
+<span class="rawlatex">$\Theta(\log n)$</span> growth and <span class="rawlatex">$\Theta(n)$</span>
+growth becomes striking as
+<span class="rawlatex">$n$</span> becomes large. For example, <tt class="docutils literal">fast_exp</tt>
+for <tt class="docutils literal">n</tt> of 1000 requires only 14 multiplications instead of 1000.</p>
+</div>
+<div class="section" id="sets">
+<h3>2.7.6   Sets</h3>
+<p>In addition to the list, tuple, and dictionary, Python has a fourth built-in
+container type called a <tt class="docutils literal">set</tt>. Set literals follow the mathematical notation
+of elements enclosed in braces.  Duplicate elements are removed upon
+construction.  Sets are unordered collections, and so the printed ordering may
+differ from the element ordering in the set literal.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">{1, 2, 3, 4}</span>
+</pre></div>
+
+<p>Python sets support a variety of operations, including membership tests, length
+computation, and the standard set operations of union and intersection</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span> <span class="ow">in</span> <span class="n">s</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">union</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span>
+<span class="go">{1, 2, 3, 4, 5}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">{3, 4}</span>
+</pre></div>
+
+<p>In addition to <tt class="docutils literal">union</tt> and <tt class="docutils literal">intersection</tt>, Python sets support several
+other methods. The predicates <tt class="docutils literal">isdisjoint</tt>, <tt class="docutils literal">issubset</tt>, and <tt class="docutils literal">issuperset</tt>
+provide set comparison.  Sets are mutable, and can be changed one element at a
+time using <tt class="docutils literal">add</tt>, <tt class="docutils literal">remove</tt>, <tt class="docutils literal">discard</tt>, and <tt class="docutils literal">pop</tt>.  Additional methods
+provide multi-element mutations, such as <tt class="docutils literal">clear</tt> and <tt class="docutils literal">update</tt>. The Python
+<a class="reference external" href="http://docs.python.org/py3k/library/stdtypes.html#set">documentation for sets</a> should be
+sufficiently intelligible at this point of the course to fill in the details.</p>
+<p><strong>Implementing sets.</strong> Abstractly, a set is a collection of distinct objects
+that supports membership testing, union, intersection, and adjunction.
+Adjoining an element and a set returns a new set that contains all of the
+original set's elements along with the new element, if it is distinct. Union
+and intersection return the set of elements that appear in either or both sets,
+respectively. As with any data abstraction, we are free to implement any
+functions over any representation of sets that provides this collection of
+behaviors.</p>
+<p>In the remainder of this section, we consider three different methods of
+implementing sets that vary in their representation. We will characterize the
+efficiency of these different representations by analyzing the order of growth
+of set operations.  We will use our <tt class="docutils literal">Rlist</tt> and <tt class="docutils literal">Tree</tt> classes from earlier
+in this section, which allow for simple and elegant recursive solutions for
+elementary set operations.</p>
+<p><strong>Sets as unordered sequences.</strong> One way to represent a set is as a sequence in
+which no element appears more than once.  The empty set is represented by the
+empty sequence. Membership testing walks recursively through the list.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return True if and only if set s contains v."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">empty</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">False</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">first</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">Rlist</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+
+<p>This implementation of <tt class="docutils literal">set_contains</tt> requires <span class="rawlatex">$\Theta(n)$</span> time to test
+membership of an element, where <span class="rawlatex">$n$</span> is the size of the set <tt class="docutils literal">s</tt>. Using
+this linear-time function for membership, we can adjoin an element to a set,
+also in linear time.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">adjoin_set</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a set containing all elements of s and element v."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Rlist</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">adjoin_set</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span>
+<span class="go">Rlist(2, Rlist(3, Rlist(4, Rlist(5))))</span>
+</pre></div>
+
+<p>In designing a representation, one of the issues with which we should be
+concerned is efficiency.  Intersecting two sets <tt class="docutils literal">set1</tt> and <tt class="docutils literal">set2</tt> also
+requires membership testing, but this time each element of <tt class="docutils literal">set1</tt> must be
+tested for membership in <tt class="docutils literal">set2</tt>, leading to a quadratic order of growth in
+the number of steps, <span class="rawlatex">$\Theta(n^2)$</span>, for two sets of size <span class="rawlatex">$n$</span>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">intersect_set</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="n">set2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a set containing all elements common to set1 and set2."""</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">filter_rlist</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">set2</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">intersect_set</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">map_rlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">square</span><span class="p">))</span>
+<span class="go">Rlist(4)</span>
+</pre></div>
+
+<p>When computing the union of two sets, we must be careful not to include any
+element twice.  The <tt class="docutils literal">union_set</tt> function also requires a linear number of
+membership tests, creating a process that also includes <span class="rawlatex">$\Theta(n^2)$</span>
+steps.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">union_set</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="n">set2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Return a set containing all elements either in set1 or set2."""</span>
+<span class="gp">    </span>    <span class="n">set1_not_set2</span> <span class="o">=</span> <span class="n">filter_rlist</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="ow">not</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">set2</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">extend_rlist</span><span class="p">(</span><span class="n">set1_not_set2</span><span class="p">,</span> <span class="n">set2</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">union_set</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+<span class="go">Rlist(2, Rlist(3, Rlist(4, Rlist(5))))</span>
+</pre></div>
+
+<p><strong>Sets as ordered tuples.</strong> One way to speed up our set operations is to change
+the representation so that the set elements are listed in increasing order. To
+do this, we need some way to compare two objects so that we can say which is
+bigger. In Python, many different types of objects can be compared using <tt class="docutils literal">&lt;</tt>
+and <tt class="docutils literal">&gt;</tt> operators, but we will concentrate on numbers in this example. We will
+represent a set of numbers by listing its elements in increasing order.</p>
+<p>One advantage of ordering shows up in <tt class="docutils literal">set_contains</tt>: In checking for the
+presence of an object, we no longer have to scan the entire set. If we reach a
+set element that is larger than the item we are looking for, then we know that
+the item is not in the set:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">empty</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">first</span> <span class="o">&gt;</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">False</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">first</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+
+<p>How many steps does this save? In the worst case, the item we are looking for
+may be the largest one in the set, so the number of steps is the same as for
+the unordered representation. On the other hand, if we search for items of many
+different sizes we can expect that sometimes we will be able to stop searching
+at a point near the beginning of the list and that other times we will still
+need to examine most of the list. On average we should expect to have to
+examine about half of the items in the set. Thus, the average number of steps
+required will be about <span class="rawlatex">$\frac{n}{2}$</span>. This is still <span class="rawlatex">$\Theta(n)$</span>
+growth, but it does save us, on average, a factor of 2 in the number of
+steps over the previous implementation.</p>
+<p>We can obtain a more impressive speedup by re-implementing <tt class="docutils literal">intersect_set</tt>.
+In the unordered representation, this operation required <span class="rawlatex">$\Theta(n^2)$</span>
+steps because we performed a complete scan of <tt class="docutils literal">set2</tt> for each element of
+<tt class="docutils literal">set1</tt>. But with the ordered representation, we can use a more clever method.
+We iterate through both sets simultaneously, tracking an element <tt class="docutils literal">e1</tt> in
+<tt class="docutils literal">set1</tt> and <tt class="docutils literal">e2</tt> in <tt class="docutils literal">set2</tt>.  When <tt class="docutils literal">e1</tt> and <tt class="docutils literal">e2</tt> are equal, we include
+that element in the intersection.</p>
+<p>Suppose, however, that <tt class="docutils literal">e1</tt> is less than <tt class="docutils literal">e2</tt>. Since <tt class="docutils literal">e2</tt> is smaller than
+the remaining elements of <tt class="docutils literal">set2</tt>, we can immediately conclude that <tt class="docutils literal">e1</tt>
+cannot appear anywhere in the remainder of <tt class="docutils literal">set2</tt> and hence is not in the
+intersection. Thus, we no longer need to consider <tt class="docutils literal">e1</tt>; we discard it and
+proceed to the next element of <tt class="docutils literal">set1</tt>.  Similar logic advances through the
+elements of <tt class="docutils literal">set2</tt> when <tt class="docutils literal">e2 &lt; e1</tt>. Here is the function:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">intersect_set</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="n">set2</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">empty</span><span class="p">(</span><span class="n">set1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">empty</span><span class="p">(</span><span class="n">set2</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Rlist</span><span class="o">.</span><span class="n">empty</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">set1</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">set2</span><span class="o">.</span><span class="n">first</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="n">e1</span> <span class="o">==</span> <span class="n">e2</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">Rlist</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">intersect_set</span><span class="p">(</span><span class="n">set1</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">set2</span><span class="o">.</span><span class="n">rest</span><span class="p">))</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="n">e1</span> <span class="o">&lt;</span> <span class="n">e2</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">intersect_set</span><span class="p">(</span><span class="n">set1</span><span class="o">.</span><span class="n">rest</span><span class="p">,</span> <span class="n">set2</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="n">e2</span> <span class="o">&lt;</span> <span class="n">e1</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">intersect_set</span><span class="p">(</span><span class="n">set1</span><span class="p">,</span> <span class="n">set2</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">intersect_set</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">rest</span><span class="p">)</span>
+<span class="go">Rlist(2, Rlist(3))</span>
+</pre></div>
+
+<p>To estimate the number of steps required by this process, observe that in each
+step we shrink the size of at least one of the sets. Thus, the number of steps
+required is at most the sum of the sizes of <tt class="docutils literal">set1</tt> and <tt class="docutils literal">set2</tt>, rather than
+the product of the sizes, as with the unordered representation. This is
+<span class="rawlatex">$\Theta(n)$</span> growth rather than <span class="rawlatex">$\Theta(n^2)$</span> -- a considerable
+speedup, even for sets of moderate size. For example, the intersection of two
+sets of size 100 will take around 200 steps, rather than 10,000 for
+the unordered representation.</p>
+<p>Adjunction and union for sets represented as ordered sequences can also be
+computed in linear time.  These implementations are left as an exercise.</p>
+<p><strong>Sets as binary trees.</strong> We can do better than the ordered-list representation
+by arranging the set elements in the form of a tree. We use the <tt class="docutils literal">Tree</tt> class
+introduced previously. The <tt class="docutils literal">entry</tt> of the root of the tree holds one element
+of the set. The entries within the <tt class="docutils literal">left</tt> branch include all elements smaller
+than the one at the root. Entries in the <tt class="docutils literal">right</tt> branch include all elements
+greater than the one at the root. The figure below shows some trees that
+represent the set <tt class="docutils literal">{1, 3, 5, 7, 9, 11}</tt>. The same set may be represented by a
+tree in a number of different ways. The only thing we require for a valid
+representation is that all elements in the <tt class="docutils literal">left</tt> subtree be smaller than the
+tree <tt class="docutils literal">entry</tt> and that all elements in the <tt class="docutils literal">right</tt> subtree be larger.</p>
+<div class="figure">
+<img alt="" src="../img/set_trees.png"/>
+</div>
+<p>The advantage of the tree representation is this: Suppose we want to check
+whether a value <tt class="docutils literal">v</tt> is contained in a set. We begin by comparing <tt class="docutils literal">v</tt> with
+<tt class="docutils literal">entry</tt>. If <tt class="docutils literal">v</tt> is less than this, we know that we need only search the
+<tt class="docutils literal">left</tt> subtree; if <tt class="docutils literal">v</tt> is greater, we need only search the <tt class="docutils literal">right</tt>
+subtree. Now, if the tree is "balanced," each of these subtrees will be about
+half the size of the original. Thus, in one step we have reduced the problem of
+searching a tree of size <span class="rawlatex">$n$</span> to searching a tree of size
+<span class="rawlatex">$\frac{n}{2}$</span>. Since the size of the tree is halved at each step, we
+should expect that the number of steps needed to search a tree grows as
+<cite>Theta(log n)</cite>. For large sets, this will be a significant speedup over the
+previous representations.  This <tt class="docutils literal">set_contains</tt> function exploits the ordering
+structure of the tree-structured set.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">set_contains</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="k">None</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">False</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">&gt;</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">set_contains</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+
+<p>Adjoining an item to a set is implemented similarly and also requires
+<span class="rawlatex">$\Theta(\log n)$</span> steps. To adjoin a value <tt class="docutils literal">v</tt>, we compare <tt class="docutils literal">v</tt> with
+<tt class="docutils literal">entry</tt> to determine whether <tt class="docutils literal">v</tt> should be added to the <tt class="docutils literal">right</tt> or to the
+<tt class="docutils literal">left</tt> branch, and having adjoined <tt class="docutils literal">v</tt> to the appropriate branch we piece
+this newly constructed branch together with the original <tt class="docutils literal">entry</tt> and the
+other branch.  If <tt class="docutils literal">v</tt> is equal to the <tt class="docutils literal">entry</tt>, we just return the node. If
+we are asked to adjoin <tt class="docutils literal">v</tt> to an empty tree, we generate a <tt class="docutils literal">Tree</tt> that has
+<tt class="docutils literal">v</tt> as the <tt class="docutils literal">entry</tt> and empty <tt class="docutils literal">right</tt> and <tt class="docutils literal">left</tt> branches. Here is the
+function:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">adjoin_set</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="k">None</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">s</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">entry</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">adjoin_set</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">entry</span> <span class="o">&gt;</span> <span class="n">v</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Tree</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">entry</span><span class="p">,</span> <span class="n">adjoin_set</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="n">s</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adjoin_set</span><span class="p">(</span><span class="n">adjoin_set</span><span class="p">(</span><span class="n">adjoin_set</span><span class="p">(</span><span class="k">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">Tree(2, Tree(1), Tree(3))</span>
+</pre></div>
+
+<p>Our claim that searching the tree can be performed in a logarithmic number
+of steps rests on the assumption that the tree is "balanced," i.e., that the
+left and the right subtree of every tree have approximately the same number of
+elements, so that each subtree contains about half the elements of its parent.
+But how can we be certain that the trees we construct will be balanced? Even if
+we start with a balanced tree, adding elements with <tt class="docutils literal">adjoin_set</tt> may produce
+an unbalanced result. Since the position of a newly adjoined element depends on
+how the element compares with the items already in the set, we can expect that
+if we add elements "randomly" the tree will tend to be balanced on the average.</p>
+<p>But this is not a guarantee. For example, if we start with an empty set and
+adjoin the numbers 1 through 7 in sequence we end up with a highly unbalanced
+tree in which all the left subtrees are empty, so it has no advantage over a
+simple ordered list. One way to solve this problem is to define an operation
+that transforms an arbitrary tree into a balanced tree with the same elements.
+We can perform this transformation after every few <tt class="docutils literal">adjoin_set</tt> operations to
+keep our set in balance.</p>
+<p>Intersection and union operations can be performed on tree-structured sets
+in linear time by converting them to ordered lists and back. The details are
+left as an exercise.</p>
+<p><strong>Python set implementation.</strong> The <tt class="docutils literal">set</tt> type that is built into Python does
+not use any of these representations internally.  Instead, Python uses a
+representation that gives constant-time membership tests and adjoin operations
+based on a technique called <em>hashing</em>, which is a topic for another course.
+Built-in Python sets cannot contain mutable data types, such as lists,
+dictionaries, or other sets.  To allow for nested sets, Python also includes a
+built-in immutable <tt class="docutils literal">frozenset</tt> class that shares methods with the <tt class="docutils literal">set</tt>
+class but excludes mutation methods and operators.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/28-generic-operations.html">
+  		2.8 Generic Operations
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

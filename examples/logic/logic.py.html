@@ -1,0 +1,179 @@
+<html>
+<head>
+<title>logic.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>logic.py (<a href="logic.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""This module implements a declarative Logic language using Scheme syntax.
+
+Logic is a variant of the Prolog language, based on scmlog by Paul Hilfinger
+and the logic programming example in SICP.
+
+All valid logic expressions are Scheme lists.  Valid forms include:
+
+(fact ...):  Assert a consequent, followed by zero or more hypotheses
+(query ...): Query zero or more relations simultaneously
+(load PATH): Load a .logic file by evaluating its expressions
+"""
+
+</span><span style="color: blue; font-weight: bold">from </span>scheme <span style="color: blue; font-weight: bold">import </span>Frame
+<span style="color: blue; font-weight: bold">from </span>scheme_reader <span style="color: blue; font-weight: bold">import </span>Pair<span style="font-weight: bold">, </span>nil<span style="font-weight: bold">, </span>read_line
+<span style="color: blue; font-weight: bold">from </span>scheme_primitives <span style="color: blue; font-weight: bold">import </span><span style="font-weight: bold">*
+</span><span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main<span style="font-weight: bold">, </span>trace
+
+<span style="color: blue; font-weight: bold">import </span>scheme
+<span style="color: blue; font-weight: bold">import </span>scheme_reader
+<span style="color: blue; font-weight: bold">import </span>scheme_test
+
+facts <span style="font-weight: bold">= []
+
+</span><span style="color: green; font-style: italic">#############
+# Inference #
+#############
+
+</span><span style="color: blue; font-weight: bold">def </span>do_query<span style="font-weight: bold">(</span>clauses<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Yield all bindings that simultaneously satisfy clauses."""
+    </span><span style="color: blue; font-weight: bold">for </span>env <span style="color: blue; font-weight: bold">in </span>search<span style="font-weight: bold">(</span>clauses<span style="font-weight: bold">, </span>Frame<span style="font-weight: bold">(</span><span style="color: blue">None</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">yield </span><span style="font-weight: bold">[(</span>v<span style="font-weight: bold">, </span>ground<span style="font-weight: bold">(</span>v<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)) </span><span style="color: blue; font-weight: bold">for </span>v <span style="color: blue; font-weight: bold">in </span>get_vars<span style="font-weight: bold">(</span>clauses<span style="font-weight: bold">)]
+
+</span>DEPTH_LIMIT <span style="font-weight: bold">= </span><span style="color: red">20
+</span><span style="color: blue; font-weight: bold">def </span>search<span style="font-weight: bold">(</span>clauses<span style="font-weight: bold">, </span>env<span style="font-weight: bold">, </span>depth<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Search for an application of rules to establish all the clauses,
+    non-destructively extending the unifier env.  Limit the search to
+    the nested application of depth rules."""
+    </span><span style="color: blue; font-weight: bold">if </span>clauses <span style="color: blue; font-weight: bold">is </span>nil<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">yield </span>env
+    <span style="color: blue; font-weight: bold">elif </span>DEPTH_LIMIT <span style="color: blue; font-weight: bold">is </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">or </span>depth <span style="font-weight: bold">&lt;= </span>DEPTH_LIMIT<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">for </span>fact <span style="color: blue; font-weight: bold">in </span>facts<span style="font-weight: bold">:
+            </span>fact <span style="font-weight: bold">= </span>rename_variables<span style="font-weight: bold">(</span>fact<span style="font-weight: bold">, </span>get_unique_id<span style="font-weight: bold">())
+            </span>env_head <span style="font-weight: bold">= </span>Frame<span style="font-weight: bold">(</span>env<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span>unify<span style="font-weight: bold">(</span>fact<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>clauses<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>env_head<span style="font-weight: bold">):
+                </span><span style="color: blue; font-weight: bold">for </span>env_rule <span style="color: blue; font-weight: bold">in </span>search<span style="font-weight: bold">(</span>fact<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>env_head<span style="font-weight: bold">, </span>depth<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">):
+                    </span><span style="color: blue; font-weight: bold">for </span>result <span style="color: blue; font-weight: bold">in </span>search<span style="font-weight: bold">(</span>clauses<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>env_rule<span style="font-weight: bold">, </span>depth<span style="font-weight: bold">+</span><span style="color: red">1</span><span style="font-weight: bold">):
+                        </span><span style="color: blue; font-weight: bold">yield </span>result
+
+<span style="color: blue; font-weight: bold">def </span>unify<span style="font-weight: bold">(</span>e<span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span>env<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Destructively extend env so as to unify (make equal) e and f, returning
+    True if this succeeds and False otherwise.  env may be modified in either
+    case (its existing bindings are never changed)."""
+    </span>e <span style="font-weight: bold">= </span>lookup<span style="font-weight: bold">(</span>e<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+    </span>f <span style="font-weight: bold">= </span>lookup<span style="font-weight: bold">(</span>f<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>e <span style="font-weight: bold">== </span>f<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>isvar<span style="font-weight: bold">(</span>e<span style="font-weight: bold">):
+        </span>env<span style="font-weight: bold">.</span>define<span style="font-weight: bold">(</span>e<span style="font-weight: bold">, </span>f<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>isvar<span style="font-weight: bold">(</span>f<span style="font-weight: bold">):
+        </span>env<span style="font-weight: bold">.</span>define<span style="font-weight: bold">(</span>f<span style="font-weight: bold">, </span>e<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return True
+    elif </span>scheme_atomp<span style="font-weight: bold">(</span>e<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">or </span>scheme_atomp<span style="font-weight: bold">(</span>f<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return False
+    else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>unify<span style="font-weight: bold">(</span>e<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>f<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>env<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>unify<span style="font-weight: bold">(</span>e<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>f<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+
+</span><span style="color: green; font-style: italic">################
+# Environments #
+################
+
+</span><span style="color: blue; font-weight: bold">def </span>lookup<span style="font-weight: bold">(</span>sym<span style="font-weight: bold">, </span>env<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Look up a symbol repeatedly until it is fully resolved."""
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>lookup<span style="font-weight: bold">(</span>env<span style="font-weight: bold">.</span>lookup<span style="font-weight: bold">(</span>sym<span style="font-weight: bold">), </span>env<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">except</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>sym
+
+<span style="color: blue; font-weight: bold">def </span>ground<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">, </span>env<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Replace all variables with their values in expr."""
+    </span><span style="color: blue; font-weight: bold">if </span>scheme_symbolp<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span>resolved <span style="font-weight: bold">= </span>lookup<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>expr <span style="font-weight: bold">!= </span>resolved<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>ground<span style="font-weight: bold">(</span>resolved<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>expr
+    <span style="color: blue; font-weight: bold">elif </span>scheme_pairp<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>Pair<span style="font-weight: bold">(</span>ground<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>env<span style="font-weight: bold">), </span>ground<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>env<span style="font-weight: bold">))
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>expr
+
+<span style="color: blue; font-weight: bold">def </span>get_vars<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return all logical vars in expr as a list."""
+    </span><span style="color: blue; font-weight: bold">if </span>isvar<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>expr<span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">elif </span>scheme_pairp<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span>vs <span style="font-weight: bold">= </span>get_vars<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">for </span>v <span style="color: blue; font-weight: bold">in </span>get_vars<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">if </span>v <span style="color: blue; font-weight: bold">not in </span>vs<span style="font-weight: bold">:
+                </span>vs<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>v<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>vs
+    <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[]
+
+</span>IDENTIFIER <span style="font-weight: bold">= </span><span style="color: red">0
+</span><span style="color: blue; font-weight: bold">def </span>get_unique_id<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Return a unique identifier."""
+    </span><span style="color: blue; font-weight: bold">global </span>IDENTIFIER
+    IDENTIFIER <span style="font-weight: bold">+= </span><span style="color: red">1
+    </span><span style="color: blue; font-weight: bold">return </span>IDENTIFIER
+
+<span style="color: blue; font-weight: bold">def </span>rename_variables<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">, </span>n<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Rename all variables in expr with an identifier N."""
+    </span><span style="color: blue; font-weight: bold">if </span>isvar<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>expr <span style="font-weight: bold">+ </span><span style="color: red">'_' </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>n<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>scheme_pairp<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>Pair<span style="font-weight: bold">(</span>rename_variables<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>n<span style="font-weight: bold">),
+                    </span>rename_variables<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>n<span style="font-weight: bold">))
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>expr
+
+<span style="color: blue; font-weight: bold">def </span>isvar<span style="font-weight: bold">(</span>symbol<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return whether symbol is a logical variable."""
+    </span><span style="color: blue; font-weight: bold">return </span>scheme_symbolp<span style="font-weight: bold">(</span>symbol<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>symbol<span style="font-weight: bold">.</span>startswith<span style="font-weight: bold">(</span><span style="color: red">"?"</span><span style="font-weight: bold">)
+
+</span><span style="color: green; font-style: italic">##################
+# User Interface #
+##################
+
+</span><span style="color: blue; font-weight: bold">def </span>process_input<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">, </span>env<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Process an input expr, which may be a fact or query."""
+    </span><span style="color: blue; font-weight: bold">if </span>expr <span style="font-weight: bold">== </span><span style="color: red">'exit'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"Goodbye"</span><span style="font-weight: bold">)
+        </span>sys<span style="font-weight: bold">.</span>exit<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">if not </span>scheme_listp<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Improperly formed expression.'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>expr<span style="font-weight: bold">.</span>first <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span><span style="color: red">"fact"</span><span style="font-weight: bold">, </span><span style="color: red">"!"</span><span style="font-weight: bold">):
+        </span>facts<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>expr<span style="font-weight: bold">.</span>first <span style="color: blue; font-weight: bold">in </span><span style="font-weight: bold">(</span><span style="color: red">"query"</span><span style="font-weight: bold">, </span><span style="color: red">"?"</span><span style="font-weight: bold">):
+        </span>results <span style="font-weight: bold">= </span>do_query<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">)
+        </span>success <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+        for </span>result <span style="color: blue; font-weight: bold">in </span>results<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">if not </span>success<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Success!'</span><span style="font-weight: bold">)
+            </span>success <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+            </span>output <span style="font-weight: bold">= </span><span style="color: red">"\t"</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span><span style="color: red">"{0}: {1}"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>k<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">:], </span>v<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>k<span style="font-weight: bold">, </span>v <span style="color: blue; font-weight: bold">in </span>result<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span>output<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>output<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if not </span>success<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Failed.'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">elif </span>expr<span style="font-weight: bold">.</span>first <span style="font-weight: bold">== </span><span style="color: red">"load"</span><span style="font-weight: bold">:
+        </span>scheme<span style="font-weight: bold">.</span>scheme_load<span style="font-weight: bold">(</span>expr<span style="font-weight: bold">.</span>second<span style="font-weight: bold">.</span>first<span style="font-weight: bold">, </span>env<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"Please provide a fact or query."</span><span style="font-weight: bold">)
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>argv<span style="font-weight: bold">):
+    </span>scheme_reader<span style="font-weight: bold">.</span>buffer_input<span style="font-weight: bold">.</span>__defaults__ <span style="font-weight: bold">= (</span><span style="color: red">'logic&gt; '</span><span style="font-weight: bold">,)
+    </span>scheme_reader<span style="font-weight: bold">.</span>buffer_lines<span style="font-weight: bold">.</span>__defaults__ <span style="font-weight: bold">= (</span><span style="color: red">'logic&gt; '</span><span style="font-weight: bold">, </span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">)
+    </span>scheme<span style="font-weight: bold">.</span>scheme_eval <span style="font-weight: bold">= </span>process_input
+    <span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>argv<span style="font-weight: bold">) == </span><span style="color: red">2 </span><span style="color: blue; font-weight: bold">and </span>argv<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">] == </span><span style="color: red">'-t'</span><span style="font-weight: bold">:
+        </span>scheme_test<span style="font-weight: bold">.</span>run_tests<span style="font-weight: bold">(</span>argv<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">])
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span>scheme<span style="font-weight: bold">.</span>run<span style="font-weight: bold">(*</span>argv<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

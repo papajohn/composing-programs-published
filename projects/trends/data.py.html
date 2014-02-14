@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>data.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>data.py (<a href="data.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Functions for reading data from the sentiment dictionary and tweet files."""
+
+</span><span style="color: blue; font-weight: bold">import </span>os
+<span style="color: blue; font-weight: bold">import </span>re
+<span style="color: blue; font-weight: bold">import </span>string
+<span style="color: blue; font-weight: bold">import </span>sys
+<span style="color: blue; font-weight: bold">from </span>datetime <span style="color: blue; font-weight: bold">import </span>datetime
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main<span style="font-weight: bold">, </span>interact
+
+<span style="color: green; font-style: italic"># Look for data directory
+</span>PY_PATH <span style="font-weight: bold">= </span>sys<span style="font-weight: bold">.</span>argv<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+</span><span style="color: blue; font-weight: bold">if </span>PY_PATH<span style="font-weight: bold">.</span>endswith<span style="font-weight: bold">(</span><span style="color: red">'doctest.py'</span><span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">and </span>len<span style="font-weight: bold">(</span>sys<span style="font-weight: bold">.</span>argv<span style="font-weight: bold">) &gt; </span><span style="color: red">1</span><span style="font-weight: bold">:
+    </span>PY_PATH <span style="font-weight: bold">= </span>sys<span style="font-weight: bold">.</span>argv<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]
+</span>DATA_PATH <span style="font-weight: bold">= </span>os<span style="font-weight: bold">.</span>path<span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>os<span style="font-weight: bold">.</span>path<span style="font-weight: bold">.</span>dirname<span style="font-weight: bold">(</span>PY_PATH<span style="font-weight: bold">), </span><span style="color: red">'data'</span><span style="font-weight: bold">) + </span>os<span style="font-weight: bold">.</span>sep
+<span style="color: blue; font-weight: bold">if not </span>os<span style="font-weight: bold">.</span>path<span style="font-weight: bold">.</span>exists<span style="font-weight: bold">(</span>DATA_PATH<span style="font-weight: bold">):
+    </span>DATA_PATH <span style="font-weight: bold">= </span><span style="color: red">'data' </span><span style="font-weight: bold">+ </span>os<span style="font-weight: bold">.</span>sep
+
+<span style="color: blue; font-weight: bold">def </span>load_sentiments<span style="font-weight: bold">(</span>file_name<span style="font-weight: bold">=</span>DATA_PATH <span style="font-weight: bold">+ </span><span style="color: red">"sentiments.csv"</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Read the sentiment file and return a dictionary containing the sentiment
+    score of each word, a value from -1 to +1.
+    """
+    </span>sentiments <span style="font-weight: bold">= {}
+    </span><span style="color: blue; font-weight: bold">for </span>line <span style="color: blue; font-weight: bold">in </span>open<span style="font-weight: bold">(</span>file_name<span style="font-weight: bold">, </span>encoding<span style="font-weight: bold">=</span><span style="color: red">'utf8'</span><span style="font-weight: bold">):
+        </span>word<span style="font-weight: bold">, </span>score <span style="font-weight: bold">= </span>line<span style="font-weight: bold">.</span>split<span style="font-weight: bold">(</span><span style="color: red">','</span><span style="font-weight: bold">)
+        </span>sentiments<span style="font-weight: bold">[</span>word<span style="font-weight: bold">] = </span>float<span style="font-weight: bold">(</span>score<span style="font-weight: bold">.</span>strip<span style="font-weight: bold">())
+    </span><span style="color: blue; font-weight: bold">return </span>sentiments
+
+word_sentiments <span style="font-weight: bold">= </span>load_sentiments<span style="font-weight: bold">()
+
+</span><span style="color: blue; font-weight: bold">def </span>file_name_for_term<span style="font-weight: bold">(</span>term<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a valid filename that corresponds to an arbitrary term string."""
+    </span>valid_characters <span style="font-weight: bold">= </span><span style="color: red">'-_' </span><span style="font-weight: bold">+ </span>string<span style="font-weight: bold">.</span>ascii_letters <span style="font-weight: bold">+ </span>string<span style="font-weight: bold">.</span>digits
+    no_space <span style="font-weight: bold">= </span>term<span style="font-weight: bold">.</span>replace<span style="font-weight: bold">(</span><span style="color: red">' '</span><span style="font-weight: bold">, </span><span style="color: red">'_'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">''</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">(</span>c <span style="color: blue; font-weight: bold">for </span>c <span style="color: blue; font-weight: bold">in </span>no_space <span style="color: blue; font-weight: bold">if </span>c <span style="color: blue; font-weight: bold">in </span>valid_characters<span style="font-weight: bold">) + </span><span style="color: red">'.txt'
+
+</span><span style="color: blue; font-weight: bold">def </span>generate_filtered_file<span style="font-weight: bold">(</span>unfiltered_name<span style="font-weight: bold">, </span>term<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the path to a file containing tweets that match term, generating
+    that file if necessary.
+    """
+    </span>filtered_path <span style="font-weight: bold">= </span>DATA_PATH <span style="font-weight: bold">+ </span>file_name_for_term<span style="font-weight: bold">(</span>term<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if not </span>os<span style="font-weight: bold">.</span>path<span style="font-weight: bold">.</span>exists<span style="font-weight: bold">(</span>filtered_path<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Generating filtered tweets file for "{0}".'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>term<span style="font-weight: bold">))
+        </span>r <span style="font-weight: bold">= </span>re<span style="font-weight: bold">.</span>compile<span style="font-weight: bold">(</span><span style="color: red">'\W' </span><span style="font-weight: bold">+ </span>term <span style="font-weight: bold">+ </span><span style="color: red">'\W'</span><span style="font-weight: bold">, </span>flags<span style="font-weight: bold">=</span>re<span style="font-weight: bold">.</span>IGNORECASE<span style="font-weight: bold">)
+        </span>with open<span style="font-weight: bold">(</span>filtered_path<span style="font-weight: bold">, </span>mode<span style="font-weight: bold">=</span><span style="color: red">'w'</span><span style="font-weight: bold">, </span>encoding<span style="font-weight: bold">=</span><span style="color: red">'utf8'</span><span style="font-weight: bold">) </span>as out<span style="font-weight: bold">:
+            </span>unfiltered <span style="font-weight: bold">= </span>open<span style="font-weight: bold">(</span>DATA_PATH <span style="font-weight: bold">+ </span>unfiltered_name<span style="font-weight: bold">, </span>encoding<span style="font-weight: bold">=</span><span style="color: red">'utf8'</span><span style="font-weight: bold">)
+            </span>matches <span style="font-weight: bold">= [</span>l <span style="color: blue; font-weight: bold">for </span>l <span style="color: blue; font-weight: bold">in </span>unfiltered <span style="color: blue; font-weight: bold">if </span>term <span style="color: blue; font-weight: bold">in </span>l<span style="font-weight: bold">.</span>lower<span style="font-weight: bold">()]
+            </span><span style="color: blue; font-weight: bold">for </span>line <span style="color: blue; font-weight: bold">in </span>matches<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">if </span>r<span style="font-weight: bold">.</span>search<span style="font-weight: bold">(</span>line<span style="font-weight: bold">):
+                    </span>out<span style="font-weight: bold">.</span>write<span style="font-weight: bold">(</span>line<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>filtered_path
+
+<span style="color: blue; font-weight: bold">def </span>load_tweets<span style="font-weight: bold">(</span>make_tweet<span style="font-weight: bold">, </span>term<span style="font-weight: bold">=</span><span style="color: red">'my job'</span><span style="font-weight: bold">, </span>file_name<span style="font-weight: bold">=</span><span style="color: red">'all_tweets.txt'</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the list of tweets in file_name that contain term.
+
+    make_tweet -- a constructor that takes four arguments:
+      - a string containing the words in the tweet
+      - a datetime.datetime object representing the time of the tweet
+      - a longitude coordinate
+      - a latitude coordinate
+    """
+    </span>term <span style="font-weight: bold">= </span>term<span style="font-weight: bold">.</span>lower<span style="font-weight: bold">()
+    </span>filtered_path <span style="font-weight: bold">= </span>generate_filtered_file<span style="font-weight: bold">(</span>file_name<span style="font-weight: bold">, </span>term<span style="font-weight: bold">)
+    </span>tweets <span style="font-weight: bold">= []
+    </span><span style="color: blue; font-weight: bold">for </span>line <span style="color: blue; font-weight: bold">in </span>open<span style="font-weight: bold">(</span>filtered_path<span style="font-weight: bold">, </span>encoding<span style="font-weight: bold">=</span><span style="color: red">'utf8'</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>len<span style="font-weight: bold">(</span>line<span style="font-weight: bold">.</span>strip<span style="font-weight: bold">().</span>split<span style="font-weight: bold">(</span><span style="color: red">"\t"</span><span style="font-weight: bold">)) &gt;=</span><span style="color: red">4</span><span style="font-weight: bold">:
+            </span>loc<span style="font-weight: bold">, </span>_<span style="font-weight: bold">, </span>time_text<span style="font-weight: bold">, </span>text <span style="font-weight: bold">= </span>line<span style="font-weight: bold">.</span>strip<span style="font-weight: bold">().</span>split<span style="font-weight: bold">(</span><span style="color: red">"\t"</span><span style="font-weight: bold">)
+            </span>time <span style="font-weight: bold">= </span>datetime<span style="font-weight: bold">.</span>strptime<span style="font-weight: bold">(</span>time_text<span style="font-weight: bold">, </span><span style="color: red">'%Y-%m-%d %H:%M:%S'</span><span style="font-weight: bold">)
+            </span>lat<span style="font-weight: bold">, </span>lon <span style="font-weight: bold">= </span>eval<span style="font-weight: bold">(</span>loc<span style="font-weight: bold">)
+            </span>tweet <span style="font-weight: bold">= </span>make_tweet<span style="font-weight: bold">(</span>text<span style="font-weight: bold">.</span>lower<span style="font-weight: bold">(), </span>time<span style="font-weight: bold">, </span>lat<span style="font-weight: bold">, </span>lon<span style="font-weight: bold">)
+            </span>tweets<span style="font-weight: bold">.</span>append<span style="font-weight: bold">(</span>tweet<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>tweets
+
+</pre>
+</body>
+</html>

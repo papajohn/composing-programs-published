@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>dice.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>dice.py (<a href="dice.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Functions that simulate dice rolls.
+
+A dice function takes no arguments and returns a number from 1 to n
+(inclusive), where n is the number of sides on the dice.
+
+Types of dice:
+
+ -  Dice can be fair, meaning that they produce each possible outcome with equal
+    probability.
+
+ -  For testing functions that use dice, we use deterministic dice that always
+    cycle among a fixed set of values when rolled.
+"""
+
+</span><span style="color: blue; font-weight: bold">from </span>random <span style="color: blue; font-weight: bold">import </span>randint
+
+<span style="color: blue; font-weight: bold">def </span>make_fair_dice<span style="font-weight: bold">(</span>sides<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a die that returns 1 to SIDES with equal chance."""
+    </span><span style="color: blue; font-weight: bold">assert </span>type<span style="font-weight: bold">(</span>sides<span style="font-weight: bold">) == </span>int <span style="color: blue; font-weight: bold">and </span>sides <span style="font-weight: bold">&gt;= </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Illegal value for sides'
+    </span><span style="color: blue; font-weight: bold">def </span>dice<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">return </span>randint<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">,</span>sides<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>dice
+
+four_sided <span style="font-weight: bold">= </span>make_fair_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">)
+</span>six_sided <span style="font-weight: bold">= </span>make_fair_dice<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>make_test_dice<span style="font-weight: bold">(*</span>outcomes<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a die that cycles deterministically through OUTCOMES.
+
+    This function uses Python syntax/techniques not yet covered in this course.
+
+    &gt;&gt;&gt; dice = make_test_dice(1, 2, 3)
+    &gt;&gt;&gt; dice()
+    1
+    &gt;&gt;&gt; dice()
+    2
+    &gt;&gt;&gt; dice()
+    3
+    &gt;&gt;&gt; dice()
+    1
+    &gt;&gt;&gt; dice()
+    2
+    """
+    </span><span style="color: blue; font-weight: bold">assert </span>len<span style="font-weight: bold">(</span>outcomes<span style="font-weight: bold">) &gt; </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">'You must supply outcomes to make_test_dice'
+    </span><span style="color: blue; font-weight: bold">for </span>o <span style="color: blue; font-weight: bold">in </span>outcomes<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">assert </span>type<span style="font-weight: bold">(</span>o<span style="font-weight: bold">) == </span>int <span style="color: blue; font-weight: bold">and </span>o <span style="font-weight: bold">&gt;= </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Outcome is not a positive integer'
+    </span>index <span style="font-weight: bold">= </span>len<span style="font-weight: bold">(</span>outcomes<span style="font-weight: bold">) - </span><span style="color: red">1
+    </span><span style="color: blue; font-weight: bold">def </span>dice<span style="font-weight: bold">():
+        </span>nonlocal index
+        index <span style="font-weight: bold">= (</span>index <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">) % </span>len<span style="font-weight: bold">(</span>outcomes<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>outcomes<span style="font-weight: bold">[</span>index<span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">return </span>dice
+
+</pre>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>4.1 Introduction</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 4<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/41-introduction.html">4.1 Introduction</a></h3>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/42-implicit-sequences.html">4.2 Implicit Sequences</a></h3>
+				<li><a href="../pages/42-implicit-sequences.html#python-iterators">4.2.1 Python Iterators</a>
+				<li><a href="../pages/42-implicit-sequences.html#iterables">4.2.2 Iterables</a>
+				<li><a href="../pages/42-implicit-sequences.html#for-statements">4.2.3 For Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#generators-and-yield-statements">4.2.4 Generators and Yield Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#creating-iterables-with-yield">4.2.5 Creating Iterables with Yield</a>
+				<li><a href="../pages/42-implicit-sequences.html#streams">4.2.6 Streams</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/43-declarative-programming.html">4.3 Declarative Programming</a></h3>
+				<li><a href="../pages/43-declarative-programming.html#facts-and-queries">4.3.1 Facts and Queries</a>
+				<li><a href="../pages/43-declarative-programming.html#recursive-facts">4.3.2 Recursive Facts</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/44-unification.html">4.4 Unification</a></h3>
+				<li><a href="../pages/44-unification.html#pattern-matching">4.4.1 Pattern Matching</a>
+				<li><a href="../pages/44-unification.html#representing-facts-and-queries">4.4.2 Representing Facts and Queries</a>
+				<li><a href="../pages/44-unification.html#the-unification-algorithm">4.4.3 The Unification Algorithm</a>
+				<li><a href="../pages/44-unification.html#proofs">4.4.4 Proofs</a>
+				<li><a href="../pages/44-unification.html#search">4.4.5 Search</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/45-distributed-computing.html">4.5 Distributed Computing</a></h3>
+				<li><a href="../pages/45-distributed-computing.html#messages">4.5.1 Messages</a>
+				<li><a href="../pages/45-distributed-computing.html#client-server-architecture">4.5.2 Client/Server Architecture</a>
+				<li><a href="../pages/45-distributed-computing.html#peer-to-peer-systems">4.5.3 Peer-to-Peer Systems</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/46-distributed-data-processing.html">4.6 Distributed Data Processing</a></h3>
+				<li><a href="../pages/46-distributed-data-processing.html#id1">4.6.1 MapReduce</a>
+				<li><a href="../pages/46-distributed-data-processing.html#local-implementation">4.6.2 Local Implementation</a>
+				<li><a href="../pages/46-distributed-data-processing.html#distributed-implementation">4.6.3 Distributed Implementation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/47-parallel-computing.html">4.7 Parallel Computing</a></h3>
+				<li><a href="../pages/47-parallel-computing.html#parallelism-in-python">4.7.1 Parallelism in Python</a>
+				<li><a href="../pages/47-parallel-computing.html#the-problem-with-shared-state">4.7.2 The Problem with Shared State</a>
+				<li><a href="../pages/47-parallel-computing.html#when-no-synchronization-is-necessary">4.7.3 When No Synchronization is Necessary</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronized-data-structures">4.7.4 Synchronized Data Structures</a>
+				<li><a href="../pages/47-parallel-computing.html#locks">4.7.5 Locks</a>
+				<li><a href="../pages/47-parallel-computing.html#barriers">4.7.6 Barriers</a>
+				<li><a href="../pages/47-parallel-computing.html#message-passing">4.7.7 Message Passing</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronization-pitfalls">4.7.8 Synchronization Pitfalls</a>
+				<li><a href="../pages/47-parallel-computing.html#conclusion">4.7.9 Conclusion</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+	<h1>Chapter 4: Data Processing</h1>
+  <div class="section" id="introduction">
+<h2>4.1   Introduction</h2>
+<p>Modern computers can process vast amounts of data representing many aspects of
+the world.  From these big data sets, we can learn about human behavior in
+unprecedented ways: how language is used, what photos are taken, what topics are
+discussed, and how people engage with their surroundings.  To process large data
+sets efficiently, programs are organized into pipelines of manipulations on
+sequential <em>streams</em> of data. In this chapter, we consider a suite of techniques
+process and manipulate sequential data streams.</p>
+<p>In Chapter 2, we introduced a sequence interface, implemented in Python by
+built-in data types such as <tt class="docutils literal">tuple</tt> and <tt class="docutils literal">list</tt>. In this chapter, we extend
+the concept of sequential data to include collections that have unbounded or
+even infinite size. Two mathematical examples of infinite sequences are the
+positive integers and the Fibonacci numbers. Sequential data sets of unbounded
+length also appear in other computational domains. For instance, the sequence of
+all emails ever written grows longer with every second and therefore does not
+have a fixed length.  Likewise, the sequence of telephone calls sent through a
+cell tower, the sequence of mouse movements made by a computer user, and the
+sequence of acceleration measurements from sensors on an aircraft all extend
+without bound as the world evolves.</p>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/42-implicit-sequences.html">
+  		4.2 Implicit Sequences
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

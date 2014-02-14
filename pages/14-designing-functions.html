@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>1.4 Designing Functions</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 1<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/11-getting-started.html">1.1 Getting Started</a></h3>
+				<li><a href="../pages/11-getting-started.html#programming-in-python">1.1.1 Programming in Python</a>
+				<li><a href="../pages/11-getting-started.html#installing-python-3">1.1.2 Installing Python 3</a>
+				<li><a href="../pages/11-getting-started.html#interactive-sessions">1.1.3 Interactive Sessions</a>
+				<li><a href="../pages/11-getting-started.html#first-example">1.1.4 First Example</a>
+				<li><a href="../pages/11-getting-started.html#errors">1.1.5 Errors</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/12-elements-of-programming.html">1.2 Elements of Programming</a></h3>
+				<li><a href="../pages/12-elements-of-programming.html#expressions">1.2.1 Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#call-expressions">1.2.2 Call Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#importing-library-functions">1.2.3 Importing Library Functions</a>
+				<li><a href="../pages/12-elements-of-programming.html#names-and-the-environment">1.2.4 Names and the Environment</a>
+				<li><a href="../pages/12-elements-of-programming.html#evaluating-nested-expressions">1.2.5 Evaluating Nested Expressions</a>
+				<li><a href="../pages/12-elements-of-programming.html#the-non-pure-print-function">1.2.6 The Non-Pure Print Function</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/13-defining-new-functions.html">1.3 Defining New Functions</a></h3>
+				<li><a href="../pages/13-defining-new-functions.html#environments">1.3.1 Environments</a>
+				<li><a href="../pages/13-defining-new-functions.html#calling-user-defined-functions">1.3.2 Calling User-Defined Functions</a>
+				<li><a href="../pages/13-defining-new-functions.html#example-calling-a-user-defined-function">1.3.3 Example: Calling a User-Defined Function</a>
+				<li><a href="../pages/13-defining-new-functions.html#local-names">1.3.4 Local Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#choosing-names">1.3.5 Choosing Names</a>
+				<li><a href="../pages/13-defining-new-functions.html#functions-as-abstractions">1.3.6 Functions as Abstractions</a>
+				<li><a href="../pages/13-defining-new-functions.html#operators">1.3.7 Operators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/14-designing-functions.html">1.4 Designing Functions</a></h3>
+				<li><a href="../pages/14-designing-functions.html#documentation">1.4.1 Documentation</a>
+				<li><a href="../pages/14-designing-functions.html#default-argument-values">1.4.2 Default Argument Values</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/15-control.html">1.5 Control</a></h3>
+				<li><a href="../pages/15-control.html#statements">1.5.1 Statements</a>
+				<li><a href="../pages/15-control.html#compound-statements">1.5.2 Compound Statements</a>
+				<li><a href="../pages/15-control.html#defining-functions-ii-local-assignment">1.5.3 Defining Functions II: Local Assignment</a>
+				<li><a href="../pages/15-control.html#conditional-statements">1.5.4 Conditional Statements</a>
+				<li><a href="../pages/15-control.html#iteration">1.5.5 Iteration</a>
+				<li><a href="../pages/15-control.html#testing">1.5.6 Testing</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/16-higher-order-functions.html">1.6 Higher-Order Functions</a></h3>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-arguments">1.6.1 Functions as Arguments</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-general-methods">1.6.2 Functions as General Methods</a>
+				<li><a href="../pages/16-higher-order-functions.html#defining-functions-iii-nested-definitions">1.6.3 Defining Functions III: Nested Definitions</a>
+				<li><a href="../pages/16-higher-order-functions.html#functions-as-returned-values">1.6.4 Functions as Returned Values</a>
+				<li><a href="../pages/16-higher-order-functions.html#example-newton-s-method">1.6.5 Example: Newton's Method</a>
+				<li><a href="../pages/16-higher-order-functions.html#currying">1.6.6 Currying</a>
+				<li><a href="../pages/16-higher-order-functions.html#lambda-expressions">1.6.7 Lambda Expressions</a>
+				<li><a href="../pages/16-higher-order-functions.html#abstractions-and-first-class-functions">1.6.8 Abstractions and First-Class Functions</a>
+				<li><a href="../pages/16-higher-order-functions.html#function-decorators">1.6.9 Function Decorators</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/17-recursive-functions.html">1.7 Recursive Functions</a></h3>
+				<li><a href="../pages/17-recursive-functions.html#the-anatomy-of-recursive-functions">1.7.1 The Anatomy of Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#mutual-recursion">1.7.2 Mutual Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#printing-in-recursive-functions">1.7.3 Printing in Recursive Functions</a>
+				<li><a href="../pages/17-recursive-functions.html#tree-recursion">1.7.4 Tree Recursion</a>
+				<li><a href="../pages/17-recursive-functions.html#example-partitions">1.7.5 Example: Partitions</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="designing-functions">
+<h2>1.4   Designing Functions</h2>
+<p>Functions are an essential ingredient of all programs, large and small, and
+serve as our primary medium to express computational processes in a programming
+language. So far, we have discussed the formal properties of functions and how
+they are applied. We now turn to the topic of what makes a good function.
+Fundamentally, the qualities of good functions all reinforce the idea that
+functions are abstractions.</p>
+<ul class="simple">
+<li>Each function should have exactly one job. That job should be identifiable
+with a short name and characterizable in a single line of text. Functions
+that perform multiple jobs in sequence should be divided into multiple
+functions.</li>
+<li><em>Don't repeat yourself</em> is a central tenet of software engineering. The
+so-called DRY principle states that multiple fragments of code should not
+describe redundant logic. Instead, that logic should be implemented once,
+given a name, and applied multiple times. If you find yourself copying and
+pasting a block of code, you have probably found an opportunity for functional
+abstraction.</li>
+<li>Functions should be defined generally. Squaring is not in the Python Library
+precisely because it is a special case of the <tt class="docutils literal">pow</tt> function, which raises
+numbers to arbitrary powers.</li>
+</ul>
+<p>These guidelines improve the readability of code, reduce the number of errors,
+and often minimize the total amount of code written. Decomposing a complex task
+into concise functions is a skill that takes experience to master. Fortunately,
+Python provides several features to support your efforts.</p>
+<div class="section" id="documentation">
+<h3>1.4.1   Documentation</h3>
+<p>A function definition will often include documentation describing the function,
+called a <em>docstring</em>, which must be indented along with the function body.
+Docstrings are conventionally triple quoted. The first line describes the job
+of the function in one line. The following lines can describe arguments and
+clarify the behavior of the function:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; def pressure(v, t, n):
+        """Compute the pressure in pascals of an ideal gas.
+
+        Applies the ideal gas law: http://en.wikipedia.org/wiki/Ideal_gas_law
+
+        v -- volume of gas, in cubic meters
+        t -- absolute temperature in degrees kelvin
+        n -- particles of gas
+        """
+        k = 1.38e-23  # Boltzmann's constant
+        return n * k * t / v
+</pre>
+<p>When you call <tt class="docutils literal">help</tt> with the name of a function as an argument, you see its
+docstring (type <tt class="docutils literal">q</tt> to quit Python help).</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span>
+</pre></div>
+
+<p>When writing Python programs, include docstrings for all but the simplest
+functions. Remember, code is written only once, but often read many times. The
+Python docs include <a class="reference external" href="http://www.python.org/dev/peps/pep-0257/">docstring guidelines</a> that maintain consistency across
+different Python projects.</p>
+<p><strong>Comments</strong>. Comments in Python can be attached to the end of a line following
+the <tt class="docutils literal">#</tt> symbol.  For example, the comment <tt class="docutils literal">Boltzmann's constant</tt> above
+describes <tt class="docutils literal">k</tt>.  These comments don't ever appear in Python's <tt class="docutils literal">help</tt>, and
+they are ignored by the interpreter.  They exist for humans alone.</p>
+</div>
+<div class="section" id="default-argument-values">
+<h3>1.4.2   Default Argument Values</h3>
+<p>A consequence of defining general functions is the introduction of additional
+arguments. Functions with many arguments can be awkward to call and difficult to
+read.</p>
+<p>In Python, we can provide default values for the arguments of a function. When
+calling that function, arguments with default values are optional. If they are
+not provided, then the default value is bound to the formal parameter name
+instead. For instance, if an application commonly computes pressure for one mole
+of particles, this value can be provided as a default:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; def pressure(v, t, n=6.022e23):
+        """Compute the pressure in pascals of an ideal gas.
+
+        v -- volume of gas, in cubic meters
+        t -- absolute temperature in degrees kelvin
+        n -- particles of gas (default: one mole)
+        """
+        k = 1.38e-23  # Boltzmann's constant
+        return n * k * t / v
+</pre>
+<p>The <tt class="docutils literal">=</tt> symbol means two different things in this example, depending on the
+context in which it is used.    In the <tt class="docutils literal">def</tt> statement header, <tt class="docutils literal">=</tt> does not
+perform assignment, but instead indicates a default value to use when the
+<tt class="docutils literal">pressure</tt> function is called. By contrast, the assignment statement to <tt class="docutils literal">k</tt>
+in the body of the function binds the name <tt class="docutils literal">k</tt> to an approximation of
+Boltzmann's constant.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pressure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">273.15</span><span class="p">)</span>
+<span class="go">2269.974834</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pressure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">273.15</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="mf">6.022e23</span><span class="p">)</span>
+<span class="go">6809.924502</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">pressure</tt> function is defined to take three arguments, but only two are
+provided in the first call expression above.  In this case, the value for <tt class="docutils literal">n</tt>
+is taken from the <tt class="docutils literal">def</tt> statement default. If a third argument is provided,
+the default is ignored.</p>
+<p>As a guideline, most data values used in a function's body should be expressed
+as default values to named arguments, so that they are easy to inspect and can
+be changed by the function caller.  Some values that never change, such as the
+fundamental constant <tt class="docutils literal">k</tt>, can be bound in the function body or in the global
+frame.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/15-control.html">
+  		1.5 Control
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

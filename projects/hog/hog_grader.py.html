@@ -1,0 +1,191 @@
+<html>
+<head>
+<title>hog_grader.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>hog_grader.py (<a href="hog_grader.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""Automatic grading script for the Hog project.
+
+Expects the following files in the current directory:
+
+hog.py
+dice.py
+ucb.py
+autograder.py
+
+This file uses features of Python not yet covered in the course.
+"""
+
+</span>__version__ <span style="font-weight: bold">= </span><span style="color: red">'2'
+
+</span><span style="color: blue; font-weight: bold">from </span>autograder <span style="color: blue; font-weight: bold">import </span>test<span style="font-weight: bold">, </span>run_tests<span style="font-weight: bold">, </span>check_func<span style="font-weight: bold">, </span>check_doctest<span style="font-weight: bold">, </span>test_eval<span style="font-weight: bold">, </span>run_tests
+
+<span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>hog      <span style="color: green; font-style: italic"># Student submission
+</span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>SyntaxError<span style="font-weight: bold">, </span>IndentationError<span style="font-weight: bold">) </span>as e<span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>traceback
+    <span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Unfortunately, the autograder cannot run because ' </span><span style="font-weight: bold">+
+          </span><span style="color: red">'your program contains a syntax error:'</span><span style="font-weight: bold">)
+    </span>traceback<span style="font-weight: bold">.</span>print_exc<span style="font-weight: bold">(</span>limit<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span>exit<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">from </span>dice <span style="color: blue; font-weight: bold">import </span>make_test_dice<span style="font-weight: bold">, </span>four_sided<span style="font-weight: bold">, </span>six_sided
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main
+
+<span style="color: green; font-style: italic">#########
+# TESTS #
+#########
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem1<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test roll_dice."""
+    </span>counted_dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">)
+    </span>test_suite1 <span style="font-weight: bold">= [((</span><span style="color: red">2</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)),           </span><span style="color: red">10</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">3</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)),            </span><span style="color: red">1</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">3</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">3</span><span style="font-weight: bold">)),            </span><span style="color: red">1</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">3</span><span style="font-weight: bold">, </span>counted_dice<span style="font-weight: bold">),                       </span><span style="color: red">1</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">1</span><span style="font-weight: bold">, </span>counted_dice<span style="font-weight: bold">),                       </span><span style="color: red">4</span><span style="font-weight: bold">)]
+    </span>test_suite2 <span style="font-weight: bold">= [((</span><span style="color: red">5</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)),  </span><span style="color: red">16</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">2</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)),                  </span><span style="color: red">1</span><span style="font-weight: bold">)]
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>roll_dice<span style="font-weight: bold">, </span>test_suite1<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    if </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>roll_dice<span style="font-weight: bold">, </span>test_suite2<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem2<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test take_turn."""
+    </span>test_suite1 <span style="font-weight: bold">= [((</span><span style="color: red">2</span><span style="font-weight: bold">,  </span><span style="color: red">0</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)), </span><span style="color: red">10</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)),  </span><span style="color: red">1</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">2</span><span style="font-weight: bold">,  </span><span style="color: red">0</span><span style="font-weight: bold">, </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">)),       </span><span style="color: red">12</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">34</span><span style="font-weight: bold">),                           </span><span style="color: red">5</span><span style="font-weight: bold">),</span><span style="color: green; font-style: italic"># Free bacon
+                   </span><span style="font-weight: bold">((</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">71</span><span style="font-weight: bold">),                           </span><span style="color: red">8</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">0</span><span style="font-weight: bold">,  </span><span style="color: red">7</span><span style="font-weight: bold">),                           </span><span style="color: red">8</span><span style="font-weight: bold">)]
+    </span>test_suite2 <span style="font-weight: bold">= [((</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">99</span><span style="font-weight: bold">),                          </span><span style="color: red">10</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">0</span><span style="font-weight: bold">,  </span><span style="color: red">0</span><span style="font-weight: bold">),                           </span><span style="color: red">1</span><span style="font-weight: bold">),
+                   ((</span><span style="color: red">0</span><span style="font-weight: bold">,  </span><span style="color: red">50</span><span style="font-weight: bold">),                          </span><span style="color: red">6</span><span style="font-weight: bold">)]
+    </span><span style="color: blue; font-weight: bold">if </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>take_turn<span style="font-weight: bold">, </span>test_suite1<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    if </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>take_turn<span style="font-weight: bold">, </span>test_suite2<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem3<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test select_dice."""
+    </span><span style="color: blue; font-weight: bold">return </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'select_dice'</span><span style="font-weight: bold">, </span>hog<span style="font-weight: bold">)
+
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem4<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test play using fixed dice."""
+    </span>always <span style="font-weight: bold">= </span>hog<span style="font-weight: bold">.</span>always_roll
+    hog<span style="font-weight: bold">.</span>four_sided <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span>hog<span style="font-weight: bold">.</span>six_sided <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">)
+
+    </span>test_suite <span style="font-weight: bold">= [((</span>always<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">),  </span>always<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">)), (</span><span style="color: red">92</span><span style="font-weight: bold">, </span><span style="color: red">106</span><span style="font-weight: bold">)),
+                  ((</span>always<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">),  </span>always<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">)), (</span><span style="color: red">17</span><span style="font-weight: bold">, </span><span style="color: red">102</span><span style="font-weight: bold">)),
+                  ((</span>always<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">), </span>always<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">)), (</span><span style="color: red">19</span><span style="font-weight: bold">, </span><span style="color: red">120</span><span style="font-weight: bold">)),
+                  ((</span>always<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">),  </span>always<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">)), (</span><span style="color: red">91</span><span style="font-weight: bold">, </span><span style="color: red">103</span><span style="font-weight: bold">)), </span><span style="color: green; font-style: italic"># always roll 0
+                  </span><span style="font-weight: bold">((</span>always<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">),  </span>always<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">)), (</span><span style="color: red">106</span><span style="font-weight: bold">, </span><span style="color: red">56</span><span style="font-weight: bold">))]
+
+    </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+        </span>failure <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False
+        if </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>play<span style="font-weight: bold">, </span>test_suite<span style="font-weight: bold">):
+            </span>failure <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+    finally</span><span style="font-weight: bold">:
+        </span><span style="color: green; font-style: italic"># Revert dice
+        </span>hog<span style="font-weight: bold">.</span>four_sided <span style="font-weight: bold">= </span>four_sided
+        hog<span style="font-weight: bold">.</span>six_sided <span style="font-weight: bold">= </span>six_sided
+    <span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Note: Not all tests have been released for problem4.'</span><span style="font-weight: bold">,
+          </span><span style="color: red">'Submit your project to the actual autograder to get more results!'</span><span style="font-weight: bold">,
+          </span>sep<span style="font-weight: bold">=</span><span style="color: red">'\n'</span><span style="font-weight: bold">, </span>end<span style="font-weight: bold">=</span><span style="color: red">'\n'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>failure
+
+
+@test
+<span style="color: blue; font-weight: bold">def </span>problem5<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test make_averaged."""
+    </span><span style="color: green; font-style: italic"># hundred_dice cycle from 1 to 99 repeatedly
+    </span>hundred_range <span style="font-weight: bold">= </span>range<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">100</span><span style="font-weight: bold">)
+    </span>hundred_dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(*</span>hundred_range<span style="font-weight: bold">)
+    </span>averaged_hundred_dice <span style="font-weight: bold">= </span>test_eval<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>make_averaged<span style="font-weight: bold">,
+                                      (</span>hundred_dice<span style="font-weight: bold">, </span><span style="color: red">5 </span><span style="font-weight: bold">* </span>len<span style="font-weight: bold">(</span>hundred_range<span style="font-weight: bold">)))
+    </span>correct_average <span style="font-weight: bold">= </span>sum<span style="font-weight: bold">(</span>range<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">100</span><span style="font-weight: bold">)) / </span>len<span style="font-weight: bold">(</span>hundred_range<span style="font-weight: bold">)
+
+    </span>test_suite <span style="font-weight: bold">= [((), </span>correct_average<span style="font-weight: bold">)] * </span><span style="color: red">2
+
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'make_averaged'</span><span style="font-weight: bold">, </span>hog<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    if </span>check_func<span style="font-weight: bold">(</span>averaged_hundred_dice<span style="font-weight: bold">, </span>test_suite<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem6<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test max_scoring_num_rolls."""
+    </span><span style="color: blue; font-weight: bold">return </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'max_scoring_num_rolls'</span><span style="font-weight: bold">, </span>hog<span style="font-weight: bold">)
+
+</span>@test
+<span style="color: blue; font-weight: bold">def </span>problem7<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test bacon_strategy."""
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'bacon_strategy'</span><span style="font-weight: bold">, </span>hog<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    </span>old_bacon <span style="font-weight: bold">= </span>hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS
+    hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS <span style="font-weight: bold">= </span><span style="color: red">5</span><span style="font-weight: bold">, </span><span style="color: red">4
+    </span>test_suite <span style="font-weight: bold">= [((</span><span style="color: red">32</span><span style="font-weight: bold">, </span><span style="color: red">34</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">),
+                  ((</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">23</span><span style="font-weight: bold">), </span><span style="color: red">4</span><span style="font-weight: bold">),
+                  ((</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">4</span><span style="font-weight: bold">),  </span><span style="color: red">0</span><span style="font-weight: bold">),
+                  ((</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">99</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">)]
+    </span>failed <span style="font-weight: bold">= </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>bacon_strategy<span style="font-weight: bold">, </span>test_suite<span style="font-weight: bold">)
+    </span>hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS <span style="font-weight: bold">= </span>old_bacon
+    <span style="color: blue; font-weight: bold">return </span>failed
+
+@test
+<span style="color: blue; font-weight: bold">def </span>problem8<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test swap_strategy."""
+    </span><span style="color: blue; font-weight: bold">if </span>check_doctest<span style="font-weight: bold">(</span><span style="color: red">'swap_strategy'</span><span style="font-weight: bold">, </span>hog<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return True
+    </span>old_bacon <span style="font-weight: bold">= </span>hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS
+    hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS <span style="font-weight: bold">= </span><span style="color: red">5</span><span style="font-weight: bold">, </span><span style="color: red">4
+    </span>test_suite <span style="font-weight: bold">= [((</span><span style="color: red">12</span><span style="font-weight: bold">, </span><span style="color: red">34</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">),    </span><span style="color: green; font-style: italic"># beneficial swap
+                  </span><span style="font-weight: bold">((</span><span style="color: red">8</span><span style="font-weight: bold">, </span><span style="color: red">9</span><span style="font-weight: bold">),   </span><span style="color: red">4</span><span style="font-weight: bold">),    </span><span style="color: green; font-style: italic"># harmful swap
+                  </span><span style="font-weight: bold">((</span><span style="color: red">32</span><span style="font-weight: bold">, </span><span style="color: red">43</span><span style="font-weight: bold">), </span><span style="color: red">0</span><span style="font-weight: bold">),    </span><span style="color: green; font-style: italic"># lots of free bacon
+                  </span><span style="font-weight: bold">((</span><span style="color: red">20</span><span style="font-weight: bold">, </span><span style="color: red">32</span><span style="font-weight: bold">), </span><span style="color: red">4</span><span style="font-weight: bold">)]    </span><span style="color: green; font-style: italic"># baseline
+    </span>failed <span style="font-weight: bold">= </span>check_func<span style="font-weight: bold">(</span>hog<span style="font-weight: bold">.</span>swap_strategy<span style="font-weight: bold">, </span>test_suite<span style="font-weight: bold">)
+    </span>hog<span style="font-weight: bold">.</span>BACON_MARGIN<span style="font-weight: bold">, </span>hog<span style="font-weight: bold">.</span>BASELINE_NUM_ROLLS <span style="font-weight: bold">= </span>old_bacon
+    <span style="color: blue; font-weight: bold">return </span>failed
+
+
+@test
+<span style="color: blue; font-weight: bold">def </span>problem9<span style="font-weight: bold">(</span>grades<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Test final_strategy."""
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Note: Tests for problem9 are not included here.'</span><span style="font-weight: bold">,
+          </span><span style="color: red">'Submit your project to the actual autograder to get results!'</span><span style="font-weight: bold">,
+          </span>sep<span style="font-weight: bold">=</span><span style="color: red">'\n'</span><span style="font-weight: bold">, </span>end<span style="font-weight: bold">=</span><span style="color: red">'\n'</span><span style="font-weight: bold">)
+
+
+</span><span style="color: green; font-style: italic">##########################
+# COMMAND LINE INTERFACE #
+##########################
+
+</span>project_info <span style="font-weight: bold">= {
+    </span><span style="color: red">'name'</span><span style="font-weight: bold">: </span><span style="color: red">'Project 1: Hog'</span><span style="font-weight: bold">,
+    </span><span style="color: red">'remote_index'</span><span style="font-weight: bold">: </span><span style="color: red">'http://inst.eecs.berkeley.edu/~cs61a/fa13/proj/hog/'</span><span style="font-weight: bold">,
+    </span><span style="color: red">'autograder_files'</span><span style="font-weight: bold">: [
+        </span><span style="color: red">'hog_grader.py'</span><span style="font-weight: bold">,
+        </span><span style="color: red">'autograder.py'</span><span style="font-weight: bold">,
+    ],
+    </span><span style="color: red">'version'</span><span style="font-weight: bold">: </span>__version__<span style="font-weight: bold">,
+}
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span>run_tests<span style="font-weight: bold">(**</span>project_info<span style="font-weight: bold">)
+</span>
+</pre>
+</body>
+</html>

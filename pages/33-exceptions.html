@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>3.3 Exceptions</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 3<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/31-introduction.html">3.1 Introduction</a></h3>
+				<li><a href="../pages/31-introduction.html#programming-languages">3.1.1 Programming Languages</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/32-functional-programming.html">3.2 Functional Programming</a></h3>
+				<li><a href="../pages/32-functional-programming.html#expressions">3.2.1 Expressions</a>
+				<li><a href="../pages/32-functional-programming.html#definitions">3.2.2 Definitions</a>
+				<li><a href="../pages/32-functional-programming.html#compound-values">3.2.3 Compound values</a>
+				<li><a href="../pages/32-functional-programming.html#symbolic-data">3.2.4 Symbolic Data</a>
+				<li><a href="../pages/32-functional-programming.html#turtle-graphics">3.2.5 Turtle graphics</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/33-exceptions.html">3.3 Exceptions</a></h3>
+				<li><a href="../pages/33-exceptions.html#exception-objects">3.3.1 Exception Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/34-interpreters-for-languages-with-combination.html">3.4 Interpreters for Languages with Combination</a></h3>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">3.4.1 A Scheme-Syntax Calculator</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#expression-trees">3.4.2 Expression Trees</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#parsing-expressions">3.4.3 Parsing Expressions</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#calculator-evaluation">3.4.4 Calculator Evaluation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/35-interpreters-for-languages-with-abstraction.html">3.5 Interpreters for Languages with Abstraction</a></h3>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#structure">3.5.1 Structure</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#environments">3.5.2 Environments</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#data-as-programs">3.5.3 Data as Programs</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="exceptions">
+<h2>3.3   Exceptions</h2>
+<p>Programmers must be always mindful of possible errors that may arise in their
+programs. Examples abound: a function may not receive arguments that it is
+designed to accept, a necessary resource may be missing, or a connection across
+a network may be lost. When designing a program, one must anticipate the
+exceptional circumstances that may arise and take appropriate measures to
+handle them.</p>
+<p>There is no single correct approach to handling errors in a program.  Programs
+designed to provide some persistent service like a web server should be robust
+to errors, logging them for later consideration but continuing to service new
+requests as long as possible. On the other hand, the Python interpreter handles
+errors by terminating immediately and printing an error message, so that
+programmers can address issues as soon as they arise. In any case, programmers
+must make conscious choices about how their programs should react to
+exceptional conditions.</p>
+<p><em>Exceptions</em>, the topic of this section, provides a general mechanism for
+adding error-handling logic to programs. <em>Raising an exception</em> is a technique
+for interrupting the normal flow of execution in a program, signaling that
+some exceptional circumstance has arisen, and returning directly to an
+enclosing part of the program that was designated to react to that
+circumstance.  The Python interpreter raises an exception each time it detects
+an error in an expression or statement.  Users can also raise exceptions with
+<tt class="docutils literal">raise</tt> and <tt class="docutils literal">assert</tt> statements.</p>
+<p><strong>Raising exceptions.</strong> An exception is a object instance with a class that
+inherits, either directly or indirectly, from the <tt class="docutils literal">BaseException</tt> class. The
+<tt class="docutils literal">assert</tt> statement introduced in Chapter 1 raises an exception with the class
+<tt class="docutils literal">AssertionError</tt>.  In general, any exception instance can be raised with the <tt class="docutils literal">raise</tt>
+statement. The general form of raise statements are described in the <a class="reference external" href="http://docs.python.org/py3k/reference/simple_stmts.html#raise">Python
+docs</a>. The
+most common use of <tt class="docutils literal">raise</tt> constructs an exception instance and raises it.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">'An error occurred'</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">"&lt;stdin&gt;"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">Exception</span>: <span class="n">an error occurred</span>
+</pre></div>
+
+<p>When an exception is raised, no further statements in the current block of code
+are executed. Unless the exception is <em>handled</em> (described below), the
+interpreter will return directly to the interactive read-eval-print loop, or
+terminate entirely if Python was started with a file argument. In addition, the
+interpreter will print a <em>stack backtrace</em>, which is a structured block of text
+that describes the nested set of active function calls in the branch of
+execution in which the exception was raised. In the example above, the file
+name <tt class="docutils literal">&lt;stdin&gt;</tt> indicates that the exception was raised by the user in an
+interactive session, rather than from code in a file.</p>
+<p><strong>Handling exceptions.</strong> An exception can be handled by an enclosing <tt class="docutils literal">try</tt>
+statement. A <tt class="docutils literal">try</tt> statement consists of multiple clauses; the first begins
+with <tt class="docutils literal">try</tt> and the rest begin with <tt class="docutils literal">except</tt>:</p>
+<pre class="literal-block">
+try:
+    &lt;try suite&gt;
+except &lt;exception class&gt; as &lt;name&gt;:
+    &lt;except suite&gt;
+...
+</pre>
+<p>The <tt class="docutils literal">&lt;try suite&gt;</tt> is always executed immediately when the <tt class="docutils literal">try</tt> statement
+is executed.  Suites of the <tt class="docutils literal">except</tt> clauses are only executed when an
+exception is raised during the course of executing the <tt class="docutils literal">&lt;try suite&gt;</tt>. Each
+<tt class="docutils literal">except</tt> clause specifies the particular class of exception to handle. For
+instance, if the <tt class="docutils literal">&lt;exception class&gt;</tt> is <tt class="docutils literal">AssertionError</tt>, then any instance
+of a class inheriting from <tt class="docutils literal">AssertionError</tt> that is raised during the course
+of executing the <tt class="docutils literal">&lt;try suite&gt;</tt> will be handled by the following <tt class="docutils literal">&lt;except
+suite&gt;</tt>. Within the <tt class="docutils literal">&lt;except suite&gt;</tt>, the identifier <tt class="docutils literal">&lt;name&gt;</tt> is bound to
+the exception object that was raised, but this binding does not persist beyond
+the <tt class="docutils literal">&lt;except suite&gt;</tt>.</p>
+<p>For example, we can handle a <tt class="docutils literal">ZeroDivisionError</tt> exception using a <tt class="docutils literal">try</tt>
+statement that binds the name <tt class="docutils literal">x</tt> to 0 when the exception is raised.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span>
+<span class="gp">    </span><span class="k">except</span> <span class="ne">ZeroDivisionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="s">'handling a'</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="go">handling a &lt;class 'ZeroDivisionError'&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">0</span>
+</pre></div>
+
+<p>A <tt class="docutils literal">try</tt> statement will handle exceptions that occur within the body of a
+function that is applied (either directly or indirectly) within the <tt class="docutils literal">&lt;try
+suite&gt;</tt>.  When an exception is raised, control jumps directly to the body of
+the <tt class="docutils literal">&lt;except suite&gt;</tt> of the most recent <tt class="docutils literal">try</tt> statement that handles that
+type of exception.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">invert</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span>  <span class="c"># Raises a ZeroDivisionError if x is 0</span>
+<span class="gp">    </span>    <span class="nb">print</span><span class="p">(</span><span class="s">'Never printed if x is 0'</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">invert_safe</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">invert</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">except</span> <span class="ne">ZeroDivisionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">invert_safe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">Never printed if x is 0</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">invert_safe</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">'division by zero'</span>
+</pre></div>
+
+<p>This example illustrates that the <tt class="docutils literal">print</tt> expression in <tt class="docutils literal">invert</tt> is never
+evaluated, and instead control is transferred to the suite of the <tt class="docutils literal">except</tt>
+clause in <tt class="docutils literal">invert_safe</tt>. Coercing the <tt class="docutils literal">ZeroDivisionError</tt> <tt class="docutils literal">e</tt> to a
+string gives the human-interpretable string returned by <tt class="docutils literal">invert_safe</tt>:
+<tt class="docutils literal">'division by zero'</tt>.</p>
+<div class="section" id="exception-objects">
+<h3>3.3.1   Exception Objects</h3>
+<p>Exception objects themselves can have attributes, such as the error message
+stated in an <tt class="docutils literal">assert</tt> statement and information about where in the course of
+execution the exception was raised. User-defined exception classes can have
+additional attributes.</p>
+<p>In Chapter 1, we implemented Newton's method to find the zeros of arbitrary
+functions. The following example defines an exception class that returns the
+best guess discovered in the course of iterative improvement whenever a
+<tt class="docutils literal">ValueError</tt> occurs. A math domain error (a type of <tt class="docutils literal">ValueError</tt>) is raised
+when <tt class="docutils literal">sqrt</tt> is applied to a negative number. This exception is handled by
+raising an <tt class="docutils literal">IterImproveError</tt> that stores the most recent guess from Newton's
+method as an attribute.</p>
+<p>First, we define a new class that inherits from <tt class="docutils literal">Exception</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IterImproveError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last_guess</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="bp">self</span><span class="o">.</span><span class="n">last_guess</span> <span class="o">=</span> <span class="n">last_guess</span>
+</pre></div>
+
+<p>Next, we define a version of <tt class="docutils literal">improve</tt>, our generic iterative improvement
+algorithm.  This version handles any <tt class="docutils literal">ValueError</tt> by raising an
+<tt class="docutils literal">IterImproveError</tt> that stores the most recent guess. As before,
+<tt class="docutils literal">improve</tt> takes as arguments two functions, each of which takes a
+single numerical argument. The <tt class="docutils literal">update</tt> function returns new guesses, while
+the <tt class="docutils literal">done</tt> function returns a boolean indicating that improvement has
+converged to a correct value.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">improve</span><span class="p">(</span><span class="n">update</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">guess</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_updates</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">max_updates</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">guess</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+<span class="gp">    </span>            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">guess</span>
+<span class="gp">    </span>    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">raise</span> <span class="n">IterImproveError</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+</pre></div>
+
+<p>Finally, we define <tt class="docutils literal">find_zero</tt>, which returns the result of <tt class="docutils literal">improve</tt>
+applied to a Newton update function returned by <tt class="docutils literal">newton_update</tt>, which is
+defined in Chapter 1 and requires no changes for this example. This version of
+<tt class="docutils literal">find_zero</tt> handles an <tt class="docutils literal">IterImproveError</tt> by returning its last guess.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">find_zero</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">guess</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">    </span>    <span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">improve</span><span class="p">(</span><span class="n">newton_update</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">done</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">except</span> <span class="n">IterImproveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">last_guess</span>
+</pre></div>
+
+<p>Consider applying <tt class="docutils literal">find_zero</tt> to find the zero of the function
+<span class="rawlatex">$2x^2 + \sqrt{x}$</span>. This function has a zero at 0, but evaluating
+it on any negative number will raise a <tt class="docutils literal">ValueError</tt>. Our Chapter 1
+implementation of Newton's Method would raise that error and fail to return any
+guess of the zero. Our revised implementation returns the last guess found
+before the error.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_zero</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">-0.030211203830201594</span>
+</pre></div>
+
+<p>Although this approximation is still far from the correct answer of 0, some
+applications would prefer this coarse approximation to a <tt class="docutils literal">ValueError</tt>.</p>
+<p>Exceptions are another technique that help us as programs to separate the
+concerns of our program into modular parts.  In this example, Python's
+exception mechanism allowed us to separate the logic for iterative improvement,
+which appears unchanged in the suite of the <tt class="docutils literal">try</tt> clause, from the logic for
+handling errors, which appears in <tt class="docutils literal">except</tt> clauses. We will also find that
+exceptions are a useful feature when implementing interpreters in Python.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/34-interpreters-for-languages-with-combination.html">
+  		3.4 Interpreters for Languages with Combination
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

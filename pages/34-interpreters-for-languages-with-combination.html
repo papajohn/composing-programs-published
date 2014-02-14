@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>3.4 Interpreters for Languages with Combination</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 3<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/31-introduction.html">3.1 Introduction</a></h3>
+				<li><a href="../pages/31-introduction.html#programming-languages">3.1.1 Programming Languages</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/32-functional-programming.html">3.2 Functional Programming</a></h3>
+				<li><a href="../pages/32-functional-programming.html#expressions">3.2.1 Expressions</a>
+				<li><a href="../pages/32-functional-programming.html#definitions">3.2.2 Definitions</a>
+				<li><a href="../pages/32-functional-programming.html#compound-values">3.2.3 Compound values</a>
+				<li><a href="../pages/32-functional-programming.html#symbolic-data">3.2.4 Symbolic Data</a>
+				<li><a href="../pages/32-functional-programming.html#turtle-graphics">3.2.5 Turtle graphics</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/33-exceptions.html">3.3 Exceptions</a></h3>
+				<li><a href="../pages/33-exceptions.html#exception-objects">3.3.1 Exception Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/34-interpreters-for-languages-with-combination.html">3.4 Interpreters for Languages with Combination</a></h3>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">3.4.1 A Scheme-Syntax Calculator</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#expression-trees">3.4.2 Expression Trees</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#parsing-expressions">3.4.3 Parsing Expressions</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#calculator-evaluation">3.4.4 Calculator Evaluation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/35-interpreters-for-languages-with-abstraction.html">3.5 Interpreters for Languages with Abstraction</a></h3>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#structure">3.5.1 Structure</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#environments">3.5.2 Environments</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#data-as-programs">3.5.3 Data as Programs</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="interpreters-for-languages-with-combination">
+<h2>3.4   Interpreters for Languages with Combination</h2>
+<p>We now embark on a tour of the technology by which languages are established in
+terms of other languages.  <em>Metalinguistic abstraction</em> — establishing new
+languages — plays an important role in all branches of engineering design. It
+is particularly important to computer programming, because in programming not
+only can we formulate new languages but we can also implement these languages
+by constructing interpreters. An interpreter for a programming language is a
+function that, when applied to an expression of the language, performs the
+actions required to evaluate that expression.</p>
+<p>We will first define an interpreter for a language that is a limited subset of
+Scheme, called Calculator.  Then, we will develop a sketch of an interpreter
+for Scheme as a whole.  The interpreter we create will be complete in the sense
+that it will allow us to write fully general programs in Scheme. To do so, it
+will implement the same environment model of evaluation that we introduced for
+Python programs in Chapter 1.</p>
+<p>Many of the examples in this section are contained in the companion
+<a class="reference external" href="../examples/scalc/scalc.html">Scheme-Syntax Calculator example</a>, as they are
+too complex to fit naturally in the format of this text.</p>
+<div class="section" id="a-scheme-syntax-calculator">
+<h3>3.4.1   A Scheme-Syntax Calculator</h3>
+<p>The Scheme-Syntax Calculator (or simply Calculator) is an expression language
+for the arithmetic operations of addition, subtraction, multiplication, and
+division. Calculator shares Scheme's call expression syntax and operator
+behavior. Addition (<tt class="docutils literal">+</tt>) and multiplication (<tt class="docutils literal">*</tt>) operations each take an
+arbitrary number of arguments:</p>
+<pre class="literal-block">
+&gt; (+ 1 2 3 4)
+10
+&gt; (+)
+0
+&gt; (* 1 2 3 4)
+24
+&gt; (*)
+1
+</pre>
+<p>Subtraction (<tt class="docutils literal">-</tt>) has two behaviors.  With one argument, it negates the
+argument.  With at least two arguments, it subtracts all but the first from the
+first.  Division (<tt class="docutils literal">/</tt>) has a similar pair of two behaviors: compute the
+multiplicative inverse of a single argument or divide all but the first into the
+first:</p>
+<pre class="literal-block">
+&gt; (- 10 1 2 3)
+4
+&gt; (- 3)
+-3
+&gt; (/ 15 12)
+1.25
+&gt; (/ 30 5 2)
+3
+&gt; (/ 10)
+0.1
+</pre>
+<p>A call expression is evaluated by evaluating its operand sub-expressions, then
+applying the operator to the resulting arguments:</p>
+<pre class="literal-block">
+&gt; (- 100 (* 7 (+ 8 (/ -12 -3))))
+16.0
+</pre>
+<p>We will implement an interpreter for the Calculator language in Python.  That
+is, we will write a Python program that takes string lines as input and returns
+the result of evaluating those lines as a Calculator expression.  Our
+interpreter will raise an appropriate exception if the calculator expression is
+not well formed.</p>
+</div>
+<div class="section" id="expression-trees">
+<h3>3.4.2   Expression Trees</h3>
+<p>Until this point in the course, expression trees have been conceptual entities
+to which we have referred in describing the process of evaluation; we have
+never before explicitly represented expression trees as data in our programs.
+In order to write an interpreter, we must operate on expressions as data.</p>
+<p>A primitive expression is just a number or a string in Calculator: either an
+<tt class="docutils literal">int</tt> or <tt class="docutils literal">float</tt> or an operator symbol. All combined expressions
+are call expressions.  A call expression is a Scheme list with a first element
+(the operator) followed by zero or more operand expressions.</p>
+<p><strong>Scheme Pairs.</strong> In Scheme, lists are nested pairs, but not all pairs are
+lists.  To represent Scheme pairs and lists in Python, we will define a class
+<tt class="docutils literal">Pair</tt> that is similar to the <tt class="docutils literal">Rlist</tt> class earlier in the chapter. The
+implementation appears in <a class="reference external" href="../examples/scalc/scheme_reader.py.html">scheme_reader</a>.</p>
+<p>The empty list is represented by an object called <tt class="docutils literal">nil</tt>, which is an instance
+of the class <tt class="docutils literal">nil</tt>. We assume that only one <tt class="docutils literal">nil</tt> instance will ever be
+created.</p>
+<p>The <tt class="docutils literal">Pair</tt> class and <tt class="docutils literal">nil</tt> object are Scheme values represented in Python.
+They have <tt class="docutils literal">repr</tt> strings that are Python expressions and <tt class="docutils literal">str</tt> strings that
+are Scheme expressions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Pair</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nil</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">Pair(1, Pair(2, nil))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">(1 2)</span>
+</pre></div>
+
+<p>They implement the basic Python sequence interface of length and element
+selection, as well as a <tt class="docutils literal">map</tt> method that returns a Scheme list.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">(5 6)</span>
+</pre></div>
+
+<p><strong>Trees.</strong> Trees are represented in Scheme by allowing the elements of a Scheme
+list to be Scheme lists. The nested Scheme expression <tt class="docutils literal">(+ (* 3 4) 5)</tt> is a
+tree, and it is represented as</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">exp</span> <span class="o">=</span> <span class="n">Pair</span><span class="p">(</span><span class="s">'+'</span><span class="p">,</span> <span class="n">Pair</span><span class="p">(</span><span class="n">Pair</span><span class="p">(</span><span class="s">'*'</span><span class="p">,</span> <span class="n">Pair</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">Pair</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">nil</span><span class="p">))),</span> <span class="n">Pair</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">nil</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="go">(+ (* 3 4) 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+<span class="go">(* 3 4)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exp</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">first</span>
+<span class="go">3</span>
+</pre></div>
+
+<p>Unlike the <tt class="docutils literal">Tree</tt> class in the previous chapter, these expression trees have
+values only at the leaves, and each tree can have any number of branches.</p>
+<p>This example demonstrates that all Calculator expressions are nested Scheme
+lists. Our Calculator interpreter will read in nested Scheme lists, convert
+them into expression trees represented as nested <tt class="docutils literal">Pair</tt> instances (<em>Parsing
+expressions</em> below), and then evaluate the expression trees to produce values
+(<em>Calculator evaluation</em> below).</p>
+</div>
+<div class="section" id="parsing-expressions">
+<h3>3.4.3   Parsing Expressions</h3>
+<p>Parsing is the process of generating expression trees from raw text input.  A
+parser is a composition of two components: a lexical analyzer and a syntactic
+analyzer.  First, the <em>lexical analyzer</em> partitions the input string into
+<em>tokens</em>, which are the minimal syntactic units of the language such as names
+and symbols. Second, the <em>syntactic analyzer</em> constructs an expression tree
+from this sequence of tokens.  The sequence of tokens produced by the lexical
+analyzer is consumed by the syntactic analyzer.</p>
+<p><strong>Lexical analysis.</strong> The component that interprets a string as a token
+sequence is called a <em>tokenizer</em> or <em>lexical analyzer</em>. In our implementation,
+the tokenizer is a function called <tt class="docutils literal">tokenize_line</tt> in <a class="reference external" href="../examples/scalc/scheme_tokens.py.html">scheme_tokens</a>. Scheme
+tokens are delimited by white space, parentheses, dots, or single quotation
+marks.  Delimiters are tokens, as are symbols and numerals. The tokenizer
+analyzes a line character by character, validating the format of symbols and
+numerals.</p>
+<p>Tokenizing a well-formed Calculator expression separates all symbols and
+delimiters, but identifies multi-character numbers (e.g., 2.3) and converts
+them into numeric types.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tokenize_line</span><span class="p">(</span><span class="s">'(+ 1 (* 2.3 45))'</span><span class="p">)</span>
+<span class="go">['(', '+', 1, '(', '*', 2.3, 45, ')', ')']</span>
+</pre></div>
+
+<p>Lexical analysis is an iterative process, and it can be applied to each line of
+an input program in isolation.</p>
+<p><strong>Syntactic analysis.</strong> The component that interprets a token sequence as an
+expression tree is called a <em>syntactic analyzer</em>. Syntactic analysis is a
+tree-recursive process, and it must consider an entire expression that may span
+multiple lines.</p>
+<p>Syntactic analysis is implemented by the <tt class="docutils literal">scheme_read</tt> function in
+<a class="reference external" href="../examples/scalc/scheme_reader.py.html">scheme_reader</a>. It is tree-recursive because analyzing a sequence of tokens
+often involves analyzing a subsequence of those tokens into a subexpression,
+which itself serves as a branch (e.g., operand) of a larger expression tree.
+Recursion generates the hierarchical structures consumed by the evaluator.</p>
+<p>The <tt class="docutils literal">scheme_read</tt> function expects its input <tt class="docutils literal">src</tt> to be a <tt class="docutils literal">Buffer</tt>
+instance that gives access to a sequence of tokens. A <tt class="docutils literal">Buffer</tt>, defined in
+the <a class="reference external" href="../examples/scalc/buffer.py.html">buffer</a> module, collects tokens that span multiple lines into a single
+object that can be analyzed syntactically.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s">'(+ 1'</span><span class="p">,</span> <span class="s">'   (* 2.3 45))'</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expression</span> <span class="o">=</span> <span class="n">scheme_read</span><span class="p">(</span><span class="n">Buffer</span><span class="p">(</span><span class="n">tokenize_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expression</span>
+<span class="go">Pair('+', Pair(1, Pair(Pair('*', Pair(2.3, Pair(45, nil))), nil)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<span class="go">(+ 1 (* 2.3 45))</span>
+</pre></div>
+
+<p>The <tt class="docutils literal">scheme_read</tt> function first checks for various base cases, including
+empty input (which raises an end-of-file exception, called <tt class="docutils literal">EOFError</tt> in
+Python) and primitive expressions. A recursive call to <tt class="docutils literal">read_tail</tt> is invoked
+whenever a <tt class="docutils literal">(</tt> token indicates the beginning of a list.</p>
+<p>The <tt class="docutils literal">read_tail</tt> function continues to read from the same input <tt class="docutils literal">src</tt>, but
+expects to be called after a list has begun.  Its base cases are an empty input
+(an error) or a closing parenthesis that terminates the list.  Its recursive
+call reads the first element of the list with <tt class="docutils literal">scheme_read</tt>, reads the rest
+of the list with <tt class="docutils literal">read_tail</tt>, and then returns a list represented as a
+<tt class="docutils literal">Pair</tt>.</p>
+<p>This implementation of <tt class="docutils literal">scheme_read</tt> can read well-formed Scheme lists, which
+are all we need for the Calculator language. Parsing dotted lists and quoted
+forms is left as an exercise.</p>
+<p>Informative syntax errors improve the usability of an interpreter
+substantially. The <tt class="docutils literal">SyntaxError</tt> exceptions that are raised include
+a description of the problem encountered.</p>
+</div>
+<div class="section" id="calculator-evaluation">
+<h3>3.4.4   Calculator Evaluation</h3>
+<p>The <a class="reference external" href="../examples/scalc/scalc.py.html">scalc</a> module implements an evaluator for the Calculator language.  The
+<tt class="docutils literal">calc_eval</tt> function takes an expression as an argument and
+returns its value. Definitions of the helper functions <tt class="docutils literal">simplify</tt>,
+<tt class="docutils literal">reduce</tt>, and <tt class="docutils literal">scheme_list</tt> appear in the model and are used below.</p>
+<p>For Calculator, the only two legal syntactic forms of expressions are numbers
+and call expressions, which are <tt class="docutils literal">Pair</tt> instances representing well-formed
+Scheme lists.  Numbers are <em>self-evaluating</em>; they can be returned directly
+from <tt class="docutils literal">calc_eval</tt>. Call expressions require function application.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">calc_eval</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Evaluate a Calculator expression."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">simplify</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">Pair</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">arguments</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">calc_eval</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">simplify</span><span class="p">(</span><span class="n">calc_apply</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">arguments</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">exp</span> <span class="o">+</span> <span class="s">' is not a number or call expression'</span><span class="p">)</span>
+</pre></div>
+
+<p>Call expressions are evaluated by first recursively mapping the <tt class="docutils literal">calc_eval</tt>
+function to the list of operands, which computes a list of <tt class="docutils literal">arguments</tt>.
+Then, the operator is applied to those arguments in a second function,
+<tt class="docutils literal">calc_apply</tt>.</p>
+<p>The Calculator language is simple enough that we can easily express the logic
+of applying each operator in the body of a single function.  In <tt class="docutils literal">calc_apply</tt>,
+each conditional clause corresponds to applying one operator.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">calc_apply</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Apply the named operator to a list of args."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span> <span class="o">+</span> <span class="s">' is not a symbol'</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s">'+'</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s">'-'</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">operator</span> <span class="o">+</span> <span class="s">' requires at least 1 argument'</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="o">-</span><span class="n">args</span><span class="o">.</span><span class="n">first</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s">'*'</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s">'/'</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">operator</span> <span class="o">+</span> <span class="s">' requires at least 1 argument'</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="n">args</span><span class="o">.</span><span class="n">first</span>
+<span class="gp">    </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">truediv</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">operator</span> <span class="o">+</span> <span class="s">' is an unknown operator'</span><span class="p">)</span>
+</pre></div>
+
+<p>Above, each suite computes the result of a different operator or raises an
+appropriate <tt class="docutils literal">TypeError</tt> when the wrong number of arguments is given. The
+<tt class="docutils literal">calc_apply</tt> function can be applied directly, but it must be passed a list
+of <em>values</em> as arguments rather than a list of operand expressions.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">calc_apply</span><span class="p">(</span><span class="s">'+'</span><span class="p">,</span> <span class="n">scheme_list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calc_apply</span><span class="p">(</span><span class="s">'-'</span><span class="p">,</span> <span class="n">scheme_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calc_apply</span><span class="p">(</span><span class="s">'*'</span><span class="p">,</span> <span class="n">nil</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calc_apply</span><span class="p">(</span><span class="s">'*'</span><span class="p">,</span> <span class="n">scheme_list</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">120</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calc_apply</span><span class="p">(</span><span class="s">'/'</span><span class="p">,</span> <span class="n">scheme_list</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">8.0</span>
+</pre></div>
+
+<p>The role of <tt class="docutils literal">calc_eval</tt> is to make proper calls to <tt class="docutils literal">calc_apply</tt> by first
+computing the value of operand sub-expressions before passing them as arguments
+to <tt class="docutils literal">calc_apply</tt>. Thus, <tt class="docutils literal">calc_eval</tt> can accept a nested expression.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="go">(+ (* 3 4) 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calc_eval</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="go">17</span>
+</pre></div>
+
+<p>The structure of <tt class="docutils literal">calc_eval</tt> is an example of dispatching on type: the form
+of the expression. The first form of expression is a number, which requires no
+additional evaluation step. In general, primitive expressions that do not
+require an additional evaluation step are called <em>self-evaluating</em>. The only
+self-evaluating expressions in our Calculator language are numbers, but a
+general programming language might also include strings, boolean values, etc.</p>
+<p><strong>Read-eval-print loops.</strong> A typical approach to interacting with an
+interpreter is through a read-eval-print loop, or REPL, which is a mode of
+interaction that reads an expression, evaluates it, and prints the result for
+the user.  The Python interactive session is an example of such a loop.</p>
+<p>An implementation of a REPL can be largely independent of the interpreter it
+uses. The function <tt class="docutils literal">read_eval_print_loop</tt> below buffers input from the user,
+constructs an expression using the language-specific <tt class="docutils literal">scheme_read</tt> function,
+then prints the result of applying <tt class="docutils literal">calc_eval</tt> to that expression.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">read_eval_print_loop</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="sd">"""Run a read-eval-print loop for calculator."""</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="n">src</span> <span class="o">=</span> <span class="n">buffer_input</span><span class="p">()</span>
+<span class="gp">    </span>        <span class="k">while</span> <span class="n">src</span><span class="o">.</span><span class="n">more_on_line</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">expression</span> <span class="o">=</span> <span class="n">scheme_read</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+<span class="gp">    </span>            <span class="nb">print</span><span class="p">(</span><span class="n">calc_eval</span><span class="p">(</span><span class="n">expression</span><span class="p">))</span>
+</pre></div>
+
+<p>This version of <tt class="docutils literal">read_eval_print_loop</tt> contains all of the essential
+components of an interactive interface.  An example session would look like:</p>
+<pre class="literal-block">
+&gt; (* 1 2 3)
+6
+&gt; (+)
+0
+&gt; (+ 2 (/ 4 8))
+2.5
+&gt; (+ 2 2) (* 3 3)
+4
+9
+&gt; (+ 1
+     (- 23)
+     (* 4 2.5))
+-12
+</pre>
+<p>This loop implementation has no mechanism for termination or error handling.
+We can improve the interface by reporting errors to the user. We can also allow
+the user to exit the loop by signalling a keyboard interrupt (<tt class="docutils literal"><span class="pre">Control-C</span></tt> on
+UNIX) or end-of-file exception (<tt class="docutils literal"><span class="pre">Control-D</span></tt> on UNIX). To enable these
+improvements, we place the original suite of the <tt class="docutils literal">while</tt> statement within a
+<tt class="docutils literal">try</tt> statement.  The first <tt class="docutils literal">except</tt> clause handles <tt class="docutils literal">SyntaxError</tt> and
+<tt class="docutils literal">ValueError</tt> exceptions raised by <tt class="docutils literal">scheme_read</tt> as well as <tt class="docutils literal">TypeError</tt>
+and <tt class="docutils literal">ZeroDivisionError</tt> exceptions raised by <tt class="docutils literal">calc_eval</tt>.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">read_eval_print_loop</span><span class="p">():</span>
+<span class="gp">    </span>    <span class="sd">"""Run a read-eval-print loop for calculator."""</span>
+<span class="gp">    </span>    <span class="k">while</span> <span class="k">True</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">try</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">src</span> <span class="o">=</span> <span class="n">buffer_input</span><span class="p">()</span>
+<span class="gp">    </span>            <span class="k">while</span> <span class="n">src</span><span class="o">.</span><span class="n">more_on_line</span><span class="p">:</span>
+<span class="gp">    </span>                <span class="n">expression</span> <span class="o">=</span> <span class="n">scheme_read</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+<span class="gp">    </span>                <span class="nb">print</span><span class="p">(</span><span class="n">calc_eval</span><span class="p">(</span><span class="n">expression</span><span class="p">))</span>
+<span class="gp">    </span>        <span class="k">except</span> <span class="p">(</span><span class="ne">SyntaxError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">ZeroDivisionError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">':'</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">EOFError</span><span class="p">):</span>  <span class="c"># &lt;Control&gt;-D, etc.</span>
+<span class="gp">    </span>            <span class="nb">print</span><span class="p">(</span><span class="s">'Calculation completed.'</span><span class="p">)</span>
+<span class="gp">    </span>            <span class="k">return</span>
+</pre></div>
+
+<p>This loop implementation reports errors without exiting the loop.  Rather than
+exiting the program on an error, restarting the loop after an error message
+lets users revise their expressions. Upon importing the <tt class="docutils literal">readline</tt> module,
+users can even recall their previous inputs using the up arrow or
+<tt class="docutils literal"><span class="pre">Control-P</span></tt>. The final result provides an informative error reporting
+interface:</p>
+<pre class="literal-block">
+&gt; )
+SyntaxError: unexpected token: )
+&gt; 2.3.4
+ValueError: invalid numeral: 2.3.4
+&gt; +
+TypeError: + is not a number or call expression
+&gt; (/ 5)
+TypeError: / requires exactly 2 arguments
+&gt; (/ 1 0)
+ZeroDivisionError: division by zero
+</pre>
+<p>As we generalize our interpreter to new languages other than Calculator, we
+will see that the <tt class="docutils literal">read_eval_print_loop</tt> is parameterized by a parsing
+function, an evaluation function, and the exception types handled by the <tt class="docutils literal">try</tt>
+statement.  Beyond these changes, all REPLs can be implemented using the same
+structure.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/35-interpreters-for-languages-with-abstraction.html">
+  		3.5 Interpreters for Languages with Abstraction
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

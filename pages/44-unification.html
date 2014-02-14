@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>4.4 Unification</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 4<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/41-introduction.html">4.1 Introduction</a></h3>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/42-implicit-sequences.html">4.2 Implicit Sequences</a></h3>
+				<li><a href="../pages/42-implicit-sequences.html#python-iterators">4.2.1 Python Iterators</a>
+				<li><a href="../pages/42-implicit-sequences.html#iterables">4.2.2 Iterables</a>
+				<li><a href="../pages/42-implicit-sequences.html#for-statements">4.2.3 For Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#generators-and-yield-statements">4.2.4 Generators and Yield Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#creating-iterables-with-yield">4.2.5 Creating Iterables with Yield</a>
+				<li><a href="../pages/42-implicit-sequences.html#streams">4.2.6 Streams</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/43-declarative-programming.html">4.3 Declarative Programming</a></h3>
+				<li><a href="../pages/43-declarative-programming.html#facts-and-queries">4.3.1 Facts and Queries</a>
+				<li><a href="../pages/43-declarative-programming.html#recursive-facts">4.3.2 Recursive Facts</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/44-unification.html">4.4 Unification</a></h3>
+				<li><a href="../pages/44-unification.html#pattern-matching">4.4.1 Pattern Matching</a>
+				<li><a href="../pages/44-unification.html#representing-facts-and-queries">4.4.2 Representing Facts and Queries</a>
+				<li><a href="../pages/44-unification.html#the-unification-algorithm">4.4.3 The Unification Algorithm</a>
+				<li><a href="../pages/44-unification.html#proofs">4.4.4 Proofs</a>
+				<li><a href="../pages/44-unification.html#search">4.4.5 Search</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/45-distributed-computing.html">4.5 Distributed Computing</a></h3>
+				<li><a href="../pages/45-distributed-computing.html#messages">4.5.1 Messages</a>
+				<li><a href="../pages/45-distributed-computing.html#client-server-architecture">4.5.2 Client/Server Architecture</a>
+				<li><a href="../pages/45-distributed-computing.html#peer-to-peer-systems">4.5.3 Peer-to-Peer Systems</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/46-distributed-data-processing.html">4.6 Distributed Data Processing</a></h3>
+				<li><a href="../pages/46-distributed-data-processing.html#id1">4.6.1 MapReduce</a>
+				<li><a href="../pages/46-distributed-data-processing.html#local-implementation">4.6.2 Local Implementation</a>
+				<li><a href="../pages/46-distributed-data-processing.html#distributed-implementation">4.6.3 Distributed Implementation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/47-parallel-computing.html">4.7 Parallel Computing</a></h3>
+				<li><a href="../pages/47-parallel-computing.html#parallelism-in-python">4.7.1 Parallelism in Python</a>
+				<li><a href="../pages/47-parallel-computing.html#the-problem-with-shared-state">4.7.2 The Problem with Shared State</a>
+				<li><a href="../pages/47-parallel-computing.html#when-no-synchronization-is-necessary">4.7.3 When No Synchronization is Necessary</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronized-data-structures">4.7.4 Synchronized Data Structures</a>
+				<li><a href="../pages/47-parallel-computing.html#locks">4.7.5 Locks</a>
+				<li><a href="../pages/47-parallel-computing.html#barriers">4.7.6 Barriers</a>
+				<li><a href="../pages/47-parallel-computing.html#message-passing">4.7.7 Message Passing</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronization-pitfalls">4.7.8 Synchronization Pitfalls</a>
+				<li><a href="../pages/47-parallel-computing.html#conclusion">4.7.9 Conclusion</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="unification">
+<h2>4.4   Unification</h2>
+<p>This section describes an implementation of the query interpreter that performs
+inference in the <tt class="docutils literal">logic</tt> language. The interpreter is a general problem
+solver, but has substantial limitations on the scale and type of problems it
+can solve. More sophisticated logical programming languages exist, but the
+construction of efficient inference procedures remains an active research topic
+in computer science.</p>
+<p>The fundamental operation performed by the query interpreter is called
+<em>unification</em>.  Unification is a general method of matching a query to a fact,
+each of which may contain variables. The query interpreter applies this
+operation repeatedly, first to match the original query to conclusions of
+facts, and then to match the hypotheses of facts to other conclusions in the
+database.  In doing so, the query interpreter performs a search through the
+space of all facts related to a query.  If it finds a way to support that query
+with an assignment of values to variables, it returns that assignment as a
+successful result.</p>
+<div class="section" id="pattern-matching">
+<h3>4.4.1   Pattern Matching</h3>
+<p>In order to return simple facts that match a query, the interpreter must match
+a query that contains variables with a fact that does not. For example, the
+query <tt class="docutils literal">(query (parent abraham <span class="pre">?child))</span></tt> and the fact <tt class="docutils literal">(fact (parent abraham
+barack))</tt> match, if the variable <tt class="docutils literal"><span class="pre">?child</span></tt> takes the value <tt class="docutils literal">barack</tt>.</p>
+<p>In general, a pattern matches some expression (a possibly nested Scheme list)
+if there is a binding of variable names to values such that substituting those
+values into the pattern yields the expression.</p>
+<p>For example, the expression <tt class="docutils literal">((a b) c (a b))</tt> matches the pattern <tt class="docutils literal"><span class="pre">(?x</span> c
+<span class="pre">?x)</span></tt> with variable <tt class="docutils literal"><span class="pre">?x</span></tt> bound to value <tt class="docutils literal">(a b)</tt>. The same expression
+matches the pattern <tt class="docutils literal">((a <span class="pre">?y)</span> <span class="pre">?z</span> (a b))</tt> with variable <tt class="docutils literal"><span class="pre">?y</span></tt> bound to <tt class="docutils literal">b</tt>
+and <tt class="docutils literal"><span class="pre">?z</span></tt> bound to <tt class="docutils literal">c</tt>.</p>
+</div>
+<div class="section" id="representing-facts-and-queries">
+<h3>4.4.2   Representing Facts and Queries</h3>
+<p>The following examples can be replicated by importing the provided <a class="reference external" href="http://composingprograms.com/examples/logic/logic.py.html">logic</a>
+example program.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">logic</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+
+<p>Both queries and facts are represented as Scheme lists in the logic language,
+using the same <tt class="docutils literal">Pair</tt> class and <tt class="docutils literal">nil</tt> object in the previous chapter.  For
+example, the query expression <tt class="docutils literal"><span class="pre">(?x</span> c <span class="pre">?x)</span></tt> is represented as nested <tt class="docutils literal">Pair</tt>
+instances.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">read_line</span><span class="p">(</span><span class="s">"(?x c ?x)"</span><span class="p">)</span>
+<span class="go">Pair('?x', Pair('c', Pair('?x', nil)))</span>
+</pre></div>
+
+<p>As in the Scheme project, an environment that binds symbols to values is
+represented with an instance of the <tt class="docutils literal">Frame</tt> class, which has an attribute
+called <tt class="docutils literal">bindings</tt>.</p>
+<p>The function that performs pattern matching in the <tt class="docutils literal">logic</tt> language is called
+<tt class="docutils literal">unify</tt>. It takes two inputs, <tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt>, as well as an environment
+<tt class="docutils literal">env</tt> that records the bindings of variables to values.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">read_line</span><span class="p">(</span><span class="s">"((a b) c (a b))"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">read_line</span><span class="p">(</span><span class="s">"(?x c ?x)"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="k">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span><span class="o">.</span><span class="n">bindings</span>
+<span class="go">{'?x': Pair('a', Pair('b', nil))}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s">'?x'</span><span class="p">))</span>
+<span class="go">(a b)</span>
+</pre></div>
+
+<p>Above, the return value of <tt class="docutils literal">True</tt> from <tt class="docutils literal">unify</tt> indicates that the pattern
+<tt class="docutils literal">f</tt> was able to match the expression <tt class="docutils literal">e</tt>.  The result of unification is
+recorded in the binding in <tt class="docutils literal">env</tt> of <tt class="docutils literal"><span class="pre">?x</span></tt> to <tt class="docutils literal">(a b)</tt>.</p>
+</div>
+<div class="section" id="the-unification-algorithm">
+<h3>4.4.3   The Unification Algorithm</h3>
+<p>Unification is a generalization of pattern matching that attempts to find a
+mapping between two expressions that may both contain variables. The <tt class="docutils literal">unify</tt>
+function implements unification via a recursive process, which performs
+unification on corresponding parts of two expressions until a contradiction is
+reached or a viable binding to all variables can be established.</p>
+<p>Let us begin with an example. The pattern <tt class="docutils literal"><span class="pre">(?x</span> <span class="pre">?x)</span></tt> can match the pattern
+<tt class="docutils literal">((a <span class="pre">?y</span> c) (a b <span class="pre">?z))</span></tt> because there is an expression with no variables that
+matches both: <tt class="docutils literal">((a b c) (a b c))</tt>. Unification identifies this solution via
+the following steps:</p>
+<ol class="arabic simple">
+<li>To match the first element of each pattern, the variable <tt class="docutils literal"><span class="pre">?x</span></tt> is bound to
+the expression <tt class="docutils literal">(a <span class="pre">?y</span> c)</tt>.</li>
+<li>To match the second element of each pattern, first the variable <tt class="docutils literal"><span class="pre">?x</span></tt> is
+replaced by its value.  Then, <tt class="docutils literal">(a <span class="pre">?y</span> c)</tt> is matched to <tt class="docutils literal">(a b <span class="pre">?z)</span></tt> by
+binding <tt class="docutils literal"><span class="pre">?y</span></tt> to <tt class="docutils literal">b</tt> and <tt class="docutils literal"><span class="pre">?z</span></tt> to <tt class="docutils literal">c</tt>.</li>
+</ol>
+<p>As a result, the bindings placed in the environment passed to <tt class="docutils literal">unify</tt> contain
+entries for <tt class="docutils literal"><span class="pre">?x</span></tt>, <tt class="docutils literal"><span class="pre">?y</span></tt>, and <tt class="docutils literal"><span class="pre">?z</span></tt>:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">read_line</span><span class="p">(</span><span class="s">"(?x ?x)"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">read_line</span><span class="p">(</span><span class="s">" ((a ?y c) (a b ?z))"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="k">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span><span class="o">.</span><span class="n">bindings</span>
+<span class="go">{'?z': 'c', '?y': 'b', '?x': Pair('a', Pair('?y', Pair('c', nil)))}</span>
+</pre></div>
+
+<p>The result of unification may bind a variable to an expression that also
+contains variables, as we see above with <tt class="docutils literal"><span class="pre">?x</span></tt> bound to <tt class="docutils literal">(a <span class="pre">?y</span> c)</tt>. The
+<tt class="docutils literal">bind</tt> function recursively and repeatedly binds all variables to their
+values in an expression until no bound variables remain.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bind</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">env</span><span class="p">))</span>
+<span class="go">((a b c) (a b c))</span>
+</pre></div>
+
+<p>In general, unification proceeds by checking several conditions. The
+implementation of <tt class="docutils literal">unify</tt> directly follows the description below.</p>
+<ol class="arabic simple">
+<li>Both inputs <tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt> are replaced by their values if they are
+variables.</li>
+<li>If <tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt> are equal, unification succeeds.</li>
+<li>If <tt class="docutils literal">e</tt> is a variable, unification succeeds and <tt class="docutils literal">e</tt> is bound to <tt class="docutils literal">f</tt>.</li>
+<li>If <tt class="docutils literal">f</tt> is a variable, unification succeeds and <tt class="docutils literal">f</tt> is bound to <tt class="docutils literal">e</tt>.</li>
+<li>If neither is a variable, both are not lists, and they are not equal, then
+<tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt> cannot be unified, and so unification fails.</li>
+<li>If none of these cases holds, then <tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt> are both pairs, and so
+unification is performed on both their first and second corresponding
+elements.</li>
+</ol>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Destructively extend ENV so as to unify (make equal) e and f, returning</span>
+<span class="gp">    </span><span class="sd">    True if this succeeds and False otherwise.  ENV may be modified in either</span>
+<span class="gp">    </span><span class="sd">    case (its existing bindings are never changed)."""</span>
+<span class="gp">    </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="n">f</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">e</span> <span class="o">==</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">isvar</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">env</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">isvar</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="n">env</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">True</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">scheme_atomp</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">or</span> <span class="n">scheme_atomp</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="k">False</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span> <span class="ow">and</span> <span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+</pre></div>
+
+</div>
+<div class="section" id="proofs">
+<h3>4.4.4   Proofs</h3>
+<p>One way to think about the <tt class="docutils literal">logic</tt> language is as a prover of assertions in a
+formal system. Each stated fact establishes an axiom in a formal system, and
+each query must be established by the query interpreter from these axioms.
+That is, each query asserts that there is some assignment to its variables such
+that all of its sub-expressions simultaneously follow from the facts of the
+system. The role of the query interpreter is to verify that this is so.</p>
+<p>For instance, given the set of facts about dogs, we may assert that there is
+some common ancestor of Clinton and a tan dog. The query interpreter only
+outputs <tt class="docutils literal">Success!</tt> if it is able to establish that this assertion is true.
+As a byproduct, it informs us of the name of that common ancestor and the tan
+dog:</p>
+<pre class="literal-block">
+logic&gt; (query (ancestor ?a clinton)
+              (ancestor ?a ?brown-dog)
+              (dog (name ?brown-dog) (color brown)))
+Success!
+a: fillmore   brown-dog: herbert
+a: eisenhower brown-dog: fillmore
+a: eisenhower brown-dog: herbert
+</pre>
+<p>Each of the three assignments shown in the result is a trace of a larger proof
+that the query is true given the facts.  A full proof would include all of the
+facts that were used, for instance including <tt class="docutils literal">(parent abraham clinton)</tt> and
+<tt class="docutils literal">(parent fillmore abraham)</tt>.</p>
+</div>
+<div class="section" id="search">
+<h3>4.4.5   Search</h3>
+<p>In order to establish a query from the facts already established in the system,
+the query interpreter performs a search in the space of all possible facts.
+Unification is the primitive operation that pattern matches two expressions. The
+<em>search procedure</em> in a query interpreter chooses what expressions to unify in
+order to find a set of facts that chain together to establishes the query.</p>
+<p>The recursive <tt class="docutils literal">search</tt> function implements the search procedure for the
+<tt class="docutils literal">logic</tt> language. It takes as input the Scheme list of <tt class="docutils literal">clauses</tt> in the
+query, an environment <tt class="docutils literal">env</tt> containing current bindings of symbols to values
+(initially empty), and the <tt class="docutils literal">depth</tt> of the chain of rules that have been
+chained together already.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">clauses</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Search for an application of rules to establish all the CLAUSES,</span>
+<span class="gp">    </span><span class="sd">    non-destructively extending the unifier ENV.  Limit the search to</span>
+<span class="gp">    </span><span class="sd">    the nested application of DEPTH rules."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">clauses</span> <span class="ow">is</span> <span class="n">nil</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">yield</span> <span class="n">env</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">DEPTH_LIMIT</span> <span class="ow">is</span> <span class="k">None</span> <span class="ow">or</span> <span class="n">depth</span> <span class="o">&lt;=</span> <span class="n">DEPTH_LIMIT</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">for</span> <span class="n">fact</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">:</span>
+<span class="gp">    </span>            <span class="n">fact</span> <span class="o">=</span> <span class="n">rename_variables</span><span class="p">(</span><span class="n">fact</span><span class="p">,</span> <span class="n">get_unique_id</span><span class="p">())</span>
+<span class="gp">    </span>            <span class="n">env_head</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">    </span>            <span class="k">if</span> <span class="n">unify</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">clauses</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">env_head</span><span class="p">):</span>
+<span class="gp">    </span>                <span class="k">for</span> <span class="n">env_rule</span> <span class="ow">in</span> <span class="n">search</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">env_head</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">    </span>                    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">search</span><span class="p">(</span><span class="n">clauses</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">env_rule</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">    </span>                        <span class="k">yield</span> <span class="n">result</span>
+</pre></div>
+
+<p>The search to satisfy all clauses simultaneously begins with the first clause.
+For each fact in the database, <tt class="docutils literal">search</tt> attempts to unify the first clause of
+the fact with the first clause of the query. Unification is performed in a new
+environment <tt class="docutils literal">env_head</tt>. As a side effect of unification, variables are bound
+to values in <tt class="docutils literal">env_head</tt>.</p>
+<p>If unification is successful, then the clause matches the conclusion of the
+current rule.  The following <tt class="docutils literal">for</tt> statement attempts to establish the
+hypotheses of the rule, so that the conclusion can be established. It is here
+that the hypotheses of a recursive rule would be passed recursively to
+<tt class="docutils literal">search</tt> in order to be established.</p>
+<p>Finally, for every successful search of <tt class="docutils literal">fact.second</tt>, the resulting
+environment is bound to <tt class="docutils literal">env_rule</tt>. Given these bindings of values to
+variables, the final <tt class="docutils literal">for</tt> statement searches to establish the rest of the
+clauses in the initial query. Any successful result is returned via the inner
+<tt class="docutils literal">yield</tt> statement.</p>
+<p><strong>Unique names.</strong> Unification assumes that no variable is shared among both
+<tt class="docutils literal">e</tt> and <tt class="docutils literal">f</tt>.  However, we often reuse variable names in the facts and
+queries of the <tt class="docutils literal">logic</tt> language. We would not like to confuse an <tt class="docutils literal"><span class="pre">?x</span></tt> in
+one fact with an <tt class="docutils literal"><span class="pre">?x</span></tt> in another; these variables are unrelated.  To ensure
+that names are not confused, before a fact is passed into unify, its
+variable names are replaced by unique names using <tt class="docutils literal">rename_variables</tt> by
+appending a unique integer for the fact.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">rename_variables</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">    </span>    <span class="sd">"""Rename all variables in EXPR with an identifier N."""</span>
+<span class="gp">    </span>    <span class="k">if</span> <span class="n">isvar</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">expr</span> <span class="o">+</span> <span class="s">'_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">    </span>    <span class="k">elif</span> <span class="n">scheme_pairp</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">Pair</span><span class="p">(</span><span class="n">rename_variables</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span>
+<span class="gp">    </span>                    <span class="n">rename_variables</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="gp">    </span>    <span class="k">else</span><span class="p">:</span>
+<span class="gp">    </span>        <span class="k">return</span> <span class="n">expr</span>
+</pre></div>
+
+<p>The remaining details, including the user interface to the <tt class="docutils literal">logic</tt> language
+and the definition of various helper functions, appears in the <a class="reference external" href="http://composingprograms.com/examples/logic/logic.py.html">logic</a>
+example.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/45-distributed-computing.html">
+  		4.5 Distributed Computing
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>3.1 Introduction</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 3<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/31-introduction.html">3.1 Introduction</a></h3>
+				<li><a href="../pages/31-introduction.html#programming-languages">3.1.1 Programming Languages</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/32-functional-programming.html">3.2 Functional Programming</a></h3>
+				<li><a href="../pages/32-functional-programming.html#expressions">3.2.1 Expressions</a>
+				<li><a href="../pages/32-functional-programming.html#definitions">3.2.2 Definitions</a>
+				<li><a href="../pages/32-functional-programming.html#compound-values">3.2.3 Compound values</a>
+				<li><a href="../pages/32-functional-programming.html#symbolic-data">3.2.4 Symbolic Data</a>
+				<li><a href="../pages/32-functional-programming.html#turtle-graphics">3.2.5 Turtle graphics</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/33-exceptions.html">3.3 Exceptions</a></h3>
+				<li><a href="../pages/33-exceptions.html#exception-objects">3.3.1 Exception Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/34-interpreters-for-languages-with-combination.html">3.4 Interpreters for Languages with Combination</a></h3>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">3.4.1 A Scheme-Syntax Calculator</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#expression-trees">3.4.2 Expression Trees</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#parsing-expressions">3.4.3 Parsing Expressions</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#calculator-evaluation">3.4.4 Calculator Evaluation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/35-interpreters-for-languages-with-abstraction.html">3.5 Interpreters for Languages with Abstraction</a></h3>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#structure">3.5.1 Structure</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#environments">3.5.2 Environments</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#data-as-programs">3.5.3 Data as Programs</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+	<h1>Chapter 3: Interpreting Computer Programs</h1>
+  <div class="section" id="introduction">
+<h2>3.1   Introduction</h2>
+<p>Chapters 1 and 2 describe the close connection between two fundamental
+elements of programming: functions and data.  We saw how functions can be
+manipulated as data using higher-order functions. We also saw how data can be
+endowed with behavior using message passing and an object system. We have also
+studied techniques for organizing large programs, such as functional
+abstraction, data abstraction, class inheritance, and generic functions. These
+core concepts constitute a strong foundation upon which to build modular,
+maintainable, and extensible programs.</p>
+<p>This chapter focuses on the third fundamental element of programming: programs
+themselves. A Python program is just a collection of text.  Only through the
+process of interpretation do we perform any meaningful computation based on
+that text.  A programming language like Python is useful because we can define
+an <em>interpreter</em>, a program that carries out Python's evaluation and execution
+procedures.  It is no exaggeration to regard this as the most fundamental idea
+in programming, that an interpreter, which determines the meaning of
+expressions in a programming language, is just another program.</p>
+<p>To appreciate this point is to change our images of ourselves as programmers.
+We come to see ourselves as designers of languages, rather than only users of
+languages designed by others.</p>
+<div class="section" id="programming-languages">
+<h3>3.1.1   Programming Languages</h3>
+<p>Programming languages vary widely in their syntactic structures, features, and
+domain of application. Among general purpose programming languages, the
+constructs of function definition and function application are pervasive.  On
+the other hand, powerful languages exist that do not include an object system,
+higher-order functions, assignment,  or even control constructs such as
+<tt class="docutils literal">while</tt> and <tt class="docutils literal">for</tt> statements. As an example of a powerful language with a
+minimal set of features, we will introduce the <a class="reference external" href="http://http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a>
+programming language. The subset of Scheme introduced in this text does not
+allow mutable values at all.</p>
+<p>In this chapter, we study the design of interpreters and the computational
+processes that they create when executing programs. The prospect of designing
+an interpreter for a general programming language may seem daunting. After all,
+interpreters are programs that can carry out any possible computation,
+depending on their input.  However, many interpreters have an elegant common
+structure: two mutually recursive functions.  The first evaluates expressions
+in environments; the second applies functions to arguments.</p>
+<p>These functions are recursive in that they are defined in terms of each other:
+applying a function requires evaluating the expressions in its body, while
+evaluating an expression may involve applying one or more functions.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/32-functional-programming.html">
+  		3.2 Functional Programming
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

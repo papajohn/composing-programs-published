@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>4.5 Distributed Computing</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 4<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/41-introduction.html">4.1 Introduction</a></h3>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/42-implicit-sequences.html">4.2 Implicit Sequences</a></h3>
+				<li><a href="../pages/42-implicit-sequences.html#python-iterators">4.2.1 Python Iterators</a>
+				<li><a href="../pages/42-implicit-sequences.html#iterables">4.2.2 Iterables</a>
+				<li><a href="../pages/42-implicit-sequences.html#for-statements">4.2.3 For Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#generators-and-yield-statements">4.2.4 Generators and Yield Statements</a>
+				<li><a href="../pages/42-implicit-sequences.html#creating-iterables-with-yield">4.2.5 Creating Iterables with Yield</a>
+				<li><a href="../pages/42-implicit-sequences.html#streams">4.2.6 Streams</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/43-declarative-programming.html">4.3 Declarative Programming</a></h3>
+				<li><a href="../pages/43-declarative-programming.html#facts-and-queries">4.3.1 Facts and Queries</a>
+				<li><a href="../pages/43-declarative-programming.html#recursive-facts">4.3.2 Recursive Facts</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/44-unification.html">4.4 Unification</a></h3>
+				<li><a href="../pages/44-unification.html#pattern-matching">4.4.1 Pattern Matching</a>
+				<li><a href="../pages/44-unification.html#representing-facts-and-queries">4.4.2 Representing Facts and Queries</a>
+				<li><a href="../pages/44-unification.html#the-unification-algorithm">4.4.3 The Unification Algorithm</a>
+				<li><a href="../pages/44-unification.html#proofs">4.4.4 Proofs</a>
+				<li><a href="../pages/44-unification.html#search">4.4.5 Search</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/45-distributed-computing.html">4.5 Distributed Computing</a></h3>
+				<li><a href="../pages/45-distributed-computing.html#messages">4.5.1 Messages</a>
+				<li><a href="../pages/45-distributed-computing.html#client-server-architecture">4.5.2 Client/Server Architecture</a>
+				<li><a href="../pages/45-distributed-computing.html#peer-to-peer-systems">4.5.3 Peer-to-Peer Systems</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/46-distributed-data-processing.html">4.6 Distributed Data Processing</a></h3>
+				<li><a href="../pages/46-distributed-data-processing.html#id1">4.6.1 MapReduce</a>
+				<li><a href="../pages/46-distributed-data-processing.html#local-implementation">4.6.2 Local Implementation</a>
+				<li><a href="../pages/46-distributed-data-processing.html#distributed-implementation">4.6.3 Distributed Implementation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/47-parallel-computing.html">4.7 Parallel Computing</a></h3>
+				<li><a href="../pages/47-parallel-computing.html#parallelism-in-python">4.7.1 Parallelism in Python</a>
+				<li><a href="../pages/47-parallel-computing.html#the-problem-with-shared-state">4.7.2 The Problem with Shared State</a>
+				<li><a href="../pages/47-parallel-computing.html#when-no-synchronization-is-necessary">4.7.3 When No Synchronization is Necessary</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronized-data-structures">4.7.4 Synchronized Data Structures</a>
+				<li><a href="../pages/47-parallel-computing.html#locks">4.7.5 Locks</a>
+				<li><a href="../pages/47-parallel-computing.html#barriers">4.7.6 Barriers</a>
+				<li><a href="../pages/47-parallel-computing.html#message-passing">4.7.7 Message Passing</a>
+				<li><a href="../pages/47-parallel-computing.html#synchronization-pitfalls">4.7.8 Synchronization Pitfalls</a>
+				<li><a href="../pages/47-parallel-computing.html#conclusion">4.7.9 Conclusion</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="distributed-computing">
+<h2>4.5   Distributed Computing</h2>
+<p>Large-scale data processing applications often coordinate effort among multiple
+computers.  A distributed computing application is one in which multiple
+interconnected but independent computers coordinate to perform a joint
+computation.</p>
+<p>Different computers are independent in the sense that they do not directly
+share memory. Instead, they communicate with each other using <em>messages</em>,
+information transferred from one computer to another over a network.</p>
+<div class="section" id="messages">
+<h3>4.5.1   Messages</h3>
+<p>Messages sent between computers are sequences of bytes. The purpose of a
+message varies; messages can request data, send data, or instruct another
+computer to evaluate a procedure call. In all cases, the sending computer must
+encode information in a way that the receiving computer can decode and
+correctly interpret. To do so, computers adopt a message protocol that endows
+meaning to sequences of bytes.</p>
+<p>A <em>message protocol</em> is a set of rules for encoding and interpreting messages.
+Both the sending and receiving computers must agree on the semantics of a
+message to enable successful communication.  Many message protocols specify
+that a message conform to a particular format in which certain bits at fixed
+positions indicate fixed conditions. Others use special bytes or byte sequences
+to delimit parts of the message, much as punctuation delimits sub-expressions
+in the syntax of a programming language.</p>
+<p>Message protocols are not particular programs or software libraries.  Instead,
+they are rules that can be applied by a variety of programs, even written in
+different programming languages.  As a result, computers with vastly different
+software systems can participate in the same distributed system, simply by
+conforming to the message protocols that govern the system.</p>
+<p><strong>The TCP/IP Protocols</strong>. On the Internet, messages are transferred from one
+machine to another using the <a class="reference external" href="http://en.wikipedia.org/wiki/Internet_Protocol">Internet Protocol</a> (IP), which specifies how to
+transfer <em>packets</em> of data among different networks to allow global Internet
+communication. IP was designed under the assumption that networks are
+inherently unreliable at any point and dynamic in structure. Moreover, it does
+not assume that any central tracking or monitoring of communication exists.
+Each packet contains a header containing the destination IP address, along with
+other information. All packets are forwarded throughout the network toward the
+destination using simple routing rules on a best-effort basis.</p>
+<p>This design imposes constraints on communication.  Packets transferred using
+modern IP implementations (IPv4 and IPv6) have a maximum size of 65,535 bytes.
+Larger data values must be split among multiple packets.  The IP does not
+guarantee that packets will be received in the same order that they were sent.
+Some packets may be lost, and some packets may be transmitted multiple times.</p>
+<p>The <a class="reference external" href="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">Transmission Control Protocol</a> is an
+abstraction defined in terms of the IP that provides reliable, ordered
+transmission of arbitrarily large byte streams. The protocol provides this
+guarantee by correctly ordering packets transferred by the IP, removing
+duplicates, and requesting retransmission of lost packets. This improved
+reliability comes at the expense of latency, the time required to send a
+message from one point to another.</p>
+<p>The TCP breaks a stream of data into <em>TCP segments</em>, each of which includes a
+portion of the data preceded by a header that contains sequence and state
+information to support reliable, ordered transmission of data. Some TCP
+segments do not include data at all, but instead establish or terminate a
+connection between two computers.</p>
+<p>Establishing a connection between two computers <tt class="docutils literal">A</tt> and <tt class="docutils literal">B</tt> proceeds in
+three steps:</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal">A</tt> sends a request to a <em>port</em> of <tt class="docutils literal">B</tt> to establish a TCP connection,
+providing a <em>port number</em> to which to send the response.</li>
+<li><tt class="docutils literal">B</tt> sends a response to the port specified by <tt class="docutils literal">A</tt> and waits for its
+response to be acknowledged.</li>
+<li><tt class="docutils literal">A</tt> sends an acknowledgment response, verifying that data can be
+transferred in both directions.</li>
+</ol>
+<p>After this three-step "handshake", the TCP connection is established, and <tt class="docutils literal">A</tt>
+and <tt class="docutils literal">B</tt> can send data to each other.  Terminating a TCP connection proceeds
+as a sequence of steps in which both the client and server request and
+acknowledge the end of the connection.</p>
+</div>
+<div class="section" id="client-server-architecture">
+<h3>4.5.2   Client/Server Architecture</h3>
+<p>The client/server architecture is a way to dispense a service from a central
+source. A <em>server</em> provides a service and multiple <em>clients</em> communicate with
+the server to consume that service. In this architecture, clients and servers
+have different roles. The server's role is to respond to service requests from
+clients, while a client's role is to issue requests and make use of the
+server's response in order to perform some task. The diagram below illustrates
+the architecture.</p>
+<div class="figure">
+<img alt="" src="../img/clientserver.png"/>
+</div>
+<p>The most influential use of the model is the modern World Wide Web. When a web
+browser displays the contents of a web page, several programs running on
+independent computers interact using the client/server architecture. This
+section describes the process of requesting a web page in order to illustrate
+central ideas in client/server distributed systems.</p>
+<p><strong>Roles</strong>. The web browser application on a Web user's computer has the role of
+the client when requesting a web page. When requesting the content from a
+domain name on the Internet, such as www.nytimes.com, it must communicate
+with at least two different servers.</p>
+<p>The client first requests the Internet Protocol (IP) address of the computer
+located at that name from a Domain Name Server (DNS). A DNS provides the
+service of mapping domain names to IP addresses, which are numerical
+identifiers of machines on the Internet.  Python can make such a request
+directly using the <tt class="docutils literal">socket</tt> module.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">socket</span> <span class="k">import</span> <span class="n">gethostbyname</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gethostbyname</span><span class="p">(</span><span class="s">'www.nytimes.com'</span><span class="p">)</span>
+<span class="go">'170.149.172.130'</span>
+</pre></div>
+
+<p>The client then requests the contents of the web page from the web server
+located at that IP address. The response in this case is an <a class="reference external" href="http://en.wikipedia.org/wiki/HTML">HTML</a> document that contains headlines and
+article excerpts of the day's news, as well as expressions that indicate how
+the web browser client should lay out that contents on the user's screen.
+Python can make the two requests required to retrieve this content using the
+<tt class="docutils literal">urllib.request</tt> module.</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">urlopen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="s">'http://www.nytimes.com'</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span>
+<span class="go">b'&lt;!DOCTYPE html&gt;'</span>
+</pre></div>
+
+<p>Upon receiving this response, the browser issues additional requests for
+images, videos, and other auxiliary components of the page.  These requests are
+initiated because the original HTML document contains addresses of additional
+content and a description of how they embed into the page.</p>
+<p><strong>An HTTP Request</strong>. The Hypertext Transfer Protocol (HTTP) is a protocol
+implemented using TCP that governs communication for the World Wide Web (WWW).
+It assumes a client/server architecture between a web browser and a web server.
+HTTP specifies the format of messages exchanged between browsers and servers.
+All web browsers use the HTTP format to request pages from a web server, and
+all web servers use the HTTP format to send back their responses.</p>
+<p>HTTP requests have several types, the most common of which is a <tt class="docutils literal">GET</tt> request
+for a specific web page.  A <tt class="docutils literal">GET</tt> request specifies a location.  For
+instance, typing the address <tt class="docutils literal"><span class="pre">http://en.wikipedia.org/wiki/UC_Berkeley</span></tt> into
+a web browser issues an HTTP <tt class="docutils literal">GET</tt> request to port 80 of the web server
+at <tt class="docutils literal">en.wikipedia.org</tt> for the contents at location <tt class="docutils literal">/wiki/UC_Berkeley</tt>.</p>
+<p>The server sends back an HTTP response:</p>
+<pre class="literal-block">
+HTTP/1.1 200 OK
+Date: Mon, 23 May 2011 22:38:34 GMT
+Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
+Last-Modified: Wed, 08 Jan 2011 23:11:55 GMT
+Content-Type: text/html; charset=UTF-8
+
+... web page content ...
+</pre>
+<p>On the first line, the text <tt class="docutils literal">200 OK</tt>  indicates that there were no errors in
+responding to the request.  The subsequent lines of the header give information
+about the server, the date, and the type of content being sent back.</p>
+<p>If you have typed in a wrong web address, or clicked on a broken link, you may
+have seen a message such as this error:</p>
+<pre class="literal-block">
+404 Error File Not Found
+</pre>
+<p>It means that the server sent back an HTTP header that started:</p>
+<pre class="literal-block">
+HTTP/1.1 404 Not Found
+</pre>
+<p>The numbers 200 and 404 are HTTP response codes.  A fixed set of
+response codes is a common feature of a message protocol.  Designers of
+protocols attempt to anticipate common messages that will be sent via the
+protocol and assign fixed codes to reduce transmission size and establish a
+common message semantics.  In the HTTP protocol, the 200 response code
+indicates success, while 404 indicates an error that a resource was not
+found.  A variety of other <a class="reference external" href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">response codes</a> exist in the HTTP
+1.1 standard as well.</p>
+<p><strong>Modularity</strong>. The concepts of <em>client</em> and <em>server</em> are powerful
+abstractions. A server provides a service, possibly to multiple clients
+simultaneously, and a client consumes that service. The clients do not need to
+know the details of how the service is provided, or how the data they are
+receiving is stored or calculated, and the server does not need to know how its
+responses are going to be used.</p>
+<p>On the web, we think of clients and servers as being on different machines, but
+even systems on a single machine can have client/server architectures. For
+example, signals from input devices on a computer need to be generally
+available to programs running on the computer. The programs are clients,
+consuming mouse and keyboard input data. The operating system's device drivers
+are the servers, taking in physical signals and serving them up as usable
+input. In addition, the central processing unit (CPU) and the specialized
+graphical processing unit (GPU) often participate in a client/server
+architecture with the CPU as the client and the GPU as a server of images.</p>
+<p>A drawback of client/server systems is that the server is a single point of
+failure. It is the only component with the ability to dispense the service.
+There can be any number of clients, which are interchangeable and can come and
+go as necessary.</p>
+<p>Another drawback of client-server systems is that computing resources become
+scarce if there are too many clients. Clients increase the demand on the system
+without contributing any computing resources.</p>
+</div>
+<div class="section" id="peer-to-peer-systems">
+<h3>4.5.3   Peer-to-Peer Systems</h3>
+<p>The client/server model is appropriate for service-oriented situations.
+However, there are other computational goals for which a more equal division of
+labor is a better choice. The term <em>peer-to-peer</em> is used to describe
+distributed systems in which labor is divided among all the components of the
+system. All the computers send and receive data, and they all contribute some
+processing power and memory. As a distributed system increases in size, its
+capacity of computational resources increases. In a peer-to-peer system, all
+components of the system contribute some processing power and memory to a
+distributed computation.</p>
+<p>Division of labor among all participants is the identifying characteristic of
+a peer-to-peer system. This means that peers need to be able to communicate
+with each other reliably. In order to make sure that messages reach their
+intended destinations, peer-to-peer systems need to have an organized network
+structure. The components in these systems cooperate to maintain enough
+information about the locations of other components to send messages to
+intended destinations.</p>
+<p>In some peer-to-peer systems, the job of maintaining the health of the network
+is taken on by a set of specialized components. Such systems are not pure
+peer-to-peer systems, because they have different types of components that
+serve different functions. The components that support a peer-to-peer network
+act like scaffolding: they help the network stay connected, they maintain
+information about the locations of different computers, and they help newcomers
+take their place within their neighborhood.</p>
+<p>The most common applications of peer-to-peer systems are data transfer and data
+storage. For data transfer, each computer in the system contributes to send
+data over the network. If the destination computer is in a particular
+computer's neighborhood, that computer helps send data along. For data storage,
+the data set may be too large to fit on any single computer, or too valuable to
+store on just a single computer. Each computer stores a small portion of the
+data, and there may be multiple copies of the same data spread over different
+computers. When a computer fails, the data that was on it can be restored from
+other copies and put back when a replacement arrives.</p>
+<p>Skype, the voice- and video-chat service, is an example of a data transfer
+application with a peer-to-peer architecture. When two people on different
+computers are having a Skype conversation, their communications are transmitted
+through a peer-to-peer network.  This network is composed of other computers
+running the Skype application. Each computer knows the location of a few other
+computers in its neighborhood. A computer helps send a packet to its
+destination by passing it on a neighbor, which passes it on to some other
+neighbor, and so on, until the packet reaches its intended destination. Skype
+is not a pure peer-to-peer system. A scaffolding network of <em>supernodes</em> is
+responsible for logging-in and logging-out users, maintaining information about
+the locations of their computers, and modifying the network structure when
+users enter and exit.</p>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/46-distributed-data-processing.html">
+  		4.6 Distributed Data Processing
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

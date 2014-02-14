@@ -1,0 +1,224 @@
+<html>
+<head>
+<title>graphics.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>graphics.py (<a href="graphics.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""The graphics module implements a simple GUI library."""
+
+</span><span style="color: blue; font-weight: bold">import </span>sys
+<span style="color: blue; font-weight: bold">import </span>math
+
+<span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">import </span>tkinter
+<span style="color: blue; font-weight: bold">except </span>Exception as e<span style="font-weight: bold">:
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Could not load tkinter: ' </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>e<span style="font-weight: bold">))
+
+</span>FRAME_TIME <span style="font-weight: bold">= </span><span style="color: red">1</span><span style="font-weight: bold">/</span><span style="color: red">30
+
+</span><span style="color: blue; font-weight: bold">class </span>Canvas<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A Canvas object supports drawing and animation primitives.
+
+    draw_* methods return the id number of a shape object in the underlying Tk
+    object.  This id can be passed to move_* and edit_* methods.
+
+    Canvas is a singleton; only one Canvas instance can be created.
+
+    """
+
+    </span>_instance <span style="font-weight: bold">= </span><span style="color: blue">None
+
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span><span style="color: red">1024</span><span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span><span style="color: red">768</span><span style="font-weight: bold">, </span>title<span style="font-weight: bold">=</span><span style="color: red">''</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'White'</span><span style="font-weight: bold">, </span>tk<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">):
+        </span><span style="color: green; font-style: italic"># Singleton enforcement
+        </span><span style="color: blue; font-weight: bold">if </span>Canvas<span style="font-weight: bold">.</span>_instance <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>Exception<span style="font-weight: bold">(</span><span style="color: red">'Only one canvas can be instantiated.'</span><span style="font-weight: bold">)
+        </span>Canvas<span style="font-weight: bold">.</span>_instance <span style="font-weight: bold">= </span><span style="color: blue">self
+
+        </span><span style="color: green; font-style: italic"># Attributes
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color <span style="font-weight: bold">= </span>color
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>width <span style="font-weight: bold">= </span>width
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>height <span style="font-weight: bold">= </span>height
+
+        <span style="color: green; font-style: italic"># Root window
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk <span style="font-weight: bold">= </span>tk <span style="color: blue; font-weight: bold">or </span>tkinter<span style="font-weight: bold">.</span>Tk<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>protocol<span style="font-weight: bold">(</span><span style="color: red">'WM_DELETE_WINDOW'</span><span style="font-weight: bold">, </span>sys<span style="font-weight: bold">.</span>exit<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>title<span style="font-weight: bold">(</span>title <span style="color: blue; font-weight: bold">or </span><span style="color: red">'Graphics Window'</span><span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>bind<span style="font-weight: bold">(</span><span style="color: red">'&lt;Button-1&gt;'</span><span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos <span style="font-weight: bold">= </span><span style="color: blue">None
+
+        </span><span style="color: green; font-style: italic"># Canvas object
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas <span style="font-weight: bold">= </span>tkinter<span style="font-weight: bold">.</span>Canvas<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">=</span>height<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>pack<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw_background<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_images <span style="font-weight: bold">= </span>dict<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>clear<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>shape<span style="font-weight: bold">=</span><span style="color: red">'all'</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Clear all shapes, text, and images."""
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>delete<span style="font-weight: bold">(</span>shape<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>shape <span style="font-weight: bold">== </span><span style="color: red">'all'</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_draw_background<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>update<span style="font-weight: bold">()
+
+    </span><span style="color: blue; font-weight: bold">def </span>draw_polygon<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>points<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'Black'</span><span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>filled<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">, </span>smooth<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Draw a polygon and return its tkinter id.
+
+        points -- a list of (x, y) pairs encoding pixel positions
+        """
+        </span><span style="color: blue; font-weight: bold">if </span>fill_color <span style="font-weight: bold">== </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>fill_color <span style="font-weight: bold">= </span>color
+        <span style="color: blue; font-weight: bold">if </span>filled <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span>fill_color <span style="font-weight: bold">= </span><span style="color: red">""
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>create_polygon<span style="font-weight: bold">(</span>flattened<span style="font-weight: bold">(</span>points<span style="font-weight: bold">), </span>outline<span style="font-weight: bold">=</span>color<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>fill_color<span style="font-weight: bold">,
+                </span>smooth<span style="font-weight: bold">=</span>smooth<span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span>width<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>draw_circle<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>center<span style="font-weight: bold">, </span>radius<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'Black'</span><span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>filled<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Draw a cirlce and return its tkinter id.
+
+        center -- an (x, y) pair encoding a pixel position
+        """
+        </span><span style="color: blue; font-weight: bold">if </span>fill_color <span style="font-weight: bold">== </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>fill_color <span style="font-weight: bold">= </span>color
+        <span style="color: blue; font-weight: bold">if </span>filled <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span>fill_color <span style="font-weight: bold">= </span><span style="color: red">""
+        </span>x0<span style="font-weight: bold">, </span>y0 <span style="font-weight: bold">= [</span>c <span style="font-weight: bold">- </span>radius <span style="color: blue; font-weight: bold">for </span>c <span style="color: blue; font-weight: bold">in </span>center<span style="font-weight: bold">]
+        </span>x1<span style="font-weight: bold">, </span>y1 <span style="font-weight: bold">= [</span>c <span style="font-weight: bold">+ </span>radius <span style="color: blue; font-weight: bold">for </span>c <span style="color: blue; font-weight: bold">in </span>center<span style="font-weight: bold">]
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>create_oval<span style="font-weight: bold">(</span>x0<span style="font-weight: bold">, </span>y0<span style="font-weight: bold">, </span>x1<span style="font-weight: bold">, </span>y1<span style="font-weight: bold">, </span>outline<span style="font-weight: bold">=</span>color<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>fill_color<span style="font-weight: bold">, </span>width<span style="font-weight: bold">=</span>width<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>draw_image<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>image_file<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>scale<span style="font-weight: bold">=</span><span style="color: red">1</span><span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span>tkinter<span style="font-weight: bold">.</span>NW<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Draw an image from a file and return its tkinter id."""
+        </span>key <span style="font-weight: bold">= (</span>image_file<span style="font-weight: bold">, </span>scale<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>key <span style="color: blue; font-weight: bold">not in </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_images<span style="font-weight: bold">:
+            </span>image <span style="font-weight: bold">= </span>tkinter<span style="font-weight: bold">.</span>PhotoImage<span style="font-weight: bold">(</span>file<span style="font-weight: bold">=</span>image_file<span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">if </span>scale <span style="font-weight: bold">&gt;= </span><span style="color: red">1</span><span style="font-weight: bold">:
+                </span>image <span style="font-weight: bold">= </span>image<span style="font-weight: bold">.</span>zoom<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span>scale<span style="font-weight: bold">))
+            </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+                </span>image <span style="font-weight: bold">= </span>image<span style="font-weight: bold">.</span>subsample<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">/</span>scale<span style="font-weight: bold">))
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_images<span style="font-weight: bold">[</span>key<span style="font-weight: bold">] = </span>image
+
+        image <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_images<span style="font-weight: bold">[</span>key<span style="font-weight: bold">]
+        </span>x<span style="font-weight: bold">, </span>y <span style="font-weight: bold">= </span>pos
+        <span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>create_image<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>image<span style="font-weight: bold">=</span>image<span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span>anchor<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>draw_text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>text<span style="font-weight: bold">, </span>pos<span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: red">'Black'</span><span style="font-weight: bold">, </span>font<span style="font-weight: bold">=</span><span style="color: red">'Arial'</span><span style="font-weight: bold">,
+                  </span>size<span style="font-weight: bold">=</span><span style="color: red">12</span><span style="font-weight: bold">, </span>style<span style="font-weight: bold">=</span><span style="color: red">'normal'</span><span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span>tkinter<span style="font-weight: bold">.</span>NW<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Draw text and return its tkinter id."""
+        </span>x<span style="font-weight: bold">, </span>y <span style="font-weight: bold">= </span>pos
+        font <span style="font-weight: bold">= (</span>font<span style="font-weight: bold">, </span>str<span style="font-weight: bold">(</span>size<span style="font-weight: bold">), </span>style<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>create_text<span style="font-weight: bold">(</span>x<span style="font-weight: bold">, </span>y<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>color<span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span>text<span style="font-weight: bold">, </span>font<span style="font-weight: bold">=</span>font<span style="font-weight: bold">, </span>anchor<span style="font-weight: bold">=</span>anchor<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>edit_text<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>id<span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>color<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>font<span style="font-weight: bold">=</span><span style="color: blue">None</span><span style="font-weight: bold">, </span>size<span style="font-weight: bold">=</span><span style="color: red">12</span><span style="font-weight: bold">,
+                  </span>style<span style="font-weight: bold">=</span><span style="color: red">'normal'</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Edit the text, color, or font of an existing text object."""
+        </span><span style="color: blue; font-weight: bold">if </span>color <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>itemconfigure<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>fill<span style="font-weight: bold">=</span>color<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>text <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>itemconfigure<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>text<span style="font-weight: bold">=</span>text<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>font <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>itemconfigure<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>font<span style="font-weight: bold">=(</span>font<span style="font-weight: bold">, </span>str<span style="font-weight: bold">(</span>size<span style="font-weight: bold">), </span>style<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>animate_shape<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>id<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">, </span>points_fn<span style="font-weight: bold">, </span>frame_count<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Animate an existing shape over points."""
+        </span>max_frames <span style="font-weight: bold">= </span>duration <span style="font-weight: bold">// </span>FRAME_TIME
+        points <span style="font-weight: bold">= </span>points_fn<span style="font-weight: bold">(</span>frame_count<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>coords<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>flattened<span style="font-weight: bold">(</span>points<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">if </span>frame_count <span style="font-weight: bold">&lt; </span>max_frames<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">def </span>tail<span style="font-weight: bold">():
+                </span><span style="color: darkred">"""Continues the animation at the next frame."""
+                </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>animate_shape<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">, </span>points_fn<span style="font-weight: bold">, </span>frame_count <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">)
+            </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>after<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span>FRAME_TIME <span style="font-weight: bold">* </span><span style="color: red">1000</span><span style="font-weight: bold">), </span>tail<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>slide_shape<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>id<span style="font-weight: bold">, </span>end_pos<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">, </span>elapsed<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Slide an existing shape to end_pos."""
+        </span>points <span style="font-weight: bold">= </span>paired<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_canvas<span style="font-weight: bold">.</span>coords<span style="font-weight: bold">(</span>id<span style="font-weight: bold">))
+        </span>start_pos <span style="font-weight: bold">= </span>points<span style="font-weight: bold">[</span><span style="color: red">0</span><span style="font-weight: bold">]
+        </span>max_frames <span style="font-weight: bold">= </span>duration <span style="font-weight: bold">// </span>FRAME_TIME
+        <span style="color: blue; font-weight: bold">def </span>points_fn<span style="font-weight: bold">(</span>frame_count<span style="font-weight: bold">):
+            </span>completed <span style="font-weight: bold">= </span>frame_count <span style="font-weight: bold">/ </span>max_frames
+            offset <span style="font-weight: bold">= [(</span>e <span style="font-weight: bold">- </span>s<span style="font-weight: bold">) * </span>completed <span style="color: blue; font-weight: bold">for </span>s<span style="font-weight: bold">, </span>e <span style="color: blue; font-weight: bold">in </span>zip<span style="font-weight: bold">(</span>start_pos<span style="font-weight: bold">, </span>end_pos<span style="font-weight: bold">)]
+            </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[</span>shift_point<span style="font-weight: bold">(</span>p<span style="font-weight: bold">, </span>offset<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>points<span style="font-weight: bold">]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>animate_shape<span style="font-weight: bold">(</span>id<span style="font-weight: bold">, </span>duration<span style="font-weight: bold">, </span>points_fn<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>wait_for_click<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>seconds<span style="font-weight: bold">=</span><span style="color: red">0</span><span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return (position, elapsed) pair of click position and elapsed time.
+
+        position: (x,y) pixel position of click
+        elapsed:  milliseconds elapsed since call
+        seconds:  maximum number of seconds to wait for a click
+
+        If there is still no click after the given time, return (None, seconds).
+
+        """
+        </span>elapsed <span style="font-weight: bold">= </span><span style="color: red">0
+        </span><span style="color: blue; font-weight: bold">while </span>elapsed <span style="font-weight: bold">&lt; </span>seconds <span style="color: blue; font-weight: bold">or </span>seconds <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos <span style="color: blue; font-weight: bold">is not </span><span style="color: blue">None </span><span style="color: blue; font-weight: bold">and </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos<span style="font-weight: bold">[</span><span style="color: red">1</span><span style="font-weight: bold">]&gt;</span><span style="color: red">0</span><span style="font-weight: bold">:
+                </span>pos <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos
+                <span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos <span style="font-weight: bold">= </span><span style="color: blue">None
+                </span><span style="color: blue; font-weight: bold">return </span>pos<span style="font-weight: bold">, </span>elapsed
+            <span style="color: blue">self</span><span style="font-weight: bold">.</span>_sleep<span style="font-weight: bold">(</span>FRAME_TIME<span style="font-weight: bold">)
+            </span>elapsed <span style="font-weight: bold">+= </span>FRAME_TIME
+        <span style="color: blue; font-weight: bold">return </span><span style="color: blue">None</span><span style="font-weight: bold">, </span>elapsed
+
+    <span style="color: blue; font-weight: bold">def </span>_draw_background<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>w<span style="font-weight: bold">, </span>h <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>width <span style="font-weight: bold">- </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>height <span style="font-weight: bold">- </span><span style="color: red">1
+        </span>corners <span style="font-weight: bold">= [(</span><span style="color: red">0</span><span style="font-weight: bold">,</span><span style="color: red">0</span><span style="font-weight: bold">), (</span><span style="color: red">0</span><span style="font-weight: bold">, </span>h<span style="font-weight: bold">), (</span>w<span style="font-weight: bold">, </span>h<span style="font-weight: bold">), (</span>w<span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">)]
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>draw_polygon<span style="font-weight: bold">(</span>corners<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color<span style="font-weight: bold">, </span>fill_color<span style="font-weight: bold">=</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>color<span style="font-weight: bold">, </span>filled<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">, </span>smooth<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_click<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>event<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_click_pos <span style="font-weight: bold">= (</span>event<span style="font-weight: bold">.</span>x<span style="font-weight: bold">, </span>event<span style="font-weight: bold">.</span>y<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>_sleep<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>seconds<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>update_idletasks<span style="font-weight: bold">()
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>after<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span><span style="color: red">1000 </span><span style="font-weight: bold">* </span>seconds<span style="font-weight: bold">), </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>quit<span style="font-weight: bold">)
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>_tk<span style="font-weight: bold">.</span>mainloop<span style="font-weight: bold">()
+
+</span><span style="color: blue; font-weight: bold">def </span>flattened<span style="font-weight: bold">(</span>points<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a flat list of coordinates from a list of pairs."""
+    </span>coords <span style="font-weight: bold">= </span>list<span style="font-weight: bold">()
+    [</span>coords<span style="font-weight: bold">.</span>extend<span style="font-weight: bold">(</span>p<span style="font-weight: bold">) </span><span style="color: blue; font-weight: bold">for </span>p <span style="color: blue; font-weight: bold">in </span>points<span style="font-weight: bold">]
+    </span><span style="color: blue; font-weight: bold">return </span>tuple<span style="font-weight: bold">(</span>coords<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>paired<span style="font-weight: bold">(</span>coords<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a list of pairs from a flat list of coordinates."""
+    </span><span style="color: blue; font-weight: bold">assert </span>len<span style="font-weight: bold">(</span>coords<span style="font-weight: bold">) % </span><span style="color: red">2 </span><span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">'Coordinates are not paired.'
+    </span>points <span style="font-weight: bold">= []
+    </span>x <span style="font-weight: bold">= </span><span style="color: blue">None
+    </span><span style="color: blue; font-weight: bold">for </span>elem <span style="color: blue; font-weight: bold">in </span>coords<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">if </span>x <span style="color: blue; font-weight: bold">is </span><span style="color: blue">None</span><span style="font-weight: bold">:
+            </span>x <span style="font-weight: bold">= </span>elem
+        <span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span>points<span style="font-weight: bold">.</span>append<span style="font-weight: bold">((</span>x<span style="font-weight: bold">, </span>elem<span style="font-weight: bold">))
+            </span>x <span style="font-weight: bold">= </span><span style="color: blue">None
+    </span><span style="color: blue; font-weight: bold">return </span>points
+
+<span style="color: blue; font-weight: bold">def </span>translate_point<span style="font-weight: bold">(</span>point<span style="font-weight: bold">, </span>angle<span style="font-weight: bold">, </span>distance<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Translate a point a distance in a direction (angle)."""
+    </span>x<span style="font-weight: bold">, </span>y <span style="font-weight: bold">= </span>point
+    <span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>x <span style="font-weight: bold">+ </span>math<span style="font-weight: bold">.</span>cos<span style="font-weight: bold">(</span>angle<span style="font-weight: bold">) * </span>distance<span style="font-weight: bold">, </span>y <span style="font-weight: bold">+ </span>math<span style="font-weight: bold">.</span>sin<span style="font-weight: bold">(</span>angle<span style="font-weight: bold">) * </span>distance<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>shift_point<span style="font-weight: bold">(</span>point<span style="font-weight: bold">, </span>offset<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Shift a point by an offset."""
+    </span>x<span style="font-weight: bold">, </span>y <span style="font-weight: bold">= </span>point
+    dx<span style="font-weight: bold">, </span>dy <span style="font-weight: bold">= </span>offset
+    <span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>x <span style="font-weight: bold">+ </span>dx<span style="font-weight: bold">, </span>y <span style="font-weight: bold">+ </span>dy<span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>rectangle_points<span style="font-weight: bold">(</span>pos<span style="font-weight: bold">, </span>width<span style="font-weight: bold">, </span>height<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the points of a rectangle starting at pos."""
+    </span>x1<span style="font-weight: bold">, </span>y1 <span style="font-weight: bold">= </span>pos
+    x2<span style="font-weight: bold">, </span>y2 <span style="font-weight: bold">= </span>width <span style="font-weight: bold">+ </span>x1<span style="font-weight: bold">, </span>height <span style="font-weight: bold">+ </span>y1
+    <span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">[(</span>x1<span style="font-weight: bold">, </span>y1<span style="font-weight: bold">), (</span>x1<span style="font-weight: bold">, </span>y2<span style="font-weight: bold">), (</span>x2<span style="font-weight: bold">, </span>y2<span style="font-weight: bold">), (</span>x2<span style="font-weight: bold">, </span>y1<span style="font-weight: bold">)]
+
+</span><span style="color: blue; font-weight: bold">def </span>format_color<span style="font-weight: bold">(</span>r<span style="font-weight: bold">, </span>g<span style="font-weight: bold">, </span>b<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Format a color as a string.
+
+    r, g, b -- integers from 0 to 255
+    """
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'#{0:02x}{1:02x}{2:02x}'</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>int<span style="font-weight: bold">(</span>r <span style="font-weight: bold">* </span><span style="color: red">255</span><span style="font-weight: bold">), </span>int<span style="font-weight: bold">(</span>g <span style="font-weight: bold">* </span><span style="color: red">255</span><span style="font-weight: bold">), </span>int<span style="font-weight: bold">(</span>b <span style="font-weight: bold">* </span><span style="color: red">255</span><span style="font-weight: bold">))
+</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>3.2 Functional Programming</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="../theme/css/cp.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/pytutor.css"/>
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/ui-lightness/jquery-ui-1.8.21.custom.css" />
+  <link rel="stylesheet" type="text/css" href="../theme/tutor/css/codemirror.css"  />
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="../theme/tutor/js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery-ui-1.8.24.custom.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.ba-bbq.min.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/jquery.jsPlumb-1.3.10-all-min.js "></script>
+
+  <!-- codemirror.net online code editor -->
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/codemirror.js"></script>
+  <script type="text/javascript" src="../theme/tutor/js/codemirror/python.js"></script>
+
+  <!-- d3 -->
+  <script type="text/javascript" src="../theme/tutor/js/d3.v2.min.js"></script>
+
+  <!-- Online Python Tutor -->
+  <script type="text/javascript" src="../theme/tutor/js/pytutor.js"></script>
+  <script type="text/javascript" src="../theme/js/tutorize.js"></script>
+
+  
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js","jsMath2jax.js"],
+           tex2jax: {
+               inlineMath: [ ['$','$'] ],
+               displayMath: [ ['$$','$$'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+
+</head>
+
+<body id="index" class="home">
+  <div class="container">
+
+    <div class="nav-main">
+      <div class="wrap">
+        <a class="nav-home" href="..">
+          <span class="nav-logo">c<span class="nav-logo-compose">⚬</span>mp<span class="nav-logo-compose">⚬</span>sing pr<span class="nav-logo-compose">⚬</span>grams</span>
+        </a>
+        <ul class="nav-site">
+          <li><a href="../">Text</a></li>
+          <li><a href="../projects.html">Projects</a></li>
+          <li><a href="../tutor.html">Tutor</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="content wrap documentationContent">
+      <div class="nav-docs">
+	<h3>Chapter 3<a id="hide_contents">Hide contents</a> </h3>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/31-introduction.html">3.1 Introduction</a></h3>
+				<li><a href="../pages/31-introduction.html#programming-languages">3.1.1 Programming Languages</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/32-functional-programming.html">3.2 Functional Programming</a></h3>
+				<li><a href="../pages/32-functional-programming.html#expressions">3.2.1 Expressions</a>
+				<li><a href="../pages/32-functional-programming.html#definitions">3.2.2 Definitions</a>
+				<li><a href="../pages/32-functional-programming.html#compound-values">3.2.3 Compound values</a>
+				<li><a href="../pages/32-functional-programming.html#symbolic-data">3.2.4 Symbolic Data</a>
+				<li><a href="../pages/32-functional-programming.html#turtle-graphics">3.2.5 Turtle graphics</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/33-exceptions.html">3.3 Exceptions</a></h3>
+				<li><a href="../pages/33-exceptions.html#exception-objects">3.3.1 Exception Objects</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/34-interpreters-for-languages-with-combination.html">3.4 Interpreters for Languages with Combination</a></h3>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#a-scheme-syntax-calculator">3.4.1 A Scheme-Syntax Calculator</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#expression-trees">3.4.2 Expression Trees</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#parsing-expressions">3.4.3 Parsing Expressions</a>
+				<li><a href="../pages/34-interpreters-for-languages-with-combination.html#calculator-evaluation">3.4.4 Calculator Evaluation</a>
+		</div>
+		<div class="nav-docs-section">
+			<h3><a href="../pages/35-interpreters-for-languages-with-abstraction.html">3.5 Interpreters for Languages with Abstraction</a></h3>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#structure">3.5.1 Structure</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#environments">3.5.2 Environments</a>
+				<li><a href="../pages/35-interpreters-for-languages-with-abstraction.html#data-as-programs">3.5.3 Data as Programs</a>
+		</div>
+      </div>
+
+      <div class="inner-content">
+  <div class="section" id="functional-programming">
+<h2>3.2   Functional Programming</h2>
+<p>The software running on any modern computer is written in a variety of
+programming languages. There are physical languages, such as the machine
+languages for particular computers. These languages are concerned with the
+representation of data and control in terms of individual bits of storage and
+primitive machine instructions. The machine-language programmer is concerned
+with using the given hardware to erect systems and utilities for the efficient
+implementation of resource-limited computations. High-level languages, erected
+on a machine-language substrate, hide concerns about the representation of data
+as collections of bits and the representation of programs as sequences of
+primitive instructions. These languages have means of combination and
+abstraction, such as function definition, that are appropriate to the
+larger-scale organization of software systems.</p>
+<p>In this section, we introduce a high-level programming language that encourages
+a functional style.  Our object of study, a subset of the Scheme language,
+employs a very similar model of computation to Python's, but uses only
+expressions (no statements), specializes in symbolic computation, and employs
+only immutable values.</p>
+<p>Scheme is a dialect of <a class="reference external" href="http://en.wikipedia.org/wiki/Lisp_(programming_language)">Lisp</a>, the second-oldest
+programming language that is still widely used today (after <a class="reference external" href="http://en.wikipedia.org/wiki/Fortran">Fortran</a>). The community of Lisp programmers
+has continued to thrive for decades, and new dialects of Lisp such as <a class="reference external" href="http://en.wikipedia.org/wiki/Clojure">Clojure</a> have some of the fastest growing
+communities of developers of any modern programming language. To follow along
+with the examples in this text, you can <a class="reference external" href="http://inst.eecs.berkeley.edu/~scheme/">download a Scheme interpreter</a>.</p>
+<div class="section" id="expressions">
+<h3>3.2.1   Expressions</h3>
+<p>Scheme programs consist of expressions, which are either call expressions or
+special forms. A call expression consists of an operator expression followed
+by zero or more operand sub-expressions, as in Python. Both the operator and
+operand are contained within parentheses:</p>
+<pre class="literal-block">
+&gt; (quotient 10 2)
+5
+</pre>
+<p>Scheme exclusively uses prefix notation.  Operators are often symbols, such as
+<tt class="docutils literal">+</tt> and <tt class="docutils literal">*</tt>. Call expressions can be nested, and they may span more than
+one line:</p>
+<pre class="literal-block">
+&gt; (+ (* 3 5) (- 10 6))
+19
+&gt; (+ (* 3
+        (+ (* 2 4)
+           (+ 3 5)))
+     (+ (- 10 7)
+        6))
+57
+</pre>
+<p>As in Python, Scheme expressions may be primitives or combinations.  Number
+literals are primitives, while call expressions are combined forms that include
+arbitrary sub-expressions. The evaluation procedure of call expressions matches
+that of Python: first the operator and operand expressions are evaluated, and
+then the function that is the value of the operator is applied to the arguments
+that are the values of the operands.</p>
+<p>The <tt class="docutils literal">if</tt> expression in Scheme is a <em>special form</em>, meaning that while it
+looks syntactically like a call expression, it has a different evaluation
+procedure.   The general form of an <tt class="docutils literal">if</tt> expression is:</p>
+<pre class="literal-block">
+(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)
+</pre>
+<p>To evaluate an <tt class="docutils literal">if</tt> expression, the interpreter starts by evaluating the
+<tt class="docutils literal">&lt;predicate&gt;</tt> part of the expression. If the <tt class="docutils literal">&lt;predicate&gt;</tt> evaluates to a
+true value, the interpreter then evaluates the <tt class="docutils literal">&lt;consequent&gt;</tt> and returns its
+value.  Otherwise it evaluates the <tt class="docutils literal">&lt;alternative&gt;</tt> and returns its value.</p>
+<p>Numerical values can be compared using familiar comparison operators, but
+prefix notation is used in this case as well:</p>
+<pre class="literal-block">
+&gt; (&gt;= 2 1)
+#t
+</pre>
+<p>The boolean values <tt class="docutils literal">#t</tt> (or <tt class="docutils literal">true</tt>) and <tt class="docutils literal">#f</tt> (or <tt class="docutils literal">false</tt>) in Scheme can
+be combined with boolean special forms, which have evaluation procedures
+similar to those in Python.</p>
+<blockquote>
+<ul class="simple">
+<li><tt class="docutils literal">(and &lt;e1&gt; ... &lt;en&gt;)</tt> The interpreter evaluates the expressions <tt class="docutils literal">&lt;e&gt;</tt>
+one at a time, in left-to-right order. If any <tt class="docutils literal">&lt;e&gt;</tt> evaluates to <tt class="docutils literal">false</tt>,
+the value of the <tt class="docutils literal">and</tt> expression is <tt class="docutils literal">false</tt>, and the rest of the
+<tt class="docutils literal">&lt;e&gt;</tt>'s are not evaluated. If all <tt class="docutils literal">&lt;e&gt;</tt>'s evaluate to true values, the
+value of the <tt class="docutils literal">and</tt> expression is the value of the last one.</li>
+<li><tt class="docutils literal">(or &lt;e1&gt; ... &lt;en&gt;)</tt> The interpreter evaluates the expressions <tt class="docutils literal">&lt;e&gt;</tt> one
+at a time, in left-to-right order. If any <tt class="docutils literal">&lt;e&gt;</tt> evaluates to a true value,
+that value is returned as the value of the <tt class="docutils literal">or</tt> expression, and the rest
+of the <tt class="docutils literal">&lt;e&gt;</tt>'s are not evaluated. If all <tt class="docutils literal">&lt;e&gt;</tt>'s evaluate to <tt class="docutils literal">false</tt>, the
+value of the <tt class="docutils literal">or</tt> expression is <tt class="docutils literal">false</tt>.</li>
+<li><tt class="docutils literal">(not &lt;e&gt;)</tt> The value of a not expression is <tt class="docutils literal">true</tt> when the expression
+<tt class="docutils literal">&lt;e&gt;</tt> evaluates to <tt class="docutils literal">false</tt>, and <tt class="docutils literal">false</tt> otherwise.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="definitions">
+<h3>3.2.2   Definitions</h3>
+<p>Values can be named using the <tt class="docutils literal">define</tt> special form:</p>
+<pre class="literal-block">
+&gt; (define pi 3.14)
+&gt; (* pi 2)
+6.28
+</pre>
+<p>New functions (called <em>procedures</em> in Scheme) can be defined using a second
+version of the <tt class="docutils literal">define</tt> special form. For example, to define squaring, we
+write:</p>
+<pre class="literal-block">
+(define (square x) (* x x))
+</pre>
+<p>The general form of a procedure definition is:</p>
+<pre class="literal-block">
+(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)
+</pre>
+<p>The <tt class="docutils literal">&lt;name&gt;</tt> is a symbol to be associated with the procedure definition in
+the environment. The <tt class="docutils literal">&lt;formal parameters&gt;</tt> are the names used within the body
+of the procedure to refer to the corresponding arguments of the procedure. The
+<tt class="docutils literal">&lt;body&gt;</tt> is an expression that will yield the value of the procedure
+application when the formal parameters are replaced by the actual arguments to
+which the procedure is applied. The <tt class="docutils literal">&lt;name&gt;</tt> and the <tt class="docutils literal">&lt;formal parameters&gt;</tt>
+are grouped within parentheses, just as they would be in an actual call to the
+procedure being defined.</p>
+<p>Having defined square, we can now use it in call expressions:</p>
+<pre class="literal-block">
+&gt; (square 21)
+441
+
+&gt; (square (+ 2 5))
+49
+
+&gt; (square (square 3))
+81
+</pre>
+<p>User-defined functions can take multiple arguments and include special forms:</p>
+<pre class="literal-block">
+&gt; (define (average x y)
+    (/ (+ x y) 2))
+&gt; (average 1 3)
+2
+&gt; (define (abs x)
+    (if (&lt; x 0)
+        (- x)
+        x))
+&gt; (abs -3)
+3
+</pre>
+<p>Scheme supports local definitions with the same lexical scoping rules as
+Python. Below, we define an iterative procedure for computing square roots
+using nested definitions are recursion:</p>
+<pre class="literal-block">
+&gt; (define (sqrt x)
+    (define (good-enough? guess)
+      (&lt; (abs (- (square guess) x)) 0.001))
+    (define (improve guess)
+      (average guess (/ x guess)))
+    (define (sqrt-iter guess)
+      (if (good-enough? guess)
+          guess
+          (sqrt-iter (improve guess))))
+    (sqrt-iter 1.0))
+&gt; (sqrt 9)
+3.00009155413138
+</pre>
+<p>Anonymous functions are created using the <tt class="docutils literal">lambda</tt> special form.  <tt class="docutils literal">Lambda</tt>
+is used to create procedures in the same way as <tt class="docutils literal">define</tt>, except that
+no name is specified for the procedure:</p>
+<pre class="literal-block">
+(lambda (&lt;formal-parameters&gt;) &lt;body&gt;)
+</pre>
+<p>The resulting procedure is just as much a procedure as one that is created
+using <tt class="docutils literal">define</tt>. The only difference is that it has not been associated with
+any name in the environment. In fact, the following expressions are
+equivalent:</p>
+<pre class="literal-block">
+&gt; (define (plus4 x) (+ x 4))
+&gt; (define plus4 (lambda (x) (+ x 4)))
+</pre>
+<p>Like any expression that has a procedure as its value, a lambda expression can
+be used as the operator in a call expression:</p>
+<pre class="literal-block">
+&gt; ((lambda (x y z) (+ x y (square z))) 1 2 3)
+12
+</pre>
+</div>
+<div class="section" id="compound-values">
+<h3>3.2.3   Compound values</h3>
+<p>Pairs are built into the Scheme language. For historical
+reasons, pairs are created with the <tt class="docutils literal">cons</tt> built-in function, and the
+elements of a pair are accessed with <tt class="docutils literal">car</tt> and <tt class="docutils literal">cdr</tt>:</p>
+<pre class="literal-block">
+&gt; (define x (cons 1 2))
+&gt; x
+(1 . 2)
+&gt; (car x)
+1
+&gt; (cdr x)
+2
+</pre>
+<p>Recursive lists are also built into the language, using pairs. A special value
+denoted <tt class="docutils literal">nil</tt> or <tt class="docutils literal">'()</tt> represents the empty list. A recursive list value is
+rendered by placing its elements within parentheses, separated by spaces:</p>
+<pre class="literal-block">
+&gt; (cons 1
+        (cons 2
+              (cons 3
+                    (cons 4 nil))))
+(1 2 3 4)
+&gt; (list 1 2 3 4)
+(1 2 3 4)
+&gt; (define one-through-four (list 1 2 3 4))
+&gt; (car one-through-four)
+1
+&gt; (cdr one-through-four)
+(2 3 4)
+&gt; (car (cdr one-through-four))
+2
+&gt; (cons 10 one-through-four)
+(10 1 2 3 4)
+&gt; (cons 5 one-through-four)
+(5 1 2 3 4)
+</pre>
+<p>Whether a list is empty can be determined using the primitive <tt class="docutils literal">null?</tt>
+predicate. Using it, we can define the standard sequence operations for
+computing <tt class="docutils literal">length</tt> and selecting elements:</p>
+<pre class="literal-block">
+&gt; (define (length items)
+    (if (null? items)
+        0
+        (+ 1 (length (cdr items)))))
+&gt; (define (getitem items n)
+    (if (= n 0)
+        (car items)
+        (getitem (cdr items) (- n 1))))
+&gt; (define squares (list 1 4 9 16 25))
+&gt; (length squares)
+5
+&gt; (getitem squares 3)
+16
+</pre>
+</div>
+<div class="section" id="symbolic-data">
+<h3>3.2.4   Symbolic Data</h3>
+<p>All the compound data objects we have used so far were
+constructed ultimately from numbers. One of Scheme's strengths is working
+with arbitrary symbols as data.</p>
+<p>In order to manipulate symbols we need a new element in our language: the
+ability to <em>quote</em> a data object. Suppose we want to construct the list <tt class="docutils literal">(a
+b)</tt>. We can't accomplish this with <tt class="docutils literal">(list a b)</tt>, because this expression
+constructs a list of the values of <tt class="docutils literal">a</tt> and <tt class="docutils literal">b</tt> rather than the symbols
+themselves. In Scheme, we refer to the symbols <tt class="docutils literal">a</tt> and <tt class="docutils literal">b</tt> rather than
+their values by preceding them with a single quotation mark:</p>
+<pre class="literal-block">
+&gt; (define a 1)
+&gt; (define b 2)
+&gt; (list a b)
+(1 2)
+&gt; (list 'a 'b)
+(a b)
+&gt; (list 'a b)
+(a 2)
+</pre>
+<p>In Scheme, any expression that is not evaluated is said to be <em>quoted</em>. This
+notion of quotation is derived from a classic philosophical distinction between
+a thing, such as a dog, which runs around and barks, and the word "dog" that is
+a linguistic construct for designating such things. When we use "dog" in
+quotation marks, we do not refer to some dog in particular but instead to a
+word. In language, quotation allow us to talk about language itself, and so it
+is in Scheme:</p>
+<pre class="literal-block">
+&gt; (list 'define 'list)
+(define list)
+</pre>
+<p>Quotation also allows us to type in compound objects, using the conventional
+printed representation for lists:</p>
+<pre class="literal-block">
+&gt; (car '(a b c))
+a
+
+&gt; (cdr '(a b c))
+(b c)
+</pre>
+<p>The full Scheme language contains additional features, such as mutation
+operations, vectors, and maps. However, the subset we have introduced so far
+provides a rich functional programming language capable of implementing many of
+the ideas we have discussed so far in this text.</p>
+</div>
+<div class="section" id="turtle-graphics">
+<h3>3.2.5   Turtle graphics</h3>
+<p>The implementation of Scheme that serves as a companion to this text includes
+Turtle graphics, an illustrating environment developed as part of the Logo
+language (another Lisp dialect). This turtle begins in the center of a canvas,
+moves and turns based on procedures, and draws lines behind it as it moves.
+While the turtle was invented to engage children in the act of programming, it
+remains an engaging graphical tool for even advanced programmers.</p>
+<p>At any moment during the course of executing a Scheme program, the turtle has a
+position and heading on the canvas. Single-argument procedures such as
+<tt class="docutils literal">forward</tt> and <tt class="docutils literal">right</tt> change the position and heading of the turtle. Common
+procedures have abbreviations: <tt class="docutils literal">forward</tt> can also be called as <tt class="docutils literal">fd</tt>, etc.
+The <tt class="docutils literal">begin</tt> special form in Scheme allows a single expression to include
+multiple sub-expressions.  This form is useful for issuing multiple commands:</p>
+<pre class="literal-block">
+&gt; (define (repeat k fn) (if (&gt; k 0)
+                            (begin (fn) (repeat (- k 1) fn))
+                            nil))
+&gt; (repeat 5
+          (lambda () (fd 100)
+                     (repeat 5
+                             (lambda () (fd 20) (rt 144)))
+                     (rt 144)))
+nil
+</pre>
+<div class="figure">
+<img alt="" src="../img/star.png"/>
+</div>
+<p>The full repertoire of Turtle procedures is also built into Python as the
+<a class="reference external" href="http://docs.python.org/py3k/library/turtle.html">turtle library module</a>.</p>
+<p>As a final example, Scheme can express recursive drawings using its turtle
+graphics in a remarkably compact form.  Sierpinski's triangle is a fractal that
+draws each triangle as three neighboring triangles that have vertexes at the
+midpoints of the legs of the triangle that contains them.  It can be drawn to a
+finite recursive depth by this Scheme program:</p>
+<pre class="literal-block">
+&gt; (define (repeat k fn)
+    (if (&gt; k 0)
+        (begin (fn) (repeat (- k 1) fn))
+        nil))
+
+&gt; (define (tri fn)
+    (repeat 3 (lambda () (fn) (lt 120))))
+
+&gt; (define (sier d k)
+    (tri (lambda ()
+           (if (= k 1) (fd d) (leg d k)))))
+
+&gt; (define (leg d k)
+    (sier (/ d 2) (- k 1))
+    (penup)
+    (fd d)
+    (pendown))
+</pre>
+<p>The <tt class="docutils literal">triangle</tt> procedure is a general method for repeating a drawing
+procedure three times with a left turn following each repetition.  The
+<tt class="docutils literal">sier</tt> procedure takes a length <tt class="docutils literal">d</tt> and a recursive depth <tt class="docutils literal">k</tt>.  It draws
+a plain triangle if the depth is 1, and otherwise draws a triangle made up
+of calls to <tt class="docutils literal">leg</tt>.  The <tt class="docutils literal">leg</tt> procedure draws a single leg of a recursive
+Sierpinski triangle by a recursive call to <tt class="docutils literal">sier</tt> that fills the first half
+of the length of the leg, then by moving the turtle to the next vertex.  The
+procedures <tt class="docutils literal">penup</tt> and <tt class="docutils literal">pendown</tt> stop the turtle from drawing as it moves
+by lifting its pen up and the placing it down again. The mutual recursion
+between <tt class="docutils literal">sier</tt> and <tt class="docutils literal">leg</tt> yields this result:</p>
+<pre class="literal-block">
+&gt; (sier 400 6)
+</pre>
+<div class="figure">
+<img alt="" src="../img/sier.png"/>
+</div>
+</div>
+</div>
+  <p><i>Continue</i>:
+  	<a href="../pages/33-exceptions.html">
+  		3.3 Exceptions
+  	</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <footer id="contentinfo" class="body">
+          Composing Programs by <a href="http://www.denero.org">John
+          DeNero</a>, based on the textbook <a
+          href="http://mitpress.mit.edu/sicp/">Structure and
+          Interpretation of Computer Programs</a> by Harold Abelson and
+          Gerald Jay Sussman, is licensed under a <a rel="license"
+          href="http://creativecommons.org/licenses/by-sa/3.0/">Creative
+          Commons Attribution-ShareAlike 3.0 Unported License</a>.
+      </footer><!-- /#contentinfo -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>scheme_reader.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>scheme_reader.py (<a href="scheme_reader.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main<span style="font-weight: bold">, </span>trace<span style="font-weight: bold">, </span>interact
+<span style="color: blue; font-weight: bold">from </span>scheme_tokens <span style="color: blue; font-weight: bold">import </span>tokenize_lines<span style="font-weight: bold">, </span>DELIMITERS
+<span style="color: blue; font-weight: bold">from </span>buffer <span style="color: blue; font-weight: bold">import </span>Buffer<span style="font-weight: bold">, </span>InputReader
+
+<span style="color: green; font-style: italic"># Pairs and Scheme lists
+
+</span><span style="color: blue; font-weight: bold">class </span>Pair<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""A pair has two instance attributes: first and second.  For a Pair to be
+    a well-formed list, second is either a well-formed list or nil.  Some
+    methods only apply to well-formed lists.
+
+    &gt;&gt;&gt; s = Pair(1, Pair(2, nil))
+    &gt;&gt;&gt; s
+    Pair(1, Pair(2, nil))
+    &gt;&gt;&gt; print(s)
+    (1 2)
+    &gt;&gt;&gt; len(s)
+    2
+    &gt;&gt;&gt; s[1]
+    2
+    &gt;&gt;&gt; print(s.map(lambda x: x+4))
+    (5 6)
+    """
+    </span><span style="color: blue; font-weight: bold">def </span>__init__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>first<span style="font-weight: bold">, </span>second<span style="font-weight: bold">):
+        </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>first <span style="font-weight: bold">= </span>first
+        <span style="color: blue">self</span><span style="font-weight: bold">.</span>second <span style="font-weight: bold">= </span>second
+
+    <span style="color: blue; font-weight: bold">def </span>__repr__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">"Pair({0}, {1})"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>repr<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>first<span style="font-weight: bold">), </span>repr<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second<span style="font-weight: bold">))
+
+    </span><span style="color: blue; font-weight: bold">def </span>__str__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>s <span style="font-weight: bold">= </span><span style="color: red">"(" </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+        </span>second <span style="font-weight: bold">= </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second
+        <span style="color: blue; font-weight: bold">while </span>isinstance<span style="font-weight: bold">(</span>second<span style="font-weight: bold">, </span>Pair<span style="font-weight: bold">):
+            </span>s <span style="font-weight: bold">+= </span><span style="color: red">" " </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>second<span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+            </span>second <span style="font-weight: bold">= </span>second<span style="font-weight: bold">.</span>second
+        <span style="color: blue; font-weight: bold">if </span>second <span style="color: blue; font-weight: bold">is not </span>nil<span style="font-weight: bold">:
+            </span>s <span style="font-weight: bold">+= </span><span style="color: red">" . " </span><span style="font-weight: bold">+ </span>str<span style="font-weight: bold">(</span>second<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>s <span style="font-weight: bold">+ </span><span style="color: red">")"
+
+    </span><span style="color: blue; font-weight: bold">def </span>__len__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span>n<span style="font-weight: bold">, </span>second <span style="font-weight: bold">= </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second
+        <span style="color: blue; font-weight: bold">while </span>isinstance<span style="font-weight: bold">(</span>second<span style="font-weight: bold">, </span>Pair<span style="font-weight: bold">):
+            </span>n <span style="font-weight: bold">+= </span><span style="color: red">1
+            </span>second <span style="font-weight: bold">= </span>second<span style="font-weight: bold">.</span>second
+        <span style="color: blue; font-weight: bold">if </span>second <span style="color: blue; font-weight: bold">is not </span>nil<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span><span style="color: red">"length attempted on improper list"</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">return </span>n
+
+    <span style="color: blue; font-weight: bold">def </span>__getitem__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>k<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>k <span style="font-weight: bold">&lt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>IndexError<span style="font-weight: bold">(</span><span style="color: red">"negative index into list"</span><span style="font-weight: bold">)
+        </span>y <span style="font-weight: bold">= </span><span style="color: blue">self
+        </span><span style="color: blue; font-weight: bold">for </span>_ <span style="color: blue; font-weight: bold">in </span>range<span style="font-weight: bold">(</span>k<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">if </span>y<span style="font-weight: bold">.</span>second <span style="color: blue; font-weight: bold">is </span>nil<span style="font-weight: bold">:
+                </span><span style="color: blue; font-weight: bold">raise </span>IndexError<span style="font-weight: bold">(</span><span style="color: red">"list index out of bounds"</span><span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">elif not </span>isinstance<span style="font-weight: bold">(</span>y<span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>Pair<span style="font-weight: bold">):
+                </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span><span style="color: red">"ill-formed list"</span><span style="font-weight: bold">)
+            </span>y <span style="font-weight: bold">= </span>y<span style="font-weight: bold">.</span>second
+        <span style="color: blue; font-weight: bold">return </span>y<span style="font-weight: bold">.</span>first
+
+    <span style="color: blue; font-weight: bold">def </span>map<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>fn<span style="font-weight: bold">):
+        </span><span style="color: darkred">"""Return a Scheme list after mapping Python function FN to SELF."""
+        </span>mapped <span style="font-weight: bold">= </span>fn<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>first<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second <span style="color: blue; font-weight: bold">is </span>nil <span style="color: blue; font-weight: bold">or </span>isinstance<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second<span style="font-weight: bold">, </span>Pair<span style="font-weight: bold">):
+            </span><span style="color: blue; font-weight: bold">return </span>Pair<span style="font-weight: bold">(</span>mapped<span style="font-weight: bold">, </span><span style="color: blue">self</span><span style="font-weight: bold">.</span>second<span style="font-weight: bold">.</span>map<span style="font-weight: bold">(</span>fn<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>TypeError<span style="font-weight: bold">(</span><span style="color: red">"ill-formed list"</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">class </span>nil<span style="font-weight: bold">(</span>object<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""The empty list"""
+
+    </span><span style="color: blue; font-weight: bold">def </span>__repr__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">"nil"
+
+    </span><span style="color: blue; font-weight: bold">def </span>__str__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">"()"
+
+    </span><span style="color: blue; font-weight: bold">def </span>__len__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">0
+
+    </span><span style="color: blue; font-weight: bold">def </span>__getitem__<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>k<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">if </span>k <span style="font-weight: bold">&lt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">raise </span>IndexError<span style="font-weight: bold">(</span><span style="color: red">"negative index into list"</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">raise </span>IndexError<span style="font-weight: bold">(</span><span style="color: red">"list index out of bounds"</span><span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">def </span>map<span style="font-weight: bold">(</span><span style="color: blue">self</span><span style="font-weight: bold">, </span>fn<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: blue">self
+
+</span>nil <span style="font-weight: bold">= </span>nil<span style="font-weight: bold">() </span><span style="color: green; font-style: italic"># Assignment hides the nil class; there is only one instance
+
+
+# Scheme list parser, without quotation or dotted lists.
+
+</span><span style="color: blue; font-weight: bold">def </span>scheme_read<span style="font-weight: bold">(</span>src<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Read the next expression from src, a Buffer of tokens.
+
+    &gt;&gt;&gt; lines = ['(+ 1 ', '(+ 23 4)) (']
+    &gt;&gt;&gt; src = Buffer(tokenize_lines(lines))
+    &gt;&gt;&gt; print(scheme_read(src))
+    (+ 1 (+ 23 4))
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>src<span style="font-weight: bold">.</span>current<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">is </span><span style="color: blue">None</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>EOFError
+    val <span style="font-weight: bold">= </span>src<span style="font-weight: bold">.</span>pop<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">if </span>val <span style="font-weight: bold">== </span><span style="color: red">'nil'</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>nil
+    <span style="color: blue; font-weight: bold">elif </span>val <span style="color: blue; font-weight: bold">not in </span>DELIMITERS<span style="font-weight: bold">:  </span><span style="color: green; font-style: italic"># ( ) ' .
+        </span><span style="color: blue; font-weight: bold">return </span>val
+    <span style="color: blue; font-weight: bold">elif </span>val <span style="font-weight: bold">== </span><span style="color: red">"("</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span>read_tail<span style="font-weight: bold">(</span>src<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>SyntaxError<span style="font-weight: bold">(</span><span style="color: red">"unexpected token: {0}"</span><span style="font-weight: bold">.</span>format<span style="font-weight: bold">(</span>val<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">def </span>read_tail<span style="font-weight: bold">(</span>src<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the remainder of a list in src, starting before an element or ).
+
+    &gt;&gt;&gt; read_tail(Buffer(tokenize_lines([')'])))
+    nil
+    &gt;&gt;&gt; read_tail(Buffer(tokenize_lines(['2 3)'])))
+    Pair(2, Pair(3, nil))
+    &gt;&gt;&gt; read_tail(Buffer(tokenize_lines(['2 (3 4))'])))
+    Pair(2, Pair(Pair(3, Pair(4, nil)), nil))
+    """
+    </span><span style="color: blue; font-weight: bold">if </span>src<span style="font-weight: bold">.</span>current<span style="font-weight: bold">() </span><span style="color: blue; font-weight: bold">is </span><span style="color: blue">None</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">raise </span>SyntaxError<span style="font-weight: bold">(</span><span style="color: red">"unexpected end of file"</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">if </span>src<span style="font-weight: bold">.</span>current<span style="font-weight: bold">() == </span><span style="color: red">")"</span><span style="font-weight: bold">:
+        </span>src<span style="font-weight: bold">.</span>pop<span style="font-weight: bold">()
+        </span><span style="color: blue; font-weight: bold">return </span>nil
+    first <span style="font-weight: bold">= </span>scheme_read<span style="font-weight: bold">(</span>src<span style="font-weight: bold">)
+    </span>rest <span style="font-weight: bold">= </span>read_tail<span style="font-weight: bold">(</span>src<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span>Pair<span style="font-weight: bold">(</span>first<span style="font-weight: bold">, </span>rest<span style="font-weight: bold">)
+
+
+</span><span style="color: green; font-style: italic"># Interactive loop
+
+</span><span style="color: blue; font-weight: bold">def </span>buffer_input<span style="font-weight: bold">():
+    </span><span style="color: blue; font-weight: bold">return </span>Buffer<span style="font-weight: bold">(</span>tokenize_lines<span style="font-weight: bold">(</span>InputReader<span style="font-weight: bold">(</span><span style="color: red">'&gt; '</span><span style="font-weight: bold">)))
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>read_print_loop<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Run a read-print loop for Scheme expressions."""
+    </span><span style="color: blue; font-weight: bold">while True</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>src <span style="font-weight: bold">= </span>buffer_input<span style="font-weight: bold">()
+            </span><span style="color: blue; font-weight: bold">while </span>src<span style="font-weight: bold">.</span>more_on_line<span style="font-weight: bold">:
+                </span>expression <span style="font-weight: bold">= </span>scheme_read<span style="font-weight: bold">(</span>src<span style="font-weight: bold">)
+                </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>repr<span style="font-weight: bold">(</span>expression<span style="font-weight: bold">))
+        </span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>SyntaxError<span style="font-weight: bold">, </span>ValueError<span style="font-weight: bold">) </span>as err<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>type<span style="font-weight: bold">(</span>err<span style="font-weight: bold">).</span>__name__ <span style="font-weight: bold">+ </span><span style="color: red">':'</span><span style="font-weight: bold">, </span>err<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span><span style="font-weight: bold">(</span>KeyboardInterrupt<span style="font-weight: bold">, </span>EOFError<span style="font-weight: bold">):  </span><span style="color: green; font-style: italic"># &lt;Control&gt;-D, etc.
+            </span><span style="color: blue; font-weight: bold">return
+</span>
+</pre>
+</body>
+</html>
